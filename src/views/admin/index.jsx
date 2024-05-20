@@ -1,3 +1,5 @@
+import React from "react"
+
 import {
   Card,
   CardContent,
@@ -5,8 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 function MainDashboard() {
+
   return (
     <div className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
+   
 
 <Card className="w-[350px]">
       <CardHeader>
