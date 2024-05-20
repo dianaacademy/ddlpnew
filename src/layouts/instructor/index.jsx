@@ -63,7 +63,7 @@ export default function instructor(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all md:pr-2 xl:ml-[270px]`}
+          className={`h-full flex-none transition-all  xl:ml-[270px]`}
         >
           {/* Routes */}
           <div className="h-full">
@@ -74,7 +74,7 @@ export default function instructor(props) {
               secondary={getActiveNavbar(routes)}
               {...rest}
             />
-            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  md:pr-2">
+            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  ">
               <Routes>
                 {getRoutes(routes)}
 

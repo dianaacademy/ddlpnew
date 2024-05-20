@@ -54,18 +54,8 @@ function MainDashboard() {
       </CardContent>
     </Card>
 
-
-
-
-
-
-
-
-
-
-
     </div>
   )
 }
 
-export default MainDashboard
+export default MainDashboard;

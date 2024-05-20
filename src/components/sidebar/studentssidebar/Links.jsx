@@ -4,12 +4,9 @@ import { Link, useLocation } from "react-router-dom";// chakra imports
 import { DashIcon } from "@radix-ui/react-icons";
 
 export function SidebarLinks(props) {
-  // Chakra color mode
   let location = useLocation();
-
   const { routes } = props;
 
-  // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return location.pathname.includes(routeName);
   };
@@ -19,44 +16,44 @@ export function SidebarLinks(props) {
       if (
         route.layout === "/admin" ||
         route.layout === "/instructor" ||
-        route.layout === "/creator"  ||
-        route.layout === "/student"      ) {
+        route.layout === "/creator" ||
+        route.layout === "/student"
+      ) {
         return (
-          <Link key={index} to={route.layout + "/" + route.path}>
-            <div className="relative mb-3 flex hover:cursor-pointer">
-              <li
-                className="my-[3px] text-md  flex cursor-pointer items-center px-2"
-                key={index}
-              >
-                <span
-                  className={`${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-red-600 dark:text-red-300"
-                      : "font-medium text-red-200"
-                  }`}
-                >
-                  {route.icon ? route.icon : <DashIcon/>}{" "}
-                </span>
-                <p
-                  className={`leading-1 ml-4 flex ${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-red-600 dark:red-white"
-                      : "font-medium text-gray-100"
-                  }`}
-                >
-                  {route.name}
-                </p>
-              </li>
-              {activeRoute(route.path) ? (
-                <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" />
-              ) : null}
-            </div>
-          </Link>
+          <div className="background-container">  
+          
+          <div key={index} className="ml-4 mr-5 mb-2 tendam ">
+            <Link 
+              to={route.layout + "/" + route.path}
+              className={`nav-link ${activeRoute(route.path) ? 'active' : ''}`}
+            >
+              <div className="pr-3 text-black flex hover:cursor-pointer ">
+                <li className="my-[3px] text-md flex cursor-pointer items-center px-2 ">
+                  <span className={`${
+                    activeRoute(route.path) ? 'font-bold text-gray-100 dark:text-red-300' : 'font-medium text-blue-600 '
+                  }`}>
+                    {route.icon ? route.icon : <DashIcon />}{" "}
+                  </span>
+                  <p className={`leading-1 flex ml-4 ${
+                    activeRoute(route.path) ? 'font-bold text-gray-100 dark:text-white' : 'font-medium text-gray-700'
+                  }`}>
+                    {route.name}
+                  </p>
+                </li>
+                {activeRoute(route.path) ? (
+                  <div className="" />
+                ) : null}
+              </div>
+            </Link>
+            
+          </div>
+          </div>
         );
       }
+      return null;
     });
   };
-  // BRAND
+
   return createLinks(routes);
 }
 

@@ -1,5 +1,11 @@
 import MainDashboard from "./src/views/student";
 import Course from "./src/components/course";
+import HomeCard from "./src/views/student/Purchasecourse";
+import CourseContent from "./src/views/student/Coursecontent";
+import TabsPage from "./src/views/student/Tabs";
+
+
+
 import {
   MdHome,
   MdFingerprint,
@@ -33,11 +39,27 @@ const routes = [
     component: <Course />,
   },
   {
-    name: "My courses",
-    layout: "student",
-    path: "ALL courses",
+    name: "Purchase Courses",
+    layout: "/student",
+    path: "mycourses",
     icon: <MdFingerprint />,
-    component: <Course />,
+    component: <HomeCard />,
   },
+  {
+    name: "Content",
+    layout: "/student",
+    path: "content",
+    icon: <MdFingerprint />,
+    component: <CourseContent />,
+  },
+  {
+    name: "Tabs",
+    layout: "/student",
+    path: "tabs",
+    icon: <MdFingerprint />,
+    component: <TabsPage />,
+  },
+ 
+ 
 ];
 export default routes;

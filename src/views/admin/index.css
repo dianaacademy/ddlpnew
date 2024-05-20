@@ -1,0 +1,17 @@
+.main-dashboard-container {
+    background-image: url('https://ik.imagekit.io/growthx100/24240507_6898809.jpg?updatedAt=1715086918840');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    min-height: 100vh;
+    background-attachment: fixed;
+   /* Fix the background image */
+  }
+
+  @media (min-width: 768px) {
+    <style>
+        .md\:pr-2 {
+            padding-right: 0px;
+        }
+    }

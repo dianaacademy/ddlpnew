@@ -4,6 +4,8 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/adminsidebar";
 import Footer from "../../components/footer";
 import routes from "../../../routes";
+import './index.css';
+
 export default function Admin(props) {
   const { ...rest } = props;
   const location = useLocation();
@@ -63,7 +65,7 @@ export default function Admin(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all md:pr-2 xl:ml-[300px]`}
+          className={`h-full flex-none transition-all  xl:ml-[300px] `}
         >
           {/* Routes */}
           <div className="h-full">
@@ -74,7 +76,7 @@ export default function Admin(props) {
               secondary={getActiveNavbar(routes)}
               {...rest}
             />
-            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  md:pr-2">
+            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  ">
               <Routes>
                 {getRoutes(routes)}
 
