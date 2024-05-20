@@ -36,33 +36,45 @@ const UserTable = () => {
           {/* Settings button content */}
         </div>
 
-        <div className="ml-72 flex-1 dark:bg-main-dark-bg bg-main-bg min-h-screen pl-4">
+        <div className="m-10 flex-1 dark:bg-main-dark-bg bg-main-bg min-h-screen pl-4">
           {/* Here is main content */}
     <div className="container mx-auto py-8  ">
-      <h2 className="text-2xl font-bold mb-4 ">Existing Users</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full bg-white rounded-lg shadow-md">
-          <thead>
-            <tr className="bg-gray-200 text-gray-700">
-              <th className="py-3 px-4 text-left">Serial No.</th>
-              <th className="py-3 px-4 text-left">Name</th>
-              <th className="py-3 px-4 text-left">Role</th>
-              <th className="py-3 px-4 text-left">Email</th>
+      <h2 className="text-2xl font-bold mb-4 text-white text-center">Existing Users</h2>
+      <div className="flex justify-center items-start min-h-screen">
+  <div className="backdrop-blur-sm bg-white/30 rounded-lg p-8">
+    <div className="overflow-x-auto">
+      <table className="w-full  rounded-lg shadow-md">
+        <thead>
+          <tr className="bg-indigo-400 text-black ">
+            <th className="py-3 px-4 text-left ">Serial No.</th>
+            <th className="py-3 px-4 text-left">Name</th>
+            <th className="py-3 px-4 text-left">Role</th>
+            <th className="py-3 px-4 text-left">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user.uid} className="hover:bg-black-100">
+              <td className="py-3 px-4 border-b border-gray-300 text-white">
+                {user.serialNo}
+              </td>
+              <td className="py-3 px-4 border-b border-gray-300 text-white">
+                {user.name}
+              </td>
+              <td className="py-3 px-4 border-b border-gray-300 text-white">
+                {user.role}
+              </td>
+              <td className="py-3 px-4 border-b border-gray-300 text-white">
+                {user.email}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.uid} className="hover:bg-gray-100">
-                <td className="py-3 px-4 border-b border-gray-300">{user.serialNo}</td>
-                <td className="py-3 px-4 border-b border-gray-300">{user.name}</td>
-                <td className="py-3 px-4 border-b border-gray-300">{user.role}</td>
-                <td className="py-3 px-4 border-b border-gray-300">{user.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {/* <AddTagsInput/> */}
-      </div>
+          ))}
+        </tbody>
+      </table>
+      {/* <AddTagsInput/> */}
+    </div>
+  </div>
+</div>
     </div>
     </div>
     </div>

@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/studentssidebar";
 import Footer from "../../components/footer";
 import routes from "../../../studentroutes";
+import '../admin/index.css';
 export default function Student(props) {
   const { ...rest } = props;
   const location = useLocation();
@@ -63,7 +64,7 @@ export default function Student(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all md:pr-2 xl:ml-[270px]`}
+          className={`h-full flex-none transition-all  xl:ml-[270px] main-dashboard-container`}
         >
           {/* Routes */}
           <div className="h-full">
@@ -74,7 +75,7 @@ export default function Student(props) {
               secondary={getActiveNavbar(routes)}
               {...rest}
             />
-            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  md:pr-2">
+            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh] pl-20 pr-10 pt-0   ">
               <Routes>
                 {getRoutes(routes)}
 
