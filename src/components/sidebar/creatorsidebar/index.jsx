@@ -21,11 +21,11 @@ const Sidebar = ({ open, onClose }) => {
         <div className="flex  h-0.5 font-poppins text-[16px] font-bold uppercase text-[#FFFFFF] dark:text-white">
    <div className="w-8 h-8  flex">
    <img 
-    width={18}
-    height={18}
+    width={30}
+    height={30}
     className="flex" src={logo} alt="diana logo" />
    </div>
-        <p className="flex pl-1 pt-2 ">iana sentinel</p>
+        <p className="flex pl-1 pt-2 ">iana learning</p>
         </div>
       </div>
       <div className="mt-[48px] mb-7 h-px bg-gray-300 dark:bg-white/30" />

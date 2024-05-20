@@ -25,7 +25,7 @@ export function SidebarLinks(props) {
         return (
           <div className="ml-4">
           <Link key={index} to={route.layout + "/" + route.path}>
-            <div className=" mb-3 text-black flex  hover:cursor-pointer">              
+            <div className=" mb-3 text-black flex scroll-m-20 text-2xl font-extrabold  hover:cursor-pointer">              
               <li
                 className="my-[3px] text-md  flex  cursor-pointer items-center px-2"
                 key={index}
@@ -33,8 +33,8 @@ export function SidebarLinks(props) {
                 <span
                   className={`${
                     activeRoute(route.path) === true
-                      ? "font-bold text-red-600 dark:text-red-300"
-                      : "font-medium text-red-500"
+                      ? "font-bold text-black dark:text-red-300"
+                      : "font-medium text-black"
                   }`}
                 >
                   {route.icon ? route.icon : <DashIcon/>}{" "}
@@ -42,7 +42,7 @@ export function SidebarLinks(props) {
                 <p
                   className={`leading-1 flex ml-4  ${
                     activeRoute(route.path) === true
-                      ? "font-bold text-red-600 dark:red-white"
+                      ? "font-bold text-black dark:red-white"
                       : "font-medium text-gray-700"
                   }`}
                 >

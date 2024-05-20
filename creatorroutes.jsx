@@ -2,6 +2,8 @@ import MainDashboard from "./src/views/creator";
 import Course from "./src/components/course";
 import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
+import LAbbuilder from "./src/views/creator/Labbuilder"
+import Labfind from "./src/views/creator/Labfind";
 // import Boards from "./views/admin/usermanagement";
 // import Reports from  "./views/admin/reports"
 // import Employe from "./views/admin/employes";
@@ -45,6 +47,27 @@ const routes = [
     path: "addcourse",
     icon: <MdFingerprint />,
     component: <CourseAdd />,
+  },
+  {
+    name: "addcourse",
+    layout: "/creator",
+    path: "addcourse",
+    icon: <MdFingerprint />,
+    component: <CourseAdd />,
+  }, 
+   {
+    name: "buildlab",
+    layout: "/creator",
+    path: "buillab",
+    icon: <MdFingerprint />,
+    component: <LAbbuilder />,
+  },
+  {
+    name: "labfing",
+    layout: "/creator",
+    path: "labfind",
+    icon: <MdFingerprint />,
+    component: <Labfind />,
   },
 
 

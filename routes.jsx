@@ -6,8 +6,11 @@ import CourseAdd from "./src/views/admin/Courseadd";
 import {
   MdHome,
   MdFingerprint,
+  MdGolfCourse,
 
 } from "react-icons/md";
+import { MdBuildCircle } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 // import Alerts from "views/admin/alerts";
 
 const routes = [
@@ -29,21 +32,21 @@ const routes = [
     name: "users",
     layout: "/admin",
     path: "users",
-    icon: <MdFingerprint />,
+    icon: <MdGolfCourse />,
     component: <UserTable />,
   },
   {
     name: "quizbuilder",
     layout: "/admin",
     path: "quizbbuild",
-    icon: <MdFingerprint />,
+    icon: <MdBuildCircle />,
     component: <QuizBuilder />,
   },
   {
     name: "addcourse",
     layout: "/admin",
     path: "addcourse",
-    icon: <MdFingerprint />,
+    icon: <MdAdd />,
     component: <CourseAdd />,
   },
   {

@@ -3,6 +3,14 @@ import { HiX } from "react-icons/hi";
 import SidebarLinks from "./Links"
 import logo from "../../../assets/logo.png";
 import routes from "../../../../routes";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 const Sidebar = ({ open, onClose }) => {
   return (
     <div
@@ -10,6 +18,7 @@ const Sidebar = ({ open, onClose }) => {
         open ? "translate-x-0" : "-translate-x-96"
       }`}
     >
+
       <span
         className="relative text-red-400 top-4  block cursor-pointer xl:hidden"
         onClick={onClose}
@@ -17,28 +26,26 @@ const Sidebar = ({ open, onClose }) => {
         <HiX />
       </span>
 
-      <div className={`mx-[16px] mt-[22px] flex items-center`}>
-        <div className="flex  h-0.5 font-poppins text-[16px] font-bold uppercase text-[#FFFFFF] dark:text-white">
-   <div className="w-8 h-8  flex">
-   <img 
+      <Card className="w-[290px] h-[750px]">
+      <CardHeader>
+        <CardTitle className=" flex">
+
+        <img 
     width={24}
     height={24}
     className="flex" src={logo} alt="diana logo" />
-   </div>
-        <p className="flex pl-1 pt-1">iana learning portal</p>
-        </div>
-      </div>
-      <div className="mt-[48px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
-      {/* Nav item */}
-
-      <ul className="mb-auto pt-2">
+            <p className="flex pl-1 pt-1">iana learning portal</p>
+</CardTitle>
+      </CardHeader>
+      <CardContent>
+          <div className="grid w-full h-full items-center gap-4">
+          <ul className="mb-auto pt-2">
         <SidebarLinks routes={routes} />
       </ul>
+          </div>
+      </CardContent>
+    </Card>
 
-      {/* Free Horizon Card */}
-
-
-      {/* Nav item end */}
     </div>
   );
 };

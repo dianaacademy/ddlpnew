@@ -1,18 +1,16 @@
-import { Fragment, createContext, useState, useEffect, useContext } from "react";
-import React from 'react';
+import { Fragment, useState,  } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import PageHeader from "./pageheader";
 import { auth } from "../../firebase.config";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, } from "firebase/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getDatabase, ref, child, get } from "firebase/database";
-
+import { useAuth } from "../../auth/hooks/useauth";
 // Create a context for user authentication
-const AuthContext = createContext();
 
 const title = "Login";
 const socialTitle = "Login With Social Media";
@@ -49,6 +47,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const {setCurrentUser} = useAuth();
 
     const handlelogin = async (event) => {
         event.preventDefault();
@@ -56,21 +55,21 @@ const LoginPage = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             console.log("User Logged In:", user);
-    
             // Fetch user data from the Realtime Database
             const database = getDatabase();
             const userRef = child(ref(database), `users/${user.uid}`);
             const snapshot = await get(userRef);
             const userData = snapshot.val();
-    
+            setCurrentUser(userData);
+            console.log(userData);
             if (userData) {
                 // Check the user's role
                 if (userData.role === "Admin") {
                     // Redirect to /dashboard if the user's role is "Admin"
-                    navigate('/dashboard');
+                    navigate('/admin');
                 } else {
                     // Redirect to /my-learning for other roles
-                    navigate('/my-learning');
+                    navigate('/student');
                 }
             } else {
                 console.error("User data not found in the database");
@@ -96,7 +95,6 @@ const LoginPage = () => {
         <Fragment>
             <Header />
             <PageHeader title={'Login Page'} curPage={'Login'} />
-            <AuthContext.Provider value={{ handlelogin }}>
                 <div className="login-section padding-tb section-bg">
                     <div className="container">
                         <div className="account-wrapper">
@@ -149,13 +147,11 @@ const LoginPage = () => {
                         </div>
                     </div>
                 </div>
-            </AuthContext.Provider>
             <Footer />
         </Fragment>
     );
 }
 
-// Custom hook to access the AuthContext
-const useAuth = () => useContext(AuthContext);
 
-export { LoginPage, useAuth };
+
+export { LoginPage };

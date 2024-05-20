@@ -11,23 +11,27 @@ import Instructor from './layouts/instructor';
 import Student from './layouts/students';
 import Blog from './components/blog';
 import Creator from './layouts/creators';
+import Lab from "./layouts/labs"
+import { useAuth } from './auth/hooks/useauth';
 function App() {
-  return (
+  const currentUser = useAuth();
+  console.log(currentUser);
+
+    return (
     <>
 		<BrowserRouter>
-		
     <AuthProvider>
     <Routes>
       <Route path="/" element={<Home />} />
-
-      
       <Route path="*" element={<ErrorPage />} />
       <Route path="signup" element={<SignupPage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="blog" element={<Blog />} />
+      <Route path="lab" element={<Lab />} />
 
 
       <Route path="admin/*" element={<Admin />} />
+
       <Route path="instructor/*" element={<Instructor />} />
       <Route path="student/*" element={<Student />} />
       <Route path="creator/*" element={<Creator />} />
