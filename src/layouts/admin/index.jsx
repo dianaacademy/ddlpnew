@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/adminsidebar";
-import Footer from "../../components/footer";
 import routes from "../../../routes";
 import './index.css';
 
@@ -59,13 +58,13 @@ export default function Admin(props) {
 
   document.documentElement.dir = "ltr";
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-full">
       <Sidebar open={open} onClose={() => setOpen(false)} />
       {/* Navbar & Main Content */}
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all  xl:ml-[300px] `}
+          className={`h-full flex-none transition-all  xl:ml-[25px] `}
         >
           {/* Routes */}
           <div className="h-full">
@@ -85,9 +84,6 @@ export default function Admin(props) {
                   element={<Navigate to="/admin/default" replace />}
                 />
               </Routes>
-            </div>
-            <div className="p-3">
-              {/* <Footer /> */}
             </div>
           </div>
         </main>

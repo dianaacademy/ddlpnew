@@ -1,30 +1,18 @@
 import MainDashboard from "./src/views/student";
 import Course from "./src/components/course";
 import HomeCard from "./src/views/student/Purchasecourse";
-import CourseContent from "./src/views/student/Coursecontent";
-import TabsPage from "./src/views/student/Tabs";
 
 
 
 import {
   MdHome,
   MdFingerprint,
-  MdPerson,
-  MdLocationOn,
-  MdMap,
-  MdMessage,
-  MdNotifications,
-  MdHistory,
-  MdSettings,
-  MdAssignment,
-  MdAccountCircle,
-  MdHelp,
 } from "react-icons/md";
 // import Alerts from "views/admin/alerts";
 
 const routes = [
   {
-      name: "Dashboard",
+      name: "Home",
       layout: "/student",
       path: "default",
       icon: <MdHome />,
@@ -32,34 +20,19 @@ const routes = [
 
   },
   {
-    name: "ALL Courses",
+    name: "discover",
     layout: "/student",
-    path: "allcourses",
+    path: "discover",
     icon: <MdFingerprint />,
     component: <Course />,
   },
   {
-    name: "Purchase Courses",
+    name: "My learning",
     layout: "/student",
-    path: "mycourses",
+    path: "mylearning",
     icon: <MdFingerprint />,
     component: <HomeCard />,
   },
-  {
-    name: "Content",
-    layout: "/student",
-    path: "content",
-    icon: <MdFingerprint />,
-    component: <CourseContent />,
-  },
-  {
-    name: "Tabs",
-    layout: "/student",
-    path: "tabs",
-    icon: <MdFingerprint />,
-    component: <TabsPage />,
-  },
- 
  
 ];
 export default routes;

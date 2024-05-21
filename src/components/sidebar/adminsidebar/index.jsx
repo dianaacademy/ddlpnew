@@ -14,37 +14,31 @@ import {
 const Sidebar = ({ open, onClose }) => {
   return (
     <div
-      className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-darkBlue dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${
+      className={`mt-6     ${
         open ? "translate-x-0" : "-translate-x-96"
       }`}
     >
+      <div>
 
       <span
-        className="relative text-red-400 top-4  block cursor-pointer xl:hidden"
+        className="relative top-4   cursor-pointer xl:hidden"
         onClick={onClose}
       >
         <HiX />
       </span>
-
-      <Card className="w-[290px] h-[750px]">
-      <CardHeader>
-        <CardTitle className=" flex">
-
         <img 
-    width={24}
-    height={24}
-    className="flex" src={logo} alt="diana logo" />
-            <p className="flex pl-1 pt-1">iana learning portal</p>
-</CardTitle>
-      </CardHeader>
-      <CardContent>
-          <div className="grid w-full h-full items-center gap-4">
-          <ul className="mb-auto pt-2">
-        <SidebarLinks routes={routes} />
-      </ul>
-          </div>
-      </CardContent>
-    </Card>
+    width={34}
+    height={34}
+    className="flex ml-2 pt-2" src={logo} alt="diana logo" />
+      </div>
+
+  
+       <div className="pt-10">
+       <SidebarLinks routes={routes} />
+
+
+       </div>
+
 
     </div>
   );

@@ -4,13 +4,14 @@ import UserTable from "./src/views/admin/userTable";
 import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
 import {
-  MdHome,
-  MdFingerprint,
-  MdGolfCourse,
+  Home,
+  Package2,
+  Settings,
+  BookType,
+  SquarePen,
+} from "lucide-react"
 
-} from "react-icons/md";
-import { MdBuildCircle } from "react-icons/md";
-import { MdAdd } from "react-icons/md";
+
 // import Alerts from "views/admin/alerts";
 
 const routes = [
@@ -18,42 +19,42 @@ const routes = [
     name: "Dashboard",
     layout: "/admin",
     path: "default",
-    icon: <MdHome />,
+    icon: <Home />,
     component: <MainDashboard />,
   },
   {
     name: "courses",
     layout: "/admin",
     path: "course",
-    icon: <MdFingerprint />,
+    icon: <BookType />,
     component: <Course />,
   },
   {
     name: "users",
     layout: "/admin",
     path: "users",
-    icon: <MdGolfCourse />,
+    icon: <Settings />,
     component: <UserTable />,
   },
   {
     name: "quizbuilder",
     layout: "/admin",
     path: "quizbbuild",
-    icon: <MdBuildCircle />,
+    icon: <SquarePen />,
     component: <QuizBuilder />,
   },
   {
     name: "addcourse",
     layout: "/admin",
     path: "addcourse",
-    icon: <MdAdd />,
+    icon: <Package2 />,
     component: <CourseAdd />,
   },
   {
     name: "alluser",
     layout: "/admin",
     path: "alluser",
-    icon: <MdFingerprint />,
+    icon: <Package2 />,
     component: <UserTable />,
   },
 

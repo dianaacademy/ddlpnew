@@ -1,10 +1,8 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/sidebar/studentssidebar";
-import Footer from "../../components/footer";
 import routes from "../../../studentroutes";
 import '../admin/index.css';
+import Navbar from "@/components/StuedntNavbar";
 export default function Student(props) {
   const { ...rest } = props;
   const location = useLocation();
@@ -59,12 +57,12 @@ export default function Student(props) {
   document.documentElement.dir = "ltr";
   return (
     <div className="flex h-full w-full">
-      <Sidebar open={open} onClose={() => setOpen(false)} />
+      {/* <Sidebar open={open} onClose={() => setOpen(false)} /> */}
       {/* Navbar & Main Content */}
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all  xl:ml-[270px] main-dashboard-container`}
+          className={`h-full flex-none transition-all   main-dashboard-container`}
         >
           {/* Routes */}
           <div className="h-full">
@@ -84,9 +82,6 @@ export default function Student(props) {
                   element={<Navigate to="/student/default" replace />}
                 />
               </Routes>
-            </div>
-            <div className="p-3">
-              <Footer />
             </div>
           </div>
         </main>

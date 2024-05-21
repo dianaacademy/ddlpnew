@@ -6,12 +6,6 @@
     font-family: "Orbitron", sans-serif;
     color: White;
 }
-@media (min-width: 1200px) {
-    <style>
-        .xl\:\!z-0 {
-            z-index: 5 !important;
-        }
-    }
 
 
 
@@ -26,7 +20,6 @@
     margin: 2px;
     border-radius: 8px;
     text-decoration: none;
-    color: #gray-700;
     transition: color 0.3s, background-color 0.3s;
   }
 
@@ -54,9 +47,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border: 1px solid #blue-600;
     border-radius: 18px;
-    box-shadow: 0 0 15px #blue-600;
     opacity: 1;
     transition: opacity 0.3s, box-shadow 0.3s;
   }

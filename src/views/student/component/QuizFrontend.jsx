@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import './assests/RadioButton.css';
 
 
@@ -184,7 +184,6 @@ const QuizFrontend = ({ quiz }) => {
                   alignItems: 'center',
                   minWidth: '100vh',
                   maxWidth: '800px',
-                  padding: '20% 30%',
                 }}
               >
                 <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>Congratulations!</h2>

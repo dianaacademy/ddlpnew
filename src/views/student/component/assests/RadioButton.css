@@ -60,7 +60,6 @@ input[type='radio'] {
   transition: background-color var(--trans-dur), box-shadow var(--trans-dur);
   -webkit-appearance: none;
   appearance: none;
-  font-color:#fff;
 }
 
 input[type='radio']:before,

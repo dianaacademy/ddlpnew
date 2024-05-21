@@ -1,15 +1,18 @@
 /* eslint-disable */
 import React from "react";
-import { Link, useLocation } from "react-router-dom";// chakra imports
+import { Link, useLocation } from "react-router-dom";
 import { DashIcon } from "@radix-ui/react-icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 export function SidebarLinks(props) {
-  // Chakra color mode
   let location = useLocation();
-
   const { routes } = props;
 
-  // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return location.pathname.includes(routeName);
   };
@@ -18,49 +21,59 @@ export function SidebarLinks(props) {
     return routes.map((route, index) => {
       if (
         route.layout === "/admin" ||
-        route.layout === "/instructor"||
-        route.layout === "/creator"  ||
+        route.layout === "/instructor" ||
+        route.layout === "/creator" ||
         route.layout === "/student"
       ) {
         return (
-          <div className="ml-4">
-          <Link key={index} to={route.layout + "/" + route.path}>
-            <div className=" mb-3 text-black flex scroll-m-20 text-3xl font-extrabold  hover:cursor-pointer">              
-              <li
-                className="my-[3px] text-md  flex  cursor-pointer items-center px-2"
-                key={index}
-              >
-                <span
-                  className={`${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-black dark:text-red-300"
-                      : "font-medium text-black"
-                  }`}
-                >
-                  {route.icon ? route.icon : <DashIcon/>}{" "}
-                </span>
-                <p
-                  className={`leading-1 flex ml-4  ${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-black dark:red-white"
-                      : "font-medium text-gray-700"
-                  }`}
-                >
-                  {route.name}
-                </p>
-              </li>
-              {activeRoute(route.path) ? (
-                <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-brand-500 dark:bg-brand-400" />
-              ) : null}
-            </div>
-          </Link>
-          </div>
+          <li key={index} className="relative">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to={route.layout + "/" + route.path} className="flex items-center justify-center h-14 w-14">
+                    <span
+                      className={`${
+                        activeRoute(route.path)
+                          ? "font-bold text-black text-lg dark:text-red-300"
+                          : "font-medium text-lg text-black"
+                      }`}
+                    >
+                      {route.icon ? route.icon : <DashIcon />}
+                    </span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p
+                    className={`${
+                      activeRoute(route.path)
+                        ? "font-bold text-black dark:text-white"
+                        : "font-medium text-gray-700"
+                    }`}
+                  >
+                    {route.name}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {activeRoute(route.path) && (
+              <div className="absolute right-0 top-0 h-full w-1 rounded-lg bg-brand-500 dark:bg-brand-400" />
+            )}
+          </li>
         );
       }
+      return null;
     });
   };
-  // BRAND
-  return createLinks(routes);
+
+  return (
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+      <nav className="flex flex-col items-center gap-2 px-2  sm:py-5">
+        <ul className="flex flex-col pt-6  gap-1">
+          {createLinks(routes)}
+        </ul>
+      </nav>
+    </aside>
+  );
 }
 
 export default SidebarLinks;
