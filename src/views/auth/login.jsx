@@ -9,7 +9,6 @@ import { signInWithEmailAndPassword, } from "firebase/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getDatabase, ref, child, get } from "firebase/database";
-import { useAuth } from "../../auth/hooks/useauth";
 // Create a context for user authentication
 
 const title = "Login";
@@ -46,9 +45,10 @@ const socialList = [
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-    const {setCurrentUser} = useAuth();
 
+
+
+    const navigate = useNavigate();
     const handlelogin = async (event) => {
         event.preventDefault();
         try {
@@ -59,18 +59,25 @@ const LoginPage = () => {
             const database = getDatabase();
             const userRef = child(ref(database), `users/${user.uid}`);
             const snapshot = await get(userRef);
-            const userData = snapshot.val();
-            setCurrentUser(userData);
-            console.log(userData);
+            const userData = snapshot.val();         
             if (userData) {
                 // Check the user's role
                 if (userData.role === "Admin") {
                     // Redirect to /dashboard if the user's role is "Admin"
                     navigate('/admin');
-                } else {
+                } 
+                else if(userData.role === "Instructor"){
+                    navigate('/admin');
+                }
+                else if(userData.role === "creator"){
+                    navigate('/creator');
+                }
+                else {
                     // Redirect to /my-learning for other roles
                     navigate('/student');
+
                 }
+             
             } else {
                 console.error("User data not found in the database");
             }

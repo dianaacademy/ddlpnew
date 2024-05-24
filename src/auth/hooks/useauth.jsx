@@ -1,32 +1,78 @@
-// src/hooks/useAuth.js
-import { useState, useEffect, createContext, useContext } from 'react';
-import {  onAuthStateChanged, signOut } from 'firebase/auth';
-import Cookies from 'js-cookie';
-import { useNavigate } from "react-router-dom";
-import { auth } from '../../firebase.config';
-const AuthContext = createContext(null);
+import React, { useContext, useState, useEffect } from "react";
+import { auth} from "@/firebase.config";// import { GoogleAuthProvider } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, child, get } from "firebase/database";
 
-export const AuthProvider = ({ children }) => {
-    const navigate = useNavigate();
-    const [currentUser, setCurrentUser] = useState(null);
-    const [error, setError] = useState(null);
 
-    const logout = async () => {
-        try {
-            await signOut(auth);
-            setCurrentUser(null);
-            Cookies.remove('authUser');
-            navigate('/login');
-        } catch (error) {
-            setError(error.message);
-            console.error('Error signing out:', error);
-        }
-    };
+const AuthContext = React.createContext();
 
-    const value = { currentUser, setCurrentUser, logout, error };
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+export function useAuth() {
+  return useContext(AuthContext);
 }
+export const doSignOut = () => {
+    return auth.signOut();
+  };
+  
 
-export const useAuth = () => {
-    return useContext(AuthContext);
+export function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [role, setRole] = useState("");
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [isEmailUser, setIsEmailUser] = useState(false);
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, initializeUser);
+    return unsubscribe;
+  }, []);
+
+  async function initializeUser(user) {
+         
+    if (user) {
+
+      setCurrentUser({ ...user });
+
+      // check if provider is email and password login
+      const isEmail = user.providerData.some(
+        (provider) => provider.providerId === "password"
+      );
+      setIsEmailUser(isEmail);
+      const database = getDatabase();
+      const userRef = child(ref(database), `users/${user.uid}`);
+      const snapshot = await get(userRef);
+      const userData = snapshot.val();   
+      setRole(userData.role);
+
+
+      // check if the auth provider is google or not
+    //   const isGoogle = user.providerData.some(
+    //     (provider) => provider.providerId === GoogleAuthProvider.PROVIDER_ID
+    //   );
+    //   setIsGoogleUser(isGoogle);
+
+      setUserLoggedIn(true);
+    } else {
+      setCurrentUser(null);
+      setUserLoggedIn(false);
+    }
+
+    setLoading(false);
+  }
+
+  const value = {
+    setRole,
+    role,
+    userLoggedIn,
+    isEmailUser,
+    isGoogleUser,
+    currentUser,
+    setCurrentUser
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }

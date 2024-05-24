@@ -1,6 +1,5 @@
 import './App.css'
 import {BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from './auth/hooks/useauth';
 import Home from './components/Home/home';
 import ErrorPage from './components/404';
 import 'swiper/css';
@@ -12,11 +11,10 @@ import Student from './layouts/students';
 import Blog from './components/blog';
 import Creator from './layouts/creators';
 import Lab from "./layouts/labs"
-import { useAuth } from './auth/hooks/useauth';
-function App() {
-  const currentUser = useAuth();
-  console.log(currentUser);
 
+import { AuthProvider } from './auth/hooks/useauth';
+import PrivateRoute from './utils/PrivateRoutes';
+function App() {
     return (
     <>
 		<BrowserRouter>
@@ -30,11 +28,29 @@ function App() {
       <Route path="lab" element={<Lab />} />
 
 
-      <Route path="admin/*" element={<Admin />} />
+      <Route path="admin/*" element={
+              <PrivateRoute allowedRoles={['Admin']}>
+                <Admin />
+              </PrivateRoute>
+            } />
 
-      <Route path="instructor/*" element={<Instructor />} />
-      <Route path="student/*" element={<Student />} />
-      <Route path="creator/*" element={<Creator />} />
+            <Route path="instructor/*" element={
+              <PrivateRoute allowedRoles={['Instructor']}>
+                <Instructor />
+              </PrivateRoute>
+            } />
+
+            <Route path="student/*" element={
+              <PrivateRoute allowedRoles={['Student']}>
+                <Student />
+              </PrivateRoute>
+            } />
+
+            <Route path="creator/*" element={
+              <PrivateRoute allowedRoles={['Creator']}>
+                <Creator />
+              </PrivateRoute>
+            } />
 
 
 

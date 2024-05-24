@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link , useNavigate } from "react-router-dom"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
-import { useAuth } from "@/auth/hooks/useauth"
-
 import {
   CircleUser,
   Menu,
@@ -18,11 +16,16 @@ import {
   Search,
 } from "lucide-react"
 import { Button } from "./ui/button"
+import { useAuth, doSignOut } from "@/auth/hooks/useauth"
+
+
 
 
 
 function Navbar() {
-  const {logout} = useAuth();
+  const navigate = useNavigate()
+  const { currentUser } = useAuth();
+  const {role}= useAuth();
 
 
   return (
@@ -136,16 +139,17 @@ function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>   {currentUser && (
+  <>
+    { currentUser.email}
+  </>
+)}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem> { currentUser.displayName }</DropdownMenuItem>
+              <DropdownMenuItem>{ role }</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <button onClick={logout}>
+              <button onClick={() => { doSignOut().then(() => { navigate('/login') }) }} className='text-sm text-blue-600 underline'> <DropdownMenuItem >Logout</DropdownMenuItem></button>
 
-        
-              <DropdownMenuItem >Logout</DropdownMenuItem>
-              </button>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
