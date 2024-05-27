@@ -3,6 +3,7 @@ import Course from "./src/components/course";
 import UserTable from "./src/views/admin/userTable";
 import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
+import QuizList from "@/views/admin/components/Allquuizes";
 import {
   Home,
   Package2,
@@ -49,6 +50,13 @@ const routes = [
     path: "addcourse",
     icon: <Package2 />,
     component: <CourseAdd />,
+  },
+  {
+    name: "quizes",
+    layout: "/admin",
+    path: "allquizes",
+    icon: <Package2 />,
+    component: <QuizList />,
   },
   {
     name: "alluser",

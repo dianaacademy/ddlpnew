@@ -7,14 +7,52 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button"
+import {useState, useEffect } from "react";
+import { auth } from "@/firebase.config";
+import { SkeletonCard } from "./components/skeltoncard";
+import { getDatabase, ref,  get } from 'firebase/database';
+
+
 
 function MainDashboard() {
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+    // const userCount = useCountUsers();
+
+  
+
   const { toast } = useToast()
+  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const database = getDatabase();
+      const usersRef = ref(database, 'users');
+      const snapshot = await get(usersRef);
+      const usersData = snapshot.val();
+  
+      if (usersData) {
+        const userCount = Object.keys(usersData).length;
+        setTotalUsers(userCount);
+
+      }
+    };
+  
+    setIsLoading(false);
+    fetchUsers();
+  }, []);
 
 
   return (
     <div className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
-<Card className="w-[350px]">
+
+      {isLoading ? (
+        <>
+        
+        <SkeletonCard/>
+        
+        </>
+      ):(
+        <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Total students</CardTitle>
       </CardHeader>
@@ -22,12 +60,16 @@ function MainDashboard() {
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              234
+            {totalUsers}
             </div>
           </div>
         </form>
       </CardContent>
     </Card>
+
+
+      )}
+  
 
     <Card className="w-[350px]">
       <CardHeader>
