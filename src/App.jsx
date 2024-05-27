@@ -13,6 +13,8 @@ import Blog from './components/blog';
 import Creator from './layouts/creators';
 import Lab from "./layouts/labs"
 import { useAuth } from './auth/hooks/useauth';
+import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
+
 function App() {
   const currentUser = useAuth();
   console.log(currentUser);
@@ -28,6 +30,7 @@ function App() {
       <Route path="login" element={<LoginPage />} />
       <Route path="blog" element={<Blog />} />
       <Route path="lab" element={<Lab />} />
+      <Route path="viewer" element={<CourseViewPage />} />
 
 
       <Route path="admin/*" element={<Admin />} />
@@ -35,6 +38,7 @@ function App() {
       <Route path="instructor/*" element={<Instructor />} />
       <Route path="student/*" element={<Student />} />
       <Route path="creator/*" element={<Creator />} />
+      
 
 
 

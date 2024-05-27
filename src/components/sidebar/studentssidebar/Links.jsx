@@ -2,6 +2,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";// chakra imports
 import { DashIcon } from "@radix-ui/react-icons";
+import '../adminsidebar/index.css';
+
 
 export function SidebarLinks(props) {
   let location = useLocation();
@@ -22,7 +24,7 @@ export function SidebarLinks(props) {
         return (
           <div className="background-container">  
           
-          <div key={index} className=" mr-5 mb-2 tendam ">
+          <div key={index} className="">
             <Link 
               to={route.layout + "/" + route.path}
               className={`nav-link ${activeRoute(route.path) ? 'active' : ''}`}
@@ -30,12 +32,12 @@ export function SidebarLinks(props) {
               <div className=" text-black flex hover:cursor-pointer ">
                 <li className=" text-md flex cursor-pointer items-center px-2 ">
                   <span className={`${
-                    activeRoute(route.path) ? 'font-bold text-gray-100 dark:text-red-300' : 'font-small text-blue-600 '
+                    activeRoute(route.path) ? ' text-white  dark:text-red-300' : 'font-small text-blue-300 '
                   }`}>
                     {route.icon ? route.icon : <DashIcon />}{" "}
                   </span>
                   <p className={`leading-1 flex ml-4 ${
-                    activeRoute(route.path) ? 'font-bold text-gray-100 dark:text-white' : 'font-small text-gray-700'
+                    activeRoute(route.path) ? ' text-gray-100 dark:text-white' : 'font-small text-gray-400'
                   }`}>
                     {route.name}
                   </p>

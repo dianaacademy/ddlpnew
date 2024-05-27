@@ -32,12 +32,13 @@ const HomeCard = () => {
           <span className="text-gray-600 text-sm ml-2">34 reviews</span>
         </div>
         <a href="/student/tabs" class="block w-full">
-  <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
+  <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 ">
     Explore
   </button>
 </a>
       </div>
       </div>
+      
    
   );
 };

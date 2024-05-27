@@ -18,7 +18,7 @@ const CourseContent = ({ items }) => {
     <img
       src="https://ik.imagekit.io/growthx100/default-image.jpg?updatedAt=1709902412480"
       alt="Cyber Security"
-      className="w-[300px] h-[300px] object-cover  ml-auto"
+      className="w-[300px] h-[300px] object-cover  ml-auto "
     />
   </div>
   <div className="flex-1 p-8 flex flex-col items-center justify-center">
@@ -35,7 +35,7 @@ const CourseContent = ({ items }) => {
           ref={index === 0 ? firstBtnRef : null}
           key={index}
           onClick={() => setSelectedTab(index)}
-          className={`outline-none flex-1 p-3 hover:bg-indigo-300 rounded-xl text-center focus:ring-2 focus:bg-white focus:text-blue-600 ${
+          className={`outline-none flex-1 p-3 hover:bg-indigo-300 rounded-xl text-center focus:ring-2 focus:bg-white focus:text-blue-600  ${
             selectedTab === index ? 'ring-2 bg-white text-blue-600' : ''
           }`}
         >
