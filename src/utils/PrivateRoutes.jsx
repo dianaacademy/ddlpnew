@@ -1,10 +1,20 @@
-import { Outlet, Navigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/auth/hooks/useauth';
+const PrivateRoute = ({ children, allowedRoles }) => {
+  const { currentUser, role } = useAuth();
 
-const PrivateRoutes = () => {
-    let {user} = useAuth()
-    return (
-      user ? <Outlet/> : <Navigate to ="/login"/>
-    )};
+  if (!currentUser) {
+    // If user is not logged in, redirect to login
+    return <Navigate to="/login" />;
+  }
 
-export default PrivateRoutes;
+  if (!allowedRoles.includes(role)) {
+    // If user does not have the appropriate role, redirect to an error page or home
+    return <Navigate to="/" />;
+  }
+
+  // If user is logged in and has the appropriate role, render the children components
+  return children;
+};
+
+export default PrivateRoute;

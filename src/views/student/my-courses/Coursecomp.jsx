@@ -24,108 +24,7 @@ const AllCoursesComponent = () => {
 
   const [resetBtn, setRestBtn] = useState(false);
 
-  const sortByOptions = [
-    {
-      key: "Recently Accessed ",
-      value: "recently accessed",
-    },
-    {
-      key: "Recently Enrolled",
-      value: "recently enrolled",
-    },
-    {
-      key: "Title: A-to-Z",
-      value: "a-z",
-    },
-    {
-      key: "Title: Z-to-A",
-      value: "z-a",
-    },
-  ];
-
-  const filterByCategoryOptions = [
-    [
-      {
-        key: "Favourites",
-        value: "favorites",
-      },
-    ],
-    [
-      {
-        key: "All Categories",
-        value: "all categories",
-      },
-      {
-        key: "Development",
-        value: "development",
-      },
-      {
-        key: "IT & Software",
-        value: "it software",
-      },
-      {
-        key: "Business",
-        value: "business",
-      },
-      {
-        key: "Marketing",
-        value: "marketing",
-      },
-    ],
-    [
-      {
-        key: "Archived",
-        value: "archived",
-      },
-    ],
-  ];
-
-  const filterByStateOptions = [
-    {
-      key: "Completed",
-      value: "completed",
-    },
-    {
-      key: "In Progress",
-      value: "in progress",
-    },
-    {
-      key: "Not Started",
-      value: "not started",
-    },
-  ];
-
-  const filterByInstructorOptions = [
-    {
-      key: "Aaron Wheeler",
-      value: "aaron wheeler",
-    },
-    {
-      key: "Koushil Mankali",
-      value: "koushil",
-    },
-  ];
-
-  useEffect(() => {
-    if (
-      Object.keys(filters.sortBy).length ||
-      Object.keys(filters.filterByCategory).length ||
-      Object.keys(filters.filterByState).length ||
-      Object.keys(filters.filterByInstructor).length
-    ) {
-      return setRestBtn(true);
-    }
-    setRestBtn(false);
-  }, [filters]);
-
-  const resetFiltersHandler = () => {
-    setFilers({
-      sortBy: {},
-      filterByCategory: {},
-      filterByState: {},
-      filterByInstructor: {},
-    });
-  };
+  
 
   const optionsComps = [
     <div className={css.opt}>
@@ -182,7 +81,7 @@ const AllCoursesComponent = () => {
         {courseDataWithOptions.map((item) => {
           return (
             <CourseCardWithOptions
-              key={item.id}
+              key={item.id }
               data={item}
               isOptions={true}
               options={optionsComps}

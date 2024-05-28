@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +10,7 @@ import {
 
 import routes from "../../studentroutes";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Input } from "@/components/ui/input"
-import { useAuth } from "@/auth/hooks/useauth"
+import { Input } from "@/components/ui/input";
 import logo from "../assets/logo.png";
 
 import {
@@ -22,13 +21,14 @@ import {
 } from "lucide-react"
 import { Button } from "./ui/button"
 import SidebarLinks from "./sidebar/studentssidebar/Links";
+import { useAuth, doSignOut } from "@/auth/hooks/useauth"
 
 
 
 function Navbar() {
-  const {logout} = useAuth();
-
-
+  const navigate = useNavigate()
+  const { currentUser } = useAuth();
+  const {role}= useAuth();
   return (
     <div className=" bg-opacity-25	 backdrop-blur-lg sticky top-0 z-50  shadow-md bg-slate-900 mb-3">
 
@@ -69,33 +69,10 @@ function Navbar() {
                 <Package2 className="h-6 w-6" />
                 <span className="sr-only">Acme Inc</span>
               </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Orders
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Products
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Customers
-              </Link>
-              <Link href="#" className="hover:text-foreground">
-                Settings
-              </Link>
+
+      <h1>
+        hello
+      </h1>
             </nav>
           </SheetContent>
         </Sheet>
@@ -118,16 +95,19 @@ function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>
+              {currentUser && (
+  <>
+    { currentUser.email}
+  </>
+)}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem> { currentUser.displayName }</DropdownMenuItem>
+              <DropdownMenuItem>{ role }</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <button onClick={logout}>
 
+              <button onClick={() => { doSignOut().then(() => { navigate('/login') }) }} className='text-sm text-blue-600 underline'> <DropdownMenuItem >Logout</DropdownMenuItem></button>
         
-              <DropdownMenuItem >Logout</DropdownMenuItem>
-              </button>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

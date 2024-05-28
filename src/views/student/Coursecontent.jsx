@@ -12,7 +12,7 @@ const CourseContent = ({ items }) => {
   return (
 <>
 
-<div className="w-full min-h-[34vh] bg-transparent backdrop-blur-[20px] border border-red-500 rounded-lg flex flex-row-reverse">
+<div className=" w-full min-h-[34vh] bg-transparent backdrop-blur-[20px] border border-red-500 rounded-lg flex flex-row-reverse">
   <div className="flex-1 relative">
     <div className="absolute inset-0 p-10 bg-opacity-30"></div>
     <img
@@ -26,7 +26,6 @@ const CourseContent = ({ items }) => {
     <p className="text-gray-600 text-center">The DIANA'S CERTIFIED DOUBLE A+ CERTIFICATION course is designed to provide participants with a comprehensive understanding of cyber threats and vulnerabilities, as well as the tools and techniques used to identify and mitigate them. The course covers topics such as risk management, threat analysis, and incident response.</p>
   </div>
 </div>
-
 <div className='bg-sky-100 flex justify-center items-center py-12'>
   <div className=' flex flex-col gap-y-2 w-full'>
     <div className='bg-indigo-700 p-3 rounded-xl flex justify-between items-center gap-x-4 font-bold text-white'>
