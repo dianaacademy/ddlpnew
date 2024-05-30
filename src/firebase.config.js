@@ -1,8 +1,9 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBMgD92jWYxvkeSYkElx7DkCqh3a3OlK30",
@@ -14,14 +15,11 @@ const firebaseConfig = {
   measurementId: "G-VXJGENCYD1",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 const analytics = getAnalytics(app);
-
-// Create a separate instance of auth
 const auth = getAuth(app);
-
-export { auth };
-export const db = getFirestore(app);
+const db = getFirestore(app);
 const storage = getStorage(app);
-export { storage, analytics };
+const database = getDatabase(app);
+
+export { auth, db, storage, analytics, database, app };

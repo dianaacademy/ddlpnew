@@ -1,0 +1,52 @@
+.course-builder {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .course-selection {
+    margin-bottom: 20px;
+  }
+  
+  .module-builder {
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+  
+  .module-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .module-input input,
+  .module-input button {
+    margin-right: 10px;
+  }
+  
+  .module {
+    margin-bottom: 20px;
+  }
+  
+  .class-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .class-input input,
+  .class-input textarea,
+  .class-input button {
+    margin-right: 10px;
+  }
+  
+  .class-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .class-item img {
+    max-width: 100%;
+    height: auto;
+  }

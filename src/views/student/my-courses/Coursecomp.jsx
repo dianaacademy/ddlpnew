@@ -1,33 +1,54 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
-import InputUtil from "../../../utils/InputUtil/InputUtil";
-import SelectDropdownUtil from "../../../utils/SelectDropdownUtil/SelectDropdownUtil";
-import CourseCardWithOptions from "../../../utils/CourseCardWithOptions/CourseCardWithOptions";
-
-import searchIcon from "/icons/search.png";
-import shareIcon from "/icons/share.png";
-import starIcon from "/icons/star-b.png";
-import plusIcon from "/icons/plus.png";
-import folderIcon from "/icons/folder.png";
-import { courseDataWithOptions } from "../../../fakedata/fakedata";
-
-import css from "./AllCoursesComponent.module.css";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { db } from '../../../firebase.config';
+import { collection, getDocs } from 'firebase/firestore';
+import InputUtil from '../../../utils/InputUtil/InputUtil';
+import SelectDropdownUtil from '../../../utils/SelectDropdownUtil/SelectDropdownUtil';
+import CourseCardWithOptions from '../../../utils/CourseCardWithOptions/CourseCardWithOptions';
+import searchIcon from '/icons/search.png';
+import shareIcon from '/icons/share.png';
+import starIcon from '/icons/star-b.png';
+import plusIcon from '/icons/plus.png';
+import folderIcon from '/icons/folder.png';
+import css from './AllCoursesComponent.module.css';
 
 const AllCoursesComponent = () => {
-  const [filters, setFilers] = useState({
+  const [courses, setCourses] = useState([]);
+  const [filters, setFilters] = useState({
     sortBy: {},
     filterByCategory: {},
     filterByState: {},
     filterByInstructor: {},
   });
+  const [resetBtn, setResetBtn] = useState(false);
 
-  const [resetBtn, setRestBtn] = useState(false);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const coursesCollection = collection(db, 'courses');
+      const coursesSnapshot = await getDocs(coursesCollection);
+      const coursesList = coursesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-  
+      const formattedCourses = coursesList.map((course) => ({
+        path: '/course/view/video',
+        img: course.thumbnailUrl,
+        id: course.id,
+        ttl: course.courseName,
+        author: course.instructor,
+        ratings: course.rating,
+        courseCoveredPercent: course.progress,
+      }));
+
+      setCourses(formattedCourses);
+    };
+
+    fetchCourses();
+  }, []);
 
   const optionsComps = [
-    <div className={css.opt}>
+    <div className={css.opt} key="lists">
       <div className={css.httl}>Lists</div>
       <Link to="/" className={css.ctxt}>
         Dynamics
@@ -36,7 +57,7 @@ const AllCoursesComponent = () => {
         NCloud
       </Link>
     </div>,
-    <div className={css.opt}>
+    <div className={css.opt} key="actions">
       <Link to="/" className={css.txtBox}>
         <span className={css.iconBox}>
           <img src={shareIcon} alt="icon" className={css.icon} />
@@ -68,26 +89,18 @@ const AllCoursesComponent = () => {
     <div className={css.outerDiv}>
       <div className={css.topBar}>
         <div className={css.filters}>
-          
-          
-          
-          
-          
+          {/* Add filter components here */}
         </div>
-
-        
       </div>
       <div className={css.bdy}>
-        {courseDataWithOptions.map((item) => {
-          return (
-            <CourseCardWithOptions
-              key={item.id }
-              data={item}
-              isOptions={true}
-              options={optionsComps}
-            />
-          );
-        })}
+        {courses.map((course) => (
+          <CourseCardWithOptions
+            key={course.id}
+            data={course}
+            isOptions={true}
+            options={optionsComps}
+          />
+        ))}
       </div>
     </div>
   );

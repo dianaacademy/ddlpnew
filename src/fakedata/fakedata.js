@@ -157,7 +157,7 @@ const courseData = [
   },
   {
     id: "t2",
-    ttl: "Javascript Refresherrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+    ttl: "Javascript Refresher",
     lects: "10",
     dur: "41min",
     list: [
