@@ -53,7 +53,7 @@ const AllCoursesComponent = () => {
       <Link to="/" className={css.ctxt}>
         Dynamics
       </Link>
-      <Link to="/" className={css.ctxt}>
+      <Link to="/" className={css.ctxt} >
         NCloud
       </Link>
     </div>,
