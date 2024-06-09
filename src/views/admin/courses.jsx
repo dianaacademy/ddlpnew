@@ -1,8 +1,6 @@
-import React from "react";
-import { EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { EyeOpenIcon, Pencil1Icon,  } from "@radix-ui/react-icons";
 import { BsBuilding } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
-import DeleteAlert from "./DeleteAlert";
 import { Link } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { useState, useEffect } from "react";
@@ -10,7 +8,6 @@ import { collection, getDocs } from "firebase/firestore";
 import {
     Card, 
     CardTitle,
-    CardDescription,
     CardContent,
  } from "@/components/ui/card";
 

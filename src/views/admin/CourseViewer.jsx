@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button"; // Adjust the import path as necessary
 
 const CourseViewer = () => {
@@ -51,7 +52,20 @@ const CourseViewer = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="course-viewer p-5">
+                    <Skeleton className="h-8 w-1/2" />
+                    <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-64 w-full mb-4" />
+                <Skeleton className="h-4 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2 mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-2/3 mb-2" />
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-4 w-1/4 mb-2" />
+                <Skeleton className="h-4 w-3/4 mb-2" />
+            </div>
+        );
     }
 
     if (!course) {
@@ -168,7 +182,7 @@ const CourseViewer = () => {
                     <p><strong>Price:</strong> ${course.coursePrice}</p>
                     <p><strong>Tutor Name:</strong> {course.tutorName}</p>
                     <p><strong>Material Included:</strong> {course.materialInclue}</p>
-                    <p><strong>What You'll Learn:</strong> {course.whatuLearn}</p>
+                    <p><strong>What Youll Learn:</strong> {course.whatuLearn}</p>
                     <p><strong>Maximum Students:</strong> {course.maxStudents}</p>
                     <p><strong>Public:</strong> {course.isPublic ? "Yes" : "No"}</p>
                     <p><strong>Enable Q&A:</strong> {course.enableQA ? "Yes" : "No"}</p>
@@ -179,3 +193,4 @@ const CourseViewer = () => {
 };
 
 export default CourseViewer;
+

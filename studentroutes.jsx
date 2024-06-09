@@ -1,7 +1,8 @@
 import MainDashboard from "./src/views/student";
 import Course from "./src/components/course";
-import HomeCard from "./src/views/student/Purchasecourse";
-import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
+import Mylearning from "./src/views/student/Mylearning";
+import Learning from "@/views/student/component/learning";
+// import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
 
 
 
@@ -32,7 +33,12 @@ const routes = [
     layout: "/student",
     path: "mylearning",
     icon: <MdFingerprint />,
-    component: <HomeCard />,
+    component: <Mylearning />,
+  },
+  {
+    layout: "/student",
+    path: "mylearning/learn/:slug",
+    component: <Learning />,
   },
   
  

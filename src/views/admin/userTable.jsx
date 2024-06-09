@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { getDatabase, ref,  get } from 'firebase/database';
 import { auth } from '../../firebase.config';
 import { Card,
-  CardFooter,
   CardTitle,
   CardContent,
 
@@ -52,6 +51,7 @@ Existing Users
         <thead>
           <tr className=" text-black ">
             <th className="py-3 px-4 text-left ">Serial No.</th>
+          <th className="py-3 px-4 text-left ">user_id</th>
             <th className="py-3 px-4 text-left">Name</th>
             <th className="py-3 px-4 text-left">Role</th>
             <th className="py-3 px-4 text-left">Email</th>
@@ -62,6 +62,9 @@ Existing Users
             <tr key={user.uid} className="hover:bg-black-100">
               <td className="py-3 px-4 border-b border-gray-300 ">
                 {user.serialNo}
+              </td>
+              <td className="py-3 px-4 border-b border-gray-300 ">
+                {user.uid}
               </td>
               <td className="py-3 px-4 border-b border-gray-300">
                 {user.name}
