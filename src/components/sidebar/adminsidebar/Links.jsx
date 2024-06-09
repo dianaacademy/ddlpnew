@@ -38,7 +38,8 @@ export function SidebarLinks(props) {
                           : "font-medium text-lg text-black"
                       }`}
                     >
-                      {route.icon ? route.icon : <DashIcon />}
+                      {route.icon ? route.icon : <DashIcon />} 
+                      {/* {route.name} */}
                     </span>
                   </Link>
                 </TooltipTrigger>

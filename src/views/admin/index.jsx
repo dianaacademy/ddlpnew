@@ -8,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {useState, useEffect } from "react";
-import { auth } from "@/firebase.config";
 import { SkeletonCard } from "./components/skeltoncard";
 import { getDatabase, ref,  get } from 'firebase/database';
 

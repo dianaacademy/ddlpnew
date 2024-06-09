@@ -4,17 +4,20 @@ import UserTable from "./src/views/admin/userTable";
 import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
 import QuizList from "@/views/admin/components/Allquuizes";
+import CourseTable from "@/views/admin/courses";
+import Coursebuild from "@/views/admin/Coursebuild";
+import CourseViewer from "@/views/admin/CourseViewer";
+import Instructor from "@/views/admin/instructor";
+import { Biohazard } from "lucide-react";
+// import {  } from "lucide-react";
 import {
   Home,
+  User,
   Package2,
   Settings,
   BookType,
   SquarePen,
 } from "lucide-react"
-
-
-// import Alerts from "views/admin/alerts";
-
 const routes = [
   {
     name: "Dashboard",
@@ -24,17 +27,10 @@ const routes = [
     component: <MainDashboard />,
   },
   {
-    name: "courses",
-    layout: "/admin",
-    path: "course",
-    icon: <BookType />,
-    component: <Course />,
-  },
-  {
     name: "users",
     layout: "/admin",
     path: "users",
-    icon: <Settings />,
+    icon: <User />,
     component: <UserTable />,
   },
   {
@@ -51,23 +47,35 @@ const routes = [
     icon: <Package2 />,
     component: <CourseAdd />,
   },
+
   {
-    name: "quizes",
+    name: "courses",
     layout: "/admin",
-    path: "allquizes",
-    icon: <Package2 />,
-    component: <QuizList />,
+    path: "courses",
+    icon: <SquarePen />,
+    component: <CourseTable />,
   },
   {
-    name: "alluser",
+    name: "instructors",
     layout: "/admin",
-    path: "alluser",
-    icon: <Package2 />,
-    component: <UserTable />,
+    path: "instructor",
+    icon: <Biohazard />,
+    component: <Instructor />,
   },
-
-
-
+  {
+    name: "courses",
+    layout: "/admin",
+    path: "courses/:slug",
+    icon: <BookType />,
+    component: <CourseViewer />,
+  },
+  {
+    name: "courses",
+    layout: "/admin",
+    path: "courses/build/:slug",
+    icon: <BookType />,
+    component: <Coursebuild />,
+  },
 
 ];
 export default routes;

@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { getDatabase, ref,  get } from 'firebase/database';
 import { auth } from '../../firebase.config';
-// import AddTagsInput from '../Components/adminDashboard/components/addtag';
+import { Card,
+  CardFooter,
+  CardTitle,
+  CardContent,
+
+
+
+ } from '@/components/ui/card';
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -30,22 +37,20 @@ const UserTable = () => {
 
   return (
 <>
-    <div className="flex relative dark:bg-main-dark-bg">
-        {/* Container for settings button */}
-        <div className="fixed top-4 right-4 z-50">
-          {/* Settings button content */}
-        </div>
 
-        <div className="m-10 flex-1 dark:bg-main-dark-bg bg-main-bg min-h-screen pl-4">
-          {/* Here is main content */}
-    <div className="container mx-auto py-8  ">
-      <h2 className="text-2xl font-bold mb-4 text-white text-center">Existing Users</h2>
-      <div className="flex justify-center items-start min-h-screen">
-  <div className="backdrop-blur-sm bg-white/30 rounded-lg p-8">
-    <div className="overflow-x-auto">
+<Card>
+
+
+  <CardTitle className="px-2 py-2">
+Existing Users
+
+  </CardTitle>
+
+  <CardContent>
+  <div className="overflow-x-auto">
       <table className="w-full  rounded-lg shadow-md">
         <thead>
-          <tr className="bg-indigo-400 text-black ">
+          <tr className=" text-black ">
             <th className="py-3 px-4 text-left ">Serial No.</th>
             <th className="py-3 px-4 text-left">Name</th>
             <th className="py-3 px-4 text-left">Role</th>
@@ -55,16 +60,16 @@ const UserTable = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.uid} className="hover:bg-black-100">
-              <td className="py-3 px-4 border-b border-gray-300 text-white">
+              <td className="py-3 px-4 border-b border-gray-300 ">
                 {user.serialNo}
               </td>
-              <td className="py-3 px-4 border-b border-gray-300 text-white">
+              <td className="py-3 px-4 border-b border-gray-300">
                 {user.name}
               </td>
-              <td className="py-3 px-4 border-b border-gray-300 text-white">
+              <td className="py-3 px-4 border-b border-gray-300 ">
                 {user.role}
               </td>
-              <td className="py-3 px-4 border-b border-gray-300 text-white">
+              <td className="py-3 px-4 border-b border-gray-300 ">
                 {user.email}
               </td>
             </tr>
@@ -73,11 +78,11 @@ const UserTable = () => {
       </table>
       {/* <AddTagsInput/> */}
     </div>
-  </div>
-</div>
-    </div>
-    </div>
-    </div>
+
+
+  </CardContent>
+
+</Card>
     </>
   );
 };

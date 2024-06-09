@@ -17,11 +17,6 @@ import {
 } from "lucide-react"
 import { Button } from "./ui/button"
 import { useAuth, doSignOut } from "@/auth/hooks/useauth"
-
-
-
-
-
 function Navbar() {
   const navigate = useNavigate()
   const { currentUser } = useAuth();
@@ -40,34 +35,16 @@ function Navbar() {
             <Package2 className="h-6 w-6" />
           </Link>
           <Link
-            href="#"
+            to="/"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Dashboard
+            Home
           </Link>
           <Link
-            href="#"
+            to="courses"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Orders
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Products
-          </Link>
-          <Link
-            href="#"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Customers
-          </Link>
-          <Link
-            href="#"
-            className="text-foreground transition-colors hover:text-foreground"
-          >
-            Settings
+            Courses
           </Link>
         </nav>
         <Sheet>
