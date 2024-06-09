@@ -1,6 +1,7 @@
 import MainDashboard from "./src/views/student";
 import Course from "./src/components/course";
 import HomeCard from "./src/views/student/Purchasecourse";
+import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
 
 
 
@@ -33,6 +34,7 @@ const routes = [
     icon: <MdFingerprint />,
     component: <HomeCard />,
   },
+  
  
 ];
 export default routes;

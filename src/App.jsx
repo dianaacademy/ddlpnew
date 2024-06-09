@@ -10,10 +10,13 @@ import Instructor from './layouts/instructor';
 import Student from './layouts/students';
 import Blog from './components/blog';
 import Creator from './layouts/creators';
-import Lab from "./layouts/labs"
+import Lab from "./layouts/labs";
+import CourseViewPage from './views/student/course-viewer/Courseviewer';
+
 
 import { AuthProvider } from './auth/hooks/useauth';
 import PrivateRoute from './utils/PrivateRoutes';
+
 function App() {
     return (
     <>
@@ -26,6 +29,7 @@ function App() {
       <Route path="login" element={<LoginPage />} />
       <Route path="blog" element={<Blog />} />
       <Route path="lab" element={<Lab />} />
+      <Route path="viewer" element={<CourseViewPage />} />
 
 
       <Route path="admin/*" element={
@@ -51,6 +55,7 @@ function App() {
                 <Creator />
               </PrivateRoute>
             } />
+
 
 
 
