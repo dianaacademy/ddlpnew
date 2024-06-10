@@ -1,3 +1,4 @@
+
 import React, { useContext, useState, useEffect } from "react";
 import { auth} from "@/firebase.config";// import { GoogleAuthProvider } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -14,6 +15,7 @@ export const doSignOut = () => {
   };
   
 
+  // eslint-disable-next-line
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [role, setRole] = useState("");
@@ -43,6 +45,7 @@ export function AuthProvider({ children }) {
       const snapshot = await get(userRef);
       const userData = snapshot.val();   
       setRole(userData.role);
+      setIsGoogleUser(true);
 
 
       // check if the auth provider is google or not

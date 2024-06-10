@@ -10,6 +10,7 @@ import { Biohazard } from "lucide-react";
 import AssignCourse from "@/views/admin/AssignCourse";
 import { MdAdd } from "react-icons/md";
 import Allstudentlearningcourse from "@/views/admin/Allstudentlearningcourse";
+import ModuleBuild from "@/views/admin/Modulebuild";
 import {
   Home,
   User,
@@ -88,6 +89,13 @@ const routes = [
     path: "courses/build/:slug",
     icon: <BookType />,
     component: <Coursebuild />,
+  },
+  {
+    name: "courses",
+    layout: "/admin",
+    path: "courses/build/:slug/module/:moduleId",
+    icon: <BookType />,
+    component: <ModuleBuild />,
   },
 
 ];

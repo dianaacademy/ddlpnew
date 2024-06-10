@@ -5,11 +5,18 @@ import { Link } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
+import PropTypes from 'prop-types';
 import {
     Card, 
     CardTitle,
     CardContent,
  } from "@/components/ui/card";
+
+ Actions.propTypes= {
+    id: PropTypes.string,
+    slug:  PropTypes.string
+ }
+
 
 export default function CourseTable() {
     const [courses, setCourses] = useState([]);
@@ -35,11 +42,13 @@ export default function CourseTable() {
 			<div className="rounded-md bg-graident-dark border-[0.5px] overflow-y-scroll ">
 				<div className="w-[800px] md:w-full">
 					<div className=" mt-8 px-4 py-4  grid grid-cols-3 grid-flow-row gap-4">
+
+                        
                             {courses?.map((courses, index) => {
                                 
                                 return (
-                                    <Card className="pb-4">
-                                    <div className="pt-4" key={index}>
+                                    <Card   key={index} className="pb-4">
+                                    <div className="pt-4" >
                                         <CardTitle className ="px-2 py-2">
                                             {courses.courseName}
                                         </CardTitle>
@@ -65,7 +74,7 @@ export default function CourseTable() {
 	);
 }
 
-const Actions = ({ id, slug }) => {
+const Actions = ({ id , slug }) => {
     return (
         <div className="flex items-center gap-2 md:flex-wrap">
             <Link to={`${slug }`}>
