@@ -15,7 +15,6 @@ import {
   Home,
   User,
   Package2,
-  BookType,
   SquarePen,
 } from "lucide-react"
 const routes = [
@@ -77,24 +76,24 @@ const routes = [
     component: <Allstudentlearningcourse />,
   },
   {
-    name: "courses",
+    // name: "courses",
     layout: "/admin",
     path: "courses/:slug",
-    icon: <BookType />,
+    // icon: <BookType />,
     component: <CourseViewer />,
   },
   {
-    name: "courses",
+    // name: "courses",
     layout: "/admin",
     path: "courses/build/:slug",
-    icon: <BookType />,
+    // icon: <BookType />,
     component: <Coursebuild />,
   },
   {
-    name: "courses",
+    // name: "courses",
     layout: "/admin",
     path: "courses/build/:slug/module/:moduleId",
-    icon: <BookType />,
+    // icon: <BookType />,
     component: <ModuleBuild />,
   },
 

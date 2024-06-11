@@ -12,10 +12,7 @@ import {
     CardContent,
  } from "@/components/ui/card";
 
- Actions.propTypes= {
-    id: PropTypes.string,
-    slug:  PropTypes.string
- }
+
 
 
 export default function CourseTable() {
@@ -100,3 +97,8 @@ const Actions = ({ id , slug }) => {
         </div>
     );
 };
+
+Actions.propTypes= {
+    id: PropTypes.string,
+    slug:  PropTypes.string
+ }

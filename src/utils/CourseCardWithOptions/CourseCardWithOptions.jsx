@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-
 import PlanModalUtil from "../../utils/PlanModalUtil/PlanModalUtil";
 
 import css from "./CourseCardWithOptions.module.css";

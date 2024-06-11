@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast"; // Import the useToast hoo
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import { Input } from "@/components/ui/input"; // Import Input component
 import { Textarea } from "@/components/ui/textarea"; // Import Textarea component
-// import ChapterQuizform from "./chapterQuizform";
+import ChapterQuizform from "./chapterQuizform";
 const ModuleBuild = () => {
   const { slug, moduleId } = useParams(); // Get the courseId and moduleId parameters from the URL
   const [module, setModule] = useState(null);
@@ -129,49 +129,34 @@ const ModuleBuild = () => {
 
 
 
-        case "quiz":
-            return (
-              <div>
-                <Textarea
-                  placeholder="Quiz Questions (one per line)"
-                  name="quizQuestions"
-                  value={chapterDetails.quizQuestions || ""}
-                  onChange={handleChapterDetailsChange}
-                  className="p-2 my-2 border rounded mr-2"
-                />
-                <Textarea
-                  placeholder="Quiz Options (separate options with commas)"
-                  name="quizOptions"
-                  value={chapterDetails.quizOptions || ""}
-                  onChange={handleChapterDetailsChange}
-                  className="p-2 my-2 border rounded mr-2"
-                />
-              </div>
-            );
+        // case "quiz":
+        //     return (
+        //       <div>
+        //         <Textarea
+        //           placeholder="Quiz Questions (one per line)"
+        //           name="quizQuestions"
+        //           value={chapterDetails.quizQuestions || ""}
+        //           onChange={handleChapterDetailsChange}
+        //           className="p-2 my-2 border rounded mr-2"
+        //         />
+        //         <Textarea
+        //           placeholder="Quiz Options (separate options with commas)"
+        //           name="quizOptions"
+        //           value={chapterDetails.quizOptions || ""}
+        //           onChange={handleChapterDetailsChange}
+        //           className="p-2 my-2 border rounded mr-2"
+        //         />
+        //       </div>
+        //     );
 
 
 
 
 
-    //   case "quiz":
-    //     return (
-    //       <div>
-    //         <Textarea
-    //           placeholder="Quiz Questions (one per line)"
-    //           name="quizQuestions"
-    //           value={chapterDetails.quizQuestions || ""}
-    //           onChange={handleChapterDetailsChange}
-    //           className="p-2 my-2 border rounded mr-2"
-    //         />
-    //         <Textarea
-    //           placeholder="Quiz Options (separate options with commas)"
-    //           name="quizOptions"
-    //           value={chapterDetails.quizOptions || ""}
-    //           onChange={handleChapterDetailsChange}
-    //           className="p-2 my-2 border rounded mr-2"
-    //         />
-    //       </div>
-    //     );
+      case "quiz":
+        return (
+     <ChapterQuizform/>
+        );
 
 
 

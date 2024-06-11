@@ -1,124 +1,181 @@
+import { useState, useEffect } from "react";
+import { getDatabase, ref, get } from 'firebase/database';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
-
-import { Button } from "@/components/ui/button"
-import {useState, useEffect } from "react";
+} from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
 import { SkeletonCard } from "./components/skeltoncard";
-import { getDatabase, ref,  get } from 'firebase/database';
+import {  collection, getDocs, } from 'firebase/firestore';
+import { db } from "@/firebase.config";
 
 
 
 function MainDashboard() {
   const [totalUsers, setTotalUsers] = useState(0);
+  const [totalCourses, setTotalCourses] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-    // const userCount = useCountUsers();
+  const [instructorCount, setInstructorCount] = useState(0);
+  const [Studentcount, setstudentCount] = useState(0);
+  const [creator, SetCreator] = useState(0);
 
-  
 
-  const { toast } = useToast()
-  
+
+  const { toast } = useToast();
+
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       const database = getDatabase();
+
       const usersRef = ref(database, 'users');
-      const snapshot = await get(usersRef);
-      const usersData = snapshot.val();
-  
+      const usersSnapshot = await get(usersRef);
+      const usersData = usersSnapshot.val();
       if (usersData) {
-        const userCount = Object.keys(usersData).length;
-        setTotalUsers(userCount);
+        setTotalUsers(Object.keys(usersData).length);
+        const instructorData = Object.values(usersData).filter(user => user.role === 'instructor');
+        const Studentdata = Object.values(usersData).filter(user => user.role === 'Student');
+        const creatordata = Object.values(usersData).filter(user => user.role === 'Creator');
 
+        setInstructorCount(instructorData.length);
+        setstudentCount(Studentdata.length);
+        SetCreator(creatordata.length);
+
+        
+        
       }
-    };
-  
-    setIsLoading(false);
-    fetchUsers();
-  }, []);
 
+      const coursesRef = collection(db, 'courses');
+      const coursesSnapshot = await getDocs(coursesRef);
+      setTotalCourses(coursesSnapshot.size);
+
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
-
       {isLoading ? (
         <>
-        
-        <SkeletonCard/>
-        
+          <SkeletonCard />
         </>
-      ):(
-        <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Total students</CardTitle>
-      </CardHeader>
-      <CardContent> 
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-            {totalUsers}
-            </div>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+      ) : (
+        <>
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Total peoples</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {totalUsers}
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Total students</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {Studentcount}
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+     
 
 
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Total course creator</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {creator}
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Total Intructor</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {instructorCount}
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Total courses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {totalCourses}
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Cybersecurity students</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    134
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Diana junior</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    14
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </>
       )}
-  
-
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>cybersecurity students</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              134
-            </div>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-
-
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Diana junior</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              14
-            </div>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-
-
-
-    <Button
-      onClick={() => {
-        toast({
-          title: "Scheduled: Catch up",
-          description: "Friday, February 10, 2023 at 5:57 PM",
-        })
-      }}
-    >
-      Show Toast
-    </Button>
-
-
-    
-
     </div>
-  )
+  );
 }
 
 export default MainDashboard;
