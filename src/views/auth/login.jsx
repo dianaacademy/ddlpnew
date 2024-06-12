@@ -85,8 +85,8 @@ const LoginPage = () => {
 
     return (
         <Fragment>
-            <Header />
-                <div className="login-section  pt-[150px]  section-bg">
+           
+                <div className="login-section  pt-[100px] pb-[100px]  section-bg">
                     <div className="container">
                         <div className="account-wrapper">
                           <div className="flex   justify-center">
@@ -144,7 +144,7 @@ const LoginPage = () => {
                             </form>
                             <div className="account-bottom">
                                 <span className="d-block pt-2 ">Don’t Have any Account?  <Link to="/signup">Sign Up</Link></span>
-                                <span className="or"><span>or</span></span>
+                                <span className="or before:absolute after:absolute">or</span>
                                 <ul className=" justify-content-center">
 
 
@@ -179,7 +179,7 @@ const LoginPage = () => {
                         </div>
                     </div>
                 </div>
-            <Footer />
+          
         </Fragment>
     );
 }

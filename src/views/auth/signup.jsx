@@ -1,8 +1,7 @@
 import { Fragment } from "react";
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../../components/footer";
-import Header from "../../components/header";
+
 import PageHeader from "./pageheader";
 import { auth } from "../../firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -10,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getDatabase, ref, set } from "firebase/database";
 import { updateProfile } from "firebase/auth";
+import logo from "../../assets/images/logo/01.png"
 
 
 const title = "Register Now";
@@ -79,15 +79,21 @@ const handlesignupform = async (event) => {
 
     return (
         <Fragment>
-            <Header />
-            <PageHeader title={'Register Now'} curPage={'Sign Up'} />
+            {/* <Header />
+            <PageHeader title={'Register Now'} curPage={'Sign Up'} /> */}
             <div className="login-section padding-tb section-bg">
                 <div className="container">
                     <div className="account-wrapper">
-                        <h3 className="title">{title}</h3>
+                    <div className="flex   justify-center pb-2">
+                          <img  
+                            height={80}
+                            width={80} src={logo} alt="logo" />
+                            
+                          </div>
+                        <h3 className="title text-3xl font-bold">{title}</h3>
                         <form onSubmit={handlesignupform} className="account-form">
                             <div className="form-group">
-                                <input
+                                <input className="p-2"
                                     type="email"
                                     name="email"
                                     placeholder="Enter Email"
@@ -96,7 +102,7 @@ const handlesignupform = async (event) => {
                                 />
                             </div>
                             <div className="form-group">
-                                <input
+                                <input className="p-2"
                                     type="password"
                                     name="password"
                                     placeholder="Password"
@@ -105,7 +111,7 @@ const handlesignupform = async (event) => {
                                 />
                             </div>
                             <div className="form-group">
-                                <input
+                                <input className="p-2"
                                     type="text"
                                     name="name"
                                     placeholder="Enter Name"
@@ -114,7 +120,7 @@ const handlesignupform = async (event) => {
                                 />
                             </div>
                             <div className="form-group">
-                                <select
+                                <select className="p-2 hidden"
                                     name="role"
                                     value={role}
                                     onChange={(e) => setRole(e.target.value)}
@@ -126,12 +132,12 @@ const handlesignupform = async (event) => {
                             </div>
 
                             <div className="form-group">
-                                <button type="submit" className="lab-btn"><span>Get Started Now</span></button>
+                                <button type="submit" className="lab-btn "><span>Signup Now</span></button>
                             </div>
                         </form>
                         <div className="account-bottom">
                             <span className="d-block cate pt-10">Are you a member? <Link to="/login">Login</Link></span>
-                            <span className="or"><span>or</span></span>
+                            {/* <span className="or"><span>or</span></span>
                             <h5 className="subtitle">{socialTitle}</h5>
                             <ul className="lab-ul social-icons justify-content-center">
                                 {socialList.map((val, i) => (
@@ -139,13 +145,13 @@ const handlesignupform = async (event) => {
                                         <a href={val.link} className={val.className}><i className={val.iconName}></i></a>
                                     </li>
                                 ))}
-                            </ul>
+                            </ul> */}
                         </div>
                         <ToastContainer />
                     </div>
                 </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </Fragment>
     );
 }

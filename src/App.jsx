@@ -12,6 +12,7 @@ import Blog from './components/blog';
 import Creator from './layouts/creators';
 import Lab from "./layouts/labs";
 import CourseViewPage from './views/student/course-viewer/Courseviewer';
+import Learning from "@/views/student/component/learning";
 
 
 import { AuthProvider } from './auth/hooks/useauth';
@@ -23,13 +24,16 @@ function App() {
 		<BrowserRouter>
     <AuthProvider>
     <Routes>
-      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Home />} /> */}
+      <Route path="/" element={<LoginPage />} />
       <Route path="*" element={<ErrorPage />} />
       <Route path="signup" element={<SignupPage />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="blog" element={<Blog />} />
       <Route path="lab" element={<Lab />} />
       <Route path="viewer" element={<CourseViewPage />} />
+      <Route path="student/mylearning/learn/:slug" element={<Learning />} />
+
 
 
       <Route path="admin/*" element={
@@ -39,7 +43,7 @@ function App() {
             } />
 
             <Route path="instructor/*" element={
-              <PrivateRoute allowedRoles={['instructor']}>
+              <PrivateRoute allowedRoles={['Instructor']}>
                 <Instructor />
               </PrivateRoute>
             } />

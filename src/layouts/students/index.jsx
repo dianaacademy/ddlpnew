@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import routes from "../../../studentroutes";
 import '../admin/index.css';
 import Navbar from "@/components/StuedntNavbar";
+import { useAuth, doSignOut } from "@/auth/hooks/useauth"
 export default function Student(props) {
   const { ...rest } = props;
   const location = useLocation();
@@ -31,6 +32,10 @@ export default function Student(props) {
     }
     return activeRoute;
   };
+
+  const { currentUser } = useAuth();
+  
+
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {

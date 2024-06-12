@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+
 import PlanModalUtil from "../../utils/PlanModalUtil/PlanModalUtil";
 
 import css from "./CourseCardWithOptions.module.css";
@@ -95,16 +97,14 @@ l11.547-1.2L16.026,0.6L20.388,10.918z"
             >
               <img src={dotsIcon} className={css.menuIcon} id={`cwo-${id}`} />
               {menuBox ? (
-                <div className={css.menuBox}>
-                  {options?.map((Option, id) => {
-                    return (
-                      <div className={css.optionComp} key={`option-${id}`}>
-                        {Option}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
+  <div className={css.menuBox}>
+    {options?.map((Option, id) => (
+      <div className={css.optionComp} key={`option-${id}`}>
+        {Option}
+      </div>
+    ))}
+  </div>
+) : null}
             </button>
           </div>
         ) : null}
