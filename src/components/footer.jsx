@@ -9,26 +9,26 @@ const supportTitle = "Our Support";
 
 
 const siteList = [
-    {
-        text: 'Documentation',
-        link: '#',
-    },
+    // {
+    //     text: 'Documentation',
+    //     link: '#',
+    // },
     {
         text: 'Feedback',
         link: '#',
     },
-    {
-        text: 'Plugins',
-        link: '#',
-    },
-    {
-        text: 'Support Forums',
-        link: '#',
-    },
-    {
-        text: 'Themes',
-        link: '#',
-    },
+    // {
+    //     text: 'Plugins',
+    //     link: '#',
+    // },
+    // {
+    //     text: 'Support Forums',
+    //     link: '#',
+    // },
+    // {
+    //     text: 'Themes',
+    //     link: '#',
+    // },
 ]
 
 const useList = [
@@ -71,10 +71,10 @@ const socialList = [
         text: 'YouTube',
         link: '#',
     },
-    {
-        text: 'Github',
-        link: '#',
-    },
+    // {
+    //     text: 'Github',
+    //     link: '#',
+    // },
 ]
 
 const supportList = [
@@ -82,18 +82,18 @@ const supportList = [
         text: 'Help Center',
         link: '#',
     },
-    {
-        text: 'Paid with Mollie',
-        link: '#',
-    },
-    {
-        text: 'Status',
-        link: '#',
-    },
-    {
-        text: 'Changelog',
-        link: '#',
-    },
+    // {
+    //     text: 'Paid with Mollie',
+    //     link: '#',
+    // },
+    // {
+    //     text: 'Status',
+    //     link: '#',
+    // },
+    // {
+    //     text: 'Changelog',
+    //     link: '#',
+    // },
     {
         text: 'Contact Support',
         link: '#',
@@ -210,7 +210,7 @@ const Footer = () => {
                 <div className="footer-bottom style-2">
                     <div className="container">
                         <div className="section-wrapper">
-                            <p>&copy; 2022 <Link to="/">Edukon</Link> Designed by <a href="https://themeforest.net/user/CodexCoder" target="_blank">CodexCoder</a> </p>
+                            <p>&copy; 2024 <Link to="/">Diana Advanced Tech Academy</Link>  </p>
                         </div>
                     </div>
                 </div>

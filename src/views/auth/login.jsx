@@ -1,7 +1,8 @@
 import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
-import Header from "../../components/header";import { auth } from "../../firebase.config";
+import Header from "../../components/header";
+import { auth } from "../../firebase.config";
 import { signInWithEmailAndPassword , GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -85,8 +86,8 @@ const LoginPage = () => {
 
     return (
         <Fragment>
-            <Header />
-                <div className="login-section  pt-[150px]  section-bg">
+           
+                <div className="login-section  pt-[100px] pb-[100px]  section-bg">
                     <div className="container">
                         <div className="account-wrapper">
                           <div className="flex   justify-center">
@@ -144,7 +145,7 @@ const LoginPage = () => {
                             </form>
                             <div className="account-bottom">
                                 <span className="d-block pt-2 ">Don’t Have any Account?  <Link to="/signup">Sign Up</Link></span>
-                                <span className="or"><span>or</span></span>
+                                <span className="or before:absolute after:absolute">or</span>
                                 <ul className=" justify-content-center">
 
 
@@ -179,7 +180,7 @@ const LoginPage = () => {
                         </div>
                     </div>
                 </div>
-            <Footer />
+          
         </Fragment>
     );
 }

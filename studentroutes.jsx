@@ -2,6 +2,7 @@ import MainDashboard from "./src/views/student";
 import Course from "./src/components/course";
 import Mylearning from "./src/views/student/Mylearning";
 import Learning from "@/views/student/component/learning";
+import Footer from "@/components/footer";
 // import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
 
 
@@ -18,7 +19,8 @@ const routes = [
       layout: "/student",
       path: "default",
       icon: <MdHome />,
-      component: <MainDashboard />,
+      // component: <MainDashboard />,
+      component: <Mylearning />,
 
   },
   {
@@ -26,20 +28,26 @@ const routes = [
     layout: "/student",
     path: "discover",
     icon: <MdFingerprint />,
-    component: <Course />,
+    // component: <Course />,
+    component: <MainDashboard />,
   },
-  {
-    name: "My learning",
-    layout: "/student",
-    path: "mylearning",
-    icon: <MdFingerprint />,
-    component: <Mylearning />,
-  },
-  {
-    layout: "/student",
-    path: "mylearning/learn/:slug",
-    component: <Learning />,
-  },
+  // {
+  //   name: "My learning",
+  //   layout: "/student",
+  //   path: "mylearning",
+  //   icon: <MdFingerprint />,
+  //   component: <Mylearning />,
+  // },
+
+  // {
+  //   name: " ",
+  //   layout: "/student",
+  //   path: "mylearning/learn/:slug",
+  //   component: <Learning />,
+  //   className: "hidden sst",
+   
+  // },
+  
   
  
 ];
