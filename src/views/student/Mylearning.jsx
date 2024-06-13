@@ -1,23 +1,14 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "@/firebase.config";
-import {
-  collection,
-  query,
-  where,
-  getDoc,
-  doc,
-  getDocs,
-} from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardTitle, CardFooter } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { useAuth,  } from "@/auth/hooks/useauth"
-
+import { useAuth } from "@/auth/hooks/useauth";
 
 const MyLearning = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [courseid, setCourseid] = useState([]);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -36,19 +27,21 @@ const MyLearning = () => {
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-              const studentData = querySnapshot.docs[0].data();
-              const enrolledcourseid = studentData.enrolledCourses || [];
-              setCourseid(enrolledcourseid);
+              const enrolledcourseid = [];
 
-              // Fetch the course details
+              querySnapshot.forEach((doc) => {
+                const studentData = doc.data();
+                if (studentData.enrolledCourses) {
+                  enrolledcourseid.push(...studentData.enrolledCourses);
+                }
+              });
+
               const coursePromises = enrolledcourseid.map((courseId) =>
                 getDoc(doc(db, "courses", courseId))
               );
 
               const courseSnapshots = await Promise.all(coursePromises);
-              const courseList = courseSnapshots.map((snapshot) =>
-                snapshot.data()
-              );
+              const courseList = courseSnapshots.map((snapshot) => snapshot.data());
 
               setCourses(courseList);
             }
@@ -70,8 +63,12 @@ const MyLearning = () => {
 
   return (
     <div>
-       <div className= "font-Poppins font-bold text-white text-4xl	font-Poppins mt-10	fontpop" >Hey !{ currentUser.displayName } </div>
-       <div className= "font-Poppins  text-white text-xl	font-Poppins mt-3	fontpop mb-5" >Resume your Pending Courses </div>
+      <div className="font-Poppins font-bold text-white text-4xl font-Poppins mt-10 fontpop">
+        Hey ! {currentUser.displayName}
+      </div>
+      <div className="font-Poppins text-white text-xl font-Poppins mt-3 fontpop mb-5">
+        Resume your Pending Courses
+      </div>
       <div className="flex flex-wrap gap-4">
         {courses.map((course, index) => (
           <Card className="w-1/4 bg-white rounded-lg shadow-md overflow-hidden" key={index}>
@@ -85,14 +82,11 @@ const MyLearning = () => {
                 NEW
               </span>
               <CardTitle className="text-xl font-semibold mt-2">{course.courseName}</CardTitle>
-              
-              
-              <Link to={`/student/mylearning/learn/${courseid}`}>
-  <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
-    resume
-  </CardFooter>
-</Link>
-
+              <Link to={`/student/mylearning/learn/${course.courseId}`}>
+                <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
+                  resume
+                </CardFooter>
+              </Link>
             </div>
           </Card>
         ))}
