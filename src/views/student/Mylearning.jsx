@@ -27,22 +27,21 @@ const MyLearning = () => {
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-              const enrolledcourseid = [];
+              const enrolledCourseIds = [];
 
               querySnapshot.forEach((doc) => {
                 const studentData = doc.data();
                 if (studentData.enrolledCourses) {
-                  enrolledcourseid.push(...studentData.enrolledCourses);
+                  enrolledCourseIds.push(...studentData.enrolledCourses);
                 }
               });
 
-              const coursePromises = enrolledcourseid.map((courseId) =>
-                getDoc(doc(db, "courses", courseId))
-              );
+              const coursePromises = enrolledCourseIds.map(async (courseId) => {
+                const courseDoc = await getDoc(doc(db, "courses", courseId));
+                return { ...courseDoc.data(), id: courseId };
+              });
 
-              const courseSnapshots = await Promise.all(coursePromises);
-              const courseList = courseSnapshots.map((snapshot) => snapshot.data());
-
+              const courseList = await Promise.all(coursePromises);
               setCourses(courseList);
             }
           }
@@ -82,7 +81,7 @@ const MyLearning = () => {
                 NEW
               </span>
               <CardTitle className="text-xl font-semibold mt-2">{course.courseName}</CardTitle>
-              <Link to={`/student/mylearning/learn/${course.courseId}`}>
+              <Link to={`/student/mylearning/learn/${course.id}`}>
                 <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
                   resume
                 </CardFooter>
