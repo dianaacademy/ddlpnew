@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import "../../../components/ui/loader.css";
 
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
 import DetailDPComponent from "../../../components/CourseVideoComponents/DetailDPComponent/DetailDPComponent";
@@ -91,7 +92,9 @@ const Learning = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center h-screen">
+    <div className="loader"></div>
+  </div>
   }
 
   if (!courseInfo) {

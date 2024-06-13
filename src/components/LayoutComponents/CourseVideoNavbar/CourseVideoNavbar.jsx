@@ -6,11 +6,12 @@ import ShareCourseCard from "../../ShareCourseCard/ShareCourseCard";
 import CourseRatingsCard from "../../CourseRatingsCard/CourseRatingsCard";
 
 
+
 import trophyIcon from "/icons/trophy.png";
 import starIcon from "/icons/star.png";
 import shareIcon from "/icons/share.png";
 import downArrowIcon from "/icons/down-arrow.svg";
-
+import logo from "../../../assets/images/logo/01.png"
 import css from "./CourseVideoNavbar.module.css";
 
 const CourseVideoNavbar = (props) => {
@@ -26,19 +27,19 @@ const CourseVideoNavbar = (props) => {
   return (
     <div className={css.outerDiv}>
       <div className={css.left}>
-        <Link to="/" className={css.logoBox}>
-          {/* <img src={logoIcon} alt="logo" className={css.logo} /> */}
+        <Link to="/" >
+          <img  height={60}  width={60}  src={logo} alt="logo"  />
         </Link>
         <hr className={css.vhr} />
         <div className={css.ttl}>{title}</div>
       </div>
       <div className={css.right}>
-        <div className={css.item}>
+        {/* <div className={css.item}>
           <img src={starIcon} alt="star" className={css.icon} />
           <span className={css.txt} onClick={() => setLeaveRatingModal(true)}>
             Leave a rating
           </span>
-        </div>
+        </div> */}
         <div className={css.item}>
           <img src={trophyIcon} alt="progress" className={css.icon} />
           <span className={css.txt}>Your Progress</span>
@@ -48,7 +49,7 @@ const CourseVideoNavbar = (props) => {
             className={[css.icon, css.arrowIcon].join(" ")}
           />
         </div>
-        <Button1
+        {/* <Button1
           txt="Share"
           color="var(--white)"
           img={shareIcon}
@@ -62,9 +63,9 @@ const CourseVideoNavbar = (props) => {
             height: "10px",
             filter: "invert(1)",
           }}
-        />
+        /> */}
       </div>
-      {showShareCourseDialog ? (
+      {/* {showShareCourseDialog ? (
         <ShareCourseCard
           ttl="Share this course"
           txt=""
@@ -78,7 +79,7 @@ const CourseVideoNavbar = (props) => {
           ttl="How would you rate this course?"
           closeModal={() => setLeaveRatingModal(false)}
         />
-      ) : null}
+      ) : null} */}
     </div>
   );
 };

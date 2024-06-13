@@ -11,15 +11,10 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { useAuth, doSignOut } from "@/auth/hooks/useauth"
-
-
 const MyLearning = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [courseid, setCourseid] = useState([]);
-  const { currentUser } = useAuth();
-
+  const [courseid,setcourseid] = useState(true);
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
@@ -34,22 +29,18 @@ const MyLearning = () => {
               where("studentId", "==", studentId)
             );
             const querySnapshot = await getDocs(q);
-
             if (!querySnapshot.empty) {
               const studentData = querySnapshot.docs[0].data();
-              const enrolledcourseid = studentData.enrolledCourses || [];
-              setCourseid(enrolledcourseid);
-
+              const enrolledCourseIds = studentData.enrolledCourses || [];
+              setcourseid(enrolledCourseIds);
               // Fetch the course details
-              const coursePromises = enrolledcourseid.map((courseId) =>
+              const coursePromises = enrolledCourseIds.map((courseId) =>
                 getDoc(doc(db, "courses", courseId))
               );
-
               const courseSnapshots = await Promise.all(coursePromises);
               const courseList = courseSnapshots.map((snapshot) =>
                 snapshot.data()
               );
-
               setCourses(courseList);
             }
           }
@@ -60,45 +51,35 @@ const MyLearning = () => {
         setLoading(false);
       }
     };
-
     fetchCourses();
   }, []);
-
   if (loading) {
     return <div>Loading...</div>;
   }
-
   return (
     <div>
-       <div className= "font-Poppins font-bold text-white text-4xl	font-Poppins mt-10	fontpop" >Hey !{ currentUser.displayName } </div>
-       <div className= "font-Poppins  text-white text-xl	font-Poppins mt-3	fontpop mb-5" >Resume your Pending Courses </div>
-      <div className="flex flex-wrap gap-4">
-        {courses.map((course, index) => (
-          <Card className="w-1/4 bg-white rounded-lg shadow-md overflow-hidden" key={index}>
-            <img
-              src={course.thumbnailUrl || "https://ik.imagekit.io/growthx100/default-image.jpg?updatedAt=1709902412480"}
-              alt={course.courseName}
-              className="w-full h-64 object-none bg-center"
-            />
-            <div className="p-4 bg-white">
-              <span className="bg-teal-500 text-white text-xs font-semibold pl-3 pr-3 pt-1 pb-1 rounded-full">
-                NEW
-              </span>
-              <CardTitle className="text-xl font-semibold mt-2">{course.courseName}</CardTitle>
-              
-              
-              <Link to={`/student/mylearning/learn/${courseid}`}>
-  <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
-    resume
-  </CardFooter>
-</Link>
-
+      <h1>My Learning hello</h1>
+      {courses?.map((course, index) => (
+          <Card className="pb-4" key={index}>
+            <div className="pt-4">
+              <CardTitle className="px-2 py-2">{course.courseName}</CardTitle>
+              <CardContent className="pt-2">
+                <img
+                  className="w-72 h-72 object-cover rounded-md"
+                  height={300}
+                  width={300}
+                  src={course.thumbnailUrl}
+                  alt={course.courseName} />
+              </CardContent>
             </div>
+            <Link to={`learn/${courseid }`} >
+            <CardFooter>
+              Learn
+            </CardFooter>
+            </Link>
           </Card>
         ))}
-      </div>
     </div>
   );
 };
-
 export default MyLearning;

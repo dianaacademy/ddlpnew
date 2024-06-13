@@ -9,7 +9,7 @@ const MatchQuiz = () => {
   ]);
   const [draggedOption, setDraggedOption] = useState(null);
 
-  const handleDragStart = (e, option) => {
+  const handleDragStart  = (e, option) => {
     setDraggedOption(option);
   };
 
