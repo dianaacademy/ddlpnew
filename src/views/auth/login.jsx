@@ -66,7 +66,7 @@ const LoginPage = () => {
                 if (userData.role === "Admin") {
                     navigate('/admin');
                 } else if (userData.role === "instructor") {
-                    navigate('/admin');
+                    navigate('/instructor');
                 } else if (userData.role === "creator") {
                     navigate('/creator');
                 } else {
@@ -171,7 +171,7 @@ const LoginPage = () => {
                   <path fill="#eb4132"
                     d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z"
                     data-original="#eb4132" />
-                </svg> </button>
+                </svg> Login with Google</button>
                                     </li>
                                 </ul>
                             </div>

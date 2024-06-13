@@ -7,7 +7,7 @@ import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBMgD92jWYxvkeSYkElx7DkCqh3a3OlK30",
-  authDomain: "labs.dianalearningportal.com",
+  authDomain: "ddlp-456ce.firebaseapp.com",
   projectId: "ddlp-456ce",
   storageBucket: "ddlp-456ce.appspot.com",
   messagingSenderId: "133537517881",
