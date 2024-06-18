@@ -1,24 +1,41 @@
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import "../../../components/ui/loader.css";
-
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
 import DetailDPComponent from "../../../components/CourseVideoComponents/DetailDPComponent/DetailDPComponent";
 import CourseContentComponent from "../../../components/CourseVideoComponents/CourseContentComponent/CourseContentComponent";
 import CourseViewTabComponent from "../../../components/CourseVideoComponents/CourseViewTabComponents/CourseViewTabComponent/CourseViewTabComponent";
-
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
-
 import css from "./CourseViewPage.module.css";
+
+const TextContent = ({ content }) => {
+  return (
+    <div className="text-content">
+      <h3>Text Content</h3>
+      <p>{content}</p>
+    </div>
+  );
+};
+
+const QuizContent = ({ content }) => {
+  return (
+    <div className="quiz-content">
+      <h3>Quiz Content</h3>
+      <p>{content}</p>
+    </div>
+  );
+};
 
 const Learning = () => {
   const { slug } = useParams();
-  console.log(slug);
   const [courseData, setCourseData] = useState([]);
   const [courseInfo, setCourseInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeChapter, setActiveChapter] = useState(null);
+  const [chapterContent, setChapterContent] = useState(null);
 
   const data = {
     title: "React - The Complete Guide (incl Hooks, React Router, Redux)",
@@ -87,14 +104,41 @@ const Learning = () => {
         type: chapter.type || '',
         desc: chapter.description || '',
         resources: chapter.resources || [],
+        videoUrl: chapter.videoUrl || '',
+        textContent: chapter.textContent || '',
+        quizContent: chapter.quizContent || '',
       }))
     };
   };
 
+  const handleChapterClick = (chapterId) => {
+    const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
+    
+    if (chapterData) {
+      setActiveChapter(chapterData);
+      switch(chapterData.type) {
+        case 'video':
+          setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.videoUrl }} />);
+          break;
+        case 'text':
+          setChapterContent(<TextContent content={chapterData.textContent} />);
+          break;
+        case 'quiz':
+          setChapterContent(<QuizContent content={chapterData.quizContent} />);
+          break;
+        default:
+          setChapterContent(<div>Unsupported content type</div>);
+      }
+    } else {
+      console.log("Chapter data not found");
+      setChapterContent(null);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen">
-    <div className="loader"></div>
-  </div>
+      <div className="loader"></div>
+    </div>
   }
 
   if (!courseInfo) {
@@ -115,11 +159,7 @@ const Learning = () => {
               height: playerFullWidth ? "700px" : "600px",
             }}
           >
-            <VideoPlayer
-              data={{ autoplay: true }}
-              playerWidthState={playerFullWidth}
-              playerWidthSetter={setPlayerFullWidth}
-            />
+            {chapterContent || <VideoPlayer data={{ autoplay: true }} />}
           </div>
           <CourseViewTabComponent />
         </div>
@@ -128,7 +168,7 @@ const Learning = () => {
           style={{ display: playerFullWidth ? "none" : "block" }}
         >
           <DetailDPComponent
-            title="Take a DIana Assessment to check your skills"
+            title="Take a Diana Assessment to check your skills"
             desc="Made by Diana, this generalized assessment is a great way to check in on your skills."
             btnTxt="Launch Assessment"
           />
@@ -136,6 +176,7 @@ const Learning = () => {
             title="Course Content"
             data={courseData}
             playerWidthSetter={setPlayerFullWidth}
+            onChapterClick={handleChapterClick}
           />
         </div>
       </div>

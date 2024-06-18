@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-
 import CustomCheckboxUtil from "../../../utils/CustomCheckboxUtil/CustomCheckboxUtil";
 
 import closeIcon from "/icons/close.png";
@@ -12,7 +11,7 @@ import openFolderIcon from "/icons/open-folder.png";
 import css from "./CourseContentComponent.module.css";
 
 const CourseContentComponent = (props) => {
-  const { title = "", data = [], playerWidthSetter = () => {} } = props;
+  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {} } = props;
   const [toggleBox, setToggleBox] = useState({});
   const [toggleDrpDwn, setToggleDrpDwn] = useState({});
 
@@ -64,12 +63,13 @@ const CourseContentComponent = (props) => {
                   </div>
                 </div>
                 {toggleBox[id] ? (
-                  <Link to="" className={css.tabBdy}>
+                  <div className={css.tabBdy}>
                     {item.list?.map((subItem) => {
                       return (
                         <div
                           className={css.descBdy}
                           key={`subItem-${subItem.id}`}
+                          onClick={() => onChapterClick(subItem.id)}
                         >
                           <div className={css.descBdyLeft}>
                             <CustomCheckboxUtil
@@ -104,7 +104,8 @@ const CourseContentComponent = (props) => {
                                 <span className={css.subDrp}>
                                   <div
                                     className={css.subDrpBox}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       setToggleDrpDwn((p) => {
                                         return {
                                           [subItem.id]: p[subItem.id]
@@ -142,6 +143,7 @@ const CourseContentComponent = (props) => {
                                             download={resItem.downloadable}
                                             to={resItem.link}
                                             className={css.resItem}
+                                            onClick={(e) => e.stopPropagation()}
                                           >
                                             <img
                                               src={resItem.icon}
@@ -163,7 +165,7 @@ const CourseContentComponent = (props) => {
                         </div>
                       );
                     })}
-                  </Link>
+                  </div>
                 ) : null}
               </div>
             );

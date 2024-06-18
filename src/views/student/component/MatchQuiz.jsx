@@ -43,7 +43,7 @@ const MatchQuiz = () => {
   const handleSubmit = () => {
     const correctAnswers = questions.filter((question) => question.answer === question.options[0]).length;
     const wrongAnswers = questions.length - correctAnswers;
-    alert(`Correct Answers: ${correctAnswers}, Wrong Answers: ${wrongAnswers}`);
+    alert(`Correct Answers: ${correctAnswers}, Drop here: ${wrongAnswers}`);
   };
 
   return (
@@ -58,7 +58,7 @@ const MatchQuiz = () => {
               onDragStart={(e) => handleDragStart(e, option)}
               className="border-solid border-2 border-indigo-600 rounded-md py-2 px-4 m-2 cursor-move text-gray-100"
             >
-              {option}
+              {option }
             </div>
           ))
         )}

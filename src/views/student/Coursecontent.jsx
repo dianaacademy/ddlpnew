@@ -6,7 +6,7 @@ const CourseContent = ({ items }) => {
   const firstBtnRef = useRef();
 
   useEffect(() => {
-    firstBtnRef.current.focus();
+    firstBtnRef.current.focus() ;
   }, []);
 
   return (
