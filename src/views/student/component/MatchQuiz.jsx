@@ -4,7 +4,7 @@ const MatchQuiz = () => {
     { id: 1, sentence: 'This is a sentence.', answer: '', options: ['Option 1', 'Option 2', 'Option 3'] },
     { id: 2, sentence: 'This is another sentence.', answer: '', options: ['Option 4', 'Option 5', 'Option 6'] },
     { id: 3, sentence: 'This is yet another sentence.', answer: '', options: ['Option 7', 'Option 8', 'Option 9'] },
-    { id: 4, sentence: 'This is a different sentence.', answer: '', options: ['Option 10', 'Option 11', 'Option 12'] },
+    { id: 4, sentence: 'This is a different sentence.', answer: '', options: ['Option 10', 'Option 11', 'Option 12']  },
     { id: 5, sentence: 'This is the last sentence.', answer: '', options: ['Option 13', 'Option 14', 'Option 15'] }
   ]);
   const [draggedOption, setDraggedOption] = useState(null);

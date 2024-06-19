@@ -11,7 +11,7 @@ const QuizRouter = () => {
   return (
     <div className="container mx-auto p-4 relative z-10 ">
       {!selectedQuiz ? (
-        <TakeQuiz onStartQuiz={handleStartQuiz} />
+        <TakeQuiz onStartQuiz={handleStartQuiz}  />
       ) : (
         <QuizFrontend quiz={selectedQuiz} />
       )}

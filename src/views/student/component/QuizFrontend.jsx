@@ -28,7 +28,7 @@ const QuizFrontend = ({ quiz }) => {
     quiz.questions.forEach((question, questionIndex) => {
       const correctOptionIndex = question.options.findIndex((option) => option.isCorrect);
       if (userAnswers[questionIndex] === correctOptionIndex) {
-        score++;
+        score++ ;
       }
     });
     setScore(score);
@@ -74,7 +74,7 @@ const QuizFrontend = ({ quiz }) => {
               {currentQuestion.options.map((option, optionIndex) => (
                 <label
                   key={optionIndex}
-                  
+                   
                 >
                   <input
                     type="radio"

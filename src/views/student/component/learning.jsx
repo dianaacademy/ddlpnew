@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
@@ -10,21 +9,24 @@ import CourseContentComponent from "../../../components/CourseVideoComponents/Co
 import CourseViewTabComponent from "../../../components/CourseVideoComponents/CourseViewTabComponents/CourseViewTabComponent/CourseViewTabComponent";
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
 import css from "./CourseViewPage.module.css";
+import QuizRouter from "./QuizRouter";
 
-const TextContent = ({ content }) => {
+const TextContent = ({ textContent }) => {
   return (
-    <div className="text-content">
-      <h3>Text Content</h3>
-      <p>{content}</p>
+    <div className="text-content p-4 text-sm">
+     
+      {textContent || <p>No text content available.</p>}
     </div>
   );
 };
 
-const QuizContent = ({ content }) => {
+const QuizContent = ({ quizContent }) => {
   return (
-    <div className="quiz-content">
-      <h3>Quiz Content</h3>
-      <p>{content}</p>
+    <div className="quiz-content p-4">
+      
+      <QuizRouter/>
+   
+      {/* {quizContent || <p>No quiz content available.</p>} */}
     </div>
   );
 };
@@ -36,11 +38,7 @@ const Learning = () => {
   const [loading, setLoading] = useState(true);
   const [activeChapter, setActiveChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState(null);
-
-  const data = {
-    title: "React - The Complete Guide (incl Hooks, React Router, Redux)",
-  };
-
+  const [data, setData] = useState({ title: "" }); 
   const [playerFullWidth, setPlayerFullWidth] = useState(false);
 
   useEffect(() => {
@@ -52,6 +50,7 @@ const Learning = () => {
         if (courseSnapshot.exists()) {
           const courseData = courseSnapshot.data();
           setCourseInfo(courseData);
+          setData({ title: courseData.courseName || "Course Title" });
 
           const modulesCollectionRef = collection(db, 'courses', slug, 'modules');
           const modulesSnapshot = await getDocs(modulesCollectionRef);
@@ -61,7 +60,7 @@ const Learning = () => {
               const moduleData = moduleDoc.data();
               const chaptersCollectionRef = collection(db, 'courses', slug, 'modules', moduleDoc.id, 'chapters');
               const chaptersSnapshot = await getDocs(chaptersCollectionRef);
-              
+
               const chaptersData = chaptersSnapshot.docs.map(chapterDoc => ({
                 id: chapterDoc.id,
                 ...chapterDoc.data()
@@ -104,27 +103,32 @@ const Learning = () => {
         type: chapter.type || '',
         desc: chapter.description || '',
         resources: chapter.resources || [],
-        videoUrl: chapter.videoUrl || '',
-        textContent: chapter.textContent || '',
-        quizContent: chapter.quizContent || '',
+        details: {
+          videoUrl: chapter.details?.videoUrl || '',
+          textContent: chapter.details?.textContent || '',
+          quizContent: chapter.details?.quizContent || '',
+        }
       }))
     };
   };
 
   const handleChapterClick = (chapterId) => {
     const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
-    
+
     if (chapterData) {
+      console.log('Chapter Data:', chapterData);
       setActiveChapter(chapterData);
+
       switch(chapterData.type) {
         case 'video':
-          setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.videoUrl }} />);
+          setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.details.videoUrl }} />);
           break;
         case 'text':
-          setChapterContent(<TextContent content={chapterData.textContent} />);
+          console.log('textContent:', chapterData.details.textContent); 
+          setChapterContent(<TextContent textContent={chapterData.details.textContent} />);
           break;
         case 'quiz':
-          setChapterContent(<QuizContent content={chapterData.quizContent} />);
+          setChapterContent(<QuizContent quizContent={chapterData.details.quizContent} />);
           break;
         default:
           setChapterContent(<div>Unsupported content type</div>);
