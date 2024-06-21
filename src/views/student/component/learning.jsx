@@ -10,6 +10,8 @@ import CourseViewTabComponent from "../../../components/CourseVideoComponents/Co
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
 import css from "./CourseViewPage.module.css";
 import QuizRouter from "./QuizRouter";
+import MatchQuiz from "./MatchQuiz";
+
 
 const TextContent = ({ textContent }) => {
   return (
@@ -25,6 +27,16 @@ const QuizContent = ({ quizContent }) => {
     <div className="quiz-content p-4">
       
       <QuizRouter/>
+   
+      {/* {quizContent || <p>No quiz content available.</p>} */}
+    </div>
+  );
+};
+const MatchContent = ({ matchContent }) => {
+  return (
+    <div className="quiz-content p-4">
+      <h1>Match Content</h1>
+      <MatchQuiz/>
    
       {/* {quizContent || <p>No quiz content available.</p>} */}
     </div>
@@ -130,6 +142,9 @@ const Learning = () => {
         case 'quiz':
           setChapterContent(<QuizContent quizContent={chapterData.details.quizContent} />);
           break;
+        case 'match':
+          setChapterContent(<MatchQuiz matchContent={chapterData.details.matchContent} />);
+          break;
         default:
           setChapterContent(<div>Unsupported content type</div>);
       }
@@ -180,7 +195,7 @@ const Learning = () => {
             title="Course Content"
             data={courseData}
             playerWidthSetter={setPlayerFullWidth}
-            onChapterClick={handleChapterClick}
+             onChapterClick={handleChapterClick}
           />
         </div>
       </div>

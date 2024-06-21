@@ -56,7 +56,7 @@ const MatchQuiz = () => {
               key={`${question.id}-${option}`}
               draggable
               onDragStart={(e) => handleDragStart(e, option)}
-              className="border-solid border-2 border-indigo-600 rounded-md py-2 px-4 m-2 cursor-move text-gray-100"
+              className="border-solid border-2 border-black-600 rounded-md py-2 px-4 m-2 cursor-move text-black-100"
             >
               {option }
             </div>
@@ -66,14 +66,14 @@ const MatchQuiz = () => {
       <div className="flex flex-col items-start">
         {questions.map((question) => (
           <div key={question.id} className="flex items-center mb-4">
-            <div className=" border-2 border-indigo-600 p-3 rounded-lg mr-4 text-gray-100">
+            <div className=" border-2 border-black-600 p-3 rounded-lg mr-4 text-black-100">
               {question.sentence}
             </div>
-            <span className="mr-4 text-gray-100">→</span>
+            <span className="mr-4 text-black-100">→</span>
             <div
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, question.id)}
-              className="border border-2-gray-300  rounded-md relative flex items-center text-gray-100"
+              className="border border-2-gray-300  rounded-md relative flex items-center text-black-100"
             >
               <span className="mr-2 p-3">{question.answer || 'Drop here'}</span>
               {question.answer && (
@@ -149,7 +149,7 @@ const MatchQuiz = () => {
 
         .neon-button:hover,
         .neon-button:focus {
-          color: var(--background-color);
+          color: var(--background-color) ;
           text-shadow: none;
           box-shadow: 0 0 1rem 0.5rem var(--neon-color); /* Outer glow on hover */
         }

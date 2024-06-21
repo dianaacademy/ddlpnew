@@ -225,7 +225,7 @@ const QuizFrontend = ({ quiz }) => {
         </div>
       )}
 
-      <style>{`
+      <style>{` 
         @keyframes celebration {
           0% {
             transform: translateY(0);
