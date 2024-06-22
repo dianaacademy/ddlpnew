@@ -11,6 +11,8 @@ import AssignCourse from "@/views/admin/AssignCourse";
 import { MdAdd } from "react-icons/md";
 import Allstudentlearningcourse from "@/views/admin/Allstudentlearningcourse";
 import ModuleBuild from "@/views/admin/Modulebuild";
+import NewChapter from "@/views/admin/managechapter";
+import EditChapter from "@/views/admin/Editchapter";
 import {
   Home,
   User,
@@ -95,6 +97,20 @@ const routes = [
     path: "courses/build/:slug/module/:moduleId",
     // icon: <BookType />,
     component: <ModuleBuild />,
+  },
+  {
+    // name: "courses",
+    layout: "/admin",
+    path: "courses/build/:slug/module/:moduleId/chapter/new",
+    // icon: <BookType />,
+    component: <NewChapter />,
+  },
+  {
+    // name: "courses",
+    layout: "/admin",
+    path: "courses/build/:slug/module/:moduleId/chapter/:chapterId/edit",
+    // icon: <BookType />,
+    component: <EditChapter />,
   },
 
 ];

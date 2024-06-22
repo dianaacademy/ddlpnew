@@ -1,33 +1,26 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { db } from "@/firebase.config";
-import { doc, collection, getDoc, getDocs, addDoc } from "firebase/firestore";
-import { Button } from "@/components/ui/button"; // Adjust the import path as necessary
-import { useToast } from "@/components/ui/use-toast"; // Import the useToast hook
-import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
-import { Input } from "@/components/ui/input"; // Import Input component
-import { Textarea } from "@/components/ui/textarea"; // Import Textarea component
-import ChapterQuizform from "./chapterQuizform";
+import { doc, collection, getDoc, getDocs } from "firebase/firestore";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card,CardTitle, CardContent } from "@/components/ui/card";
+import DeleteAlert from "./DeleteAlert"; // Adjust the import path as necessary
+
 const ModuleBuild = () => {
-  const { slug, moduleId } = useParams(); // Get the courseId and moduleId parameters from the URL
+  const { slug, moduleId } = useParams();
   const [module, setModule] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [newChapterName, setNewChapterName] = useState("");
-  const [chapterType, setChapterType] = useState("video");
-  const [chapterDetails, setChapterDetails] = useState({});
-  const { toast } = useToast(); // Initialize the toast
 
   useEffect(() => {
     const fetchModuleData = async () => {
       try {
-        // Fetch module data
         const moduleRef = doc(db, "courses", slug, "modules", moduleId);
         const moduleSnap = await getDoc(moduleRef);
 
         if (moduleSnap.exists()) {
           const moduleData = moduleSnap.data();
 
-          // Fetch chapters for the module
           const chaptersRef = collection(moduleRef, "chapters");
           const chaptersSnap = await getDocs(chaptersRef);
           moduleData.chapters = chaptersSnap.docs.map((chapterDoc) => ({
@@ -49,147 +42,9 @@ const ModuleBuild = () => {
     fetchModuleData();
   }, [slug, moduleId]);
 
-  const handleAddChapter = async () => {
-    if (!newChapterName) return;
-
-    const chapterData = {
-      chapterName: newChapterName,
-      type: chapterType,
-      details: chapterDetails,
-    };
-
-    try {
-      const chaptersRef = collection(
-        db,
-        "courses",
-        slug,
-        "modules",
-        moduleId,
-        "chapters"
-      );
-
-      await addDoc(chaptersRef, chapterData);
-
-      // Refresh the module data
-      const moduleRef = doc(db, "courses", slug, "modules", moduleId);
-      const moduleSnap = await getDoc(moduleRef);
-
-      if (moduleSnap.exists()) {
-        const moduleData = moduleSnap.data();
-
-        const chaptersSnap = await getDocs(collection(moduleRef, "chapters"));
-        moduleData.chapters = chaptersSnap.docs.map((chapterDoc) => ({
-          ...chapterDoc.data(),
-          id: chapterDoc.id,
-        }));
-
-        setModule(moduleData);
-        setNewChapterName("");
-        setChapterType("video");
-        setChapterDetails({});
-        
-        toast({
-          title: "Chapter Added",
-          description: `Chapter "${newChapterName}" has been added successfully.`,
-        });
-      }
-    } catch (error) {
-      console.error("Error adding chapter: ", error);
-      toast({
-        title: "Error",
-        description: `There was an error adding the chapter: ${error.message}`,
-        status: "error",
-      });
-    }
-  };
-
-  const handleChapterDetailsChange = (e) => {
-    const { name, value } = e.target;
-    setChapterDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
-  };
-
-  const renderChapterDetailsForm = () => {
-    switch (chapterType) {
-      case "video":
-        return (
-          <div>
-            <Input
-              type="url"
-              placeholder="Video URL"
-              name="videoUrl"
-              value={chapterDetails.videoUrl || ""}
-              onChange={handleChapterDetailsChange}
-              className="p-2 my-2 border rounded mr-2"
-            />
-          </div>
-        );
-
-
-
-        // case "quiz":
-        //     return (
-        //       <div>
-        //         <Textarea
-        //           placeholder="Quiz Questions (one per line)"
-        //           name="quizQuestions"
-        //           value={chapterDetails.quizQuestions || ""}
-        //           onChange={handleChapterDetailsChange}
-        //           className="p-2 my-2 border rounded mr-2"
-        //         />
-        //         <Textarea
-        //           placeholder="Quiz Options (separate options with commas)"
-        //           name="quizOptions"
-        //           value={chapterDetails.quizOptions || ""}
-        //           onChange={handleChapterDetailsChange}
-        //           className="p-2 my-2 border rounded mr-2"
-        //         />
-        //       </div>
-        //     );
-
-
-
-
-
-      case "quiz":
-        return (
-     <ChapterQuizform/>
-        );
-
-
-
-
-
-      case "text":
-        return (
-          <div>
-            <Textarea
-              placeholder="Text Content"
-              name="textContent"
-              value={chapterDetails.textContent || ""}
-              onChange={handleChapterDetailsChange}
-              className="p-2 my-2 border rounded mr-2"
-            />
-          </div>
-        );
-      case "lab":
-        return (
-          <div>
-            <Input
-              type="url"
-              placeholder="Lab Instructions URL"
-              name="labInstructionsUrl"
-              value={chapterDetails.labInstructionsUrl || ""}
-              onChange={handleChapterDetailsChange}
-              className="p-2 my-2 border rounded mr-2"
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
+  const handleDeleteChapter = (chapterId) => {
+    const updatedChapters = module.chapters.filter((chapter) => chapter.id !== chapterId);
+    setModule({ ...module, chapters: updatedChapters });
   };
 
   if (loading) {
@@ -211,41 +66,52 @@ const ModuleBuild = () => {
 
   return (
     <div className="module-builder p-5">
-      <h1 className="text-2xl font-bold mb-4">{module.moduleName}</h1>
+      <div>
+        <h1 className="text-2xl font-bold mb-4">You are building module {module.moduleName}</h1>
 
-      <div className="add-chapter mb-4">
-        <input
-          type="text"
-          placeholder="New Chapter Name"
-          value={newChapterName}
-          onChange={(e) => setNewChapterName(e.target.value)}
-          className="p-2 my-2 border rounded mr-2"
-        />
-        <select
-          value={chapterType}
-          onChange={(e) => setChapterType(e.target.value)}
-          className="p-2 my-2 border rounded mr-2"
-        >
-          <option value="video">Video</option>
-          <option value="quiz">Quiz</option>
-          <option value="text">Text Document</option>
-          <option value="lab">Lab</option>
-        </select>
-        {renderChapterDetailsForm()}
-        <Button onClick={handleAddChapter}>Add Chapter</Button>
+        <div className="flex float-right">
+          <Link to={`chapter/new`}>
+            <Button>Add Chapter</Button>
+          </Link>
+        </div>
       </div>
 
-      <div className="chapters space-y-2">
-        {module.chapters && module.chapters.length > 0 ? (
-          module.chapters.map((chapter) => (
-            <div key={chapter.id} className="chapter pl-4 border-l">
-              <p className="chapter-name">{chapter.chapterName}</p>
-              <p className="chapter-type">Type: {chapter.type}</p>
-            </div>
-          ))
-        ) : (
-          <p>No chapters available</p>
-        )}
+      <div className="chapters space-y-2 mt-20">
+        <Card className="mt-6 grid grid-flow-row gap-4 px-4 py-4 grid-cols-1">
+          {module.chapters && module.chapters.length > 0 ? (
+            module.chapters.map((chapter) => (
+              <div key={chapter.id}>
+                <Card>
+                  <CardContent>
+
+    
+                  <CardTitle className="px-2 pt-4">
+Chapter
+                  </CardTitle>
+              <div className="flex justify-between mx-2 pt-2">
+      <div>
+      <p className="chapter-name">chapter name:-{chapter.chapterName}</p>
+      <p className="chapter-name">chapter number:-{chapter.chapterno}</p>
+      </div>
+              <p className="chapter-type ">Type: {chapter.type}</p>
+              </div>
+                 <div className="flex gap-4 pt-4 mb-2 ">
+                 <Link to={`/course/${slug}/module/${moduleId}/chapter/${chapter.id}`}>
+                    <Button variant="outline" className="ml-2">View Chapter</Button>
+                  </Link>
+                  <Link to={`chapter/${chapter.id}/edit`}>
+                    <Button variant="outline" className="ml-2">Edit Chapter</Button>
+                  </Link>
+                  <DeleteAlert chapterId={chapter.id} onDelete={handleDeleteChapter} />
+                 </div>
+                 </CardContent>
+                </Card>
+              </div>
+            ))
+          ) : (
+            <p>No chapters available</p>
+          )}
+        </Card>
       </div>
     </div>
   );

@@ -2,9 +2,8 @@ import  { useState,  } from 'react';
 import { FiTrash2, FiCheck } from 'react-icons/fi';
 
 
-const ChapterQuizform = () => {
+const ChapterQuizform = ( {questions, setQuestions}) => {
   const [quizName, setQuizName] = useState('');
-  const [questions, setQuestions] = useState([{ question: '', options: [{ option: '', isCorrect: false }] }]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
 

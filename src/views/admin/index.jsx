@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { getDatabase, ref, get } from 'firebase/database';
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
 import { SkeletonCard } from "./components/skeltoncard";
 import {  collection, getDocs, } from 'firebase/firestore';
-import { db } from "@/firebase.config";
-
-
-
+import { db } from "@/firebase.config"
 function MainDashboard() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalCourses, setTotalCourses] = useState(0);
@@ -22,8 +19,6 @@ function MainDashboard() {
   const [creator, SetCreator] = useState(0);
 
 
-
-  const { toast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,10 +88,6 @@ function MainDashboard() {
               </form>
             </CardContent>
           </Card>
-
-     
-
-
           <Card className="w-[350px]">
             <CardHeader>
               <CardTitle>Total course creator</CardTitle>

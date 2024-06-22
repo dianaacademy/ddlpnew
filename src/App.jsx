@@ -25,7 +25,7 @@ function App() {
     <AuthProvider>
     <Routes>
       {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<Home />} />
       <Route path="*" element={<ErrorPage />} />
       <Route path="signup" element={<SignupPage />} />
       <Route path="login" element={<LoginPage />} />
@@ -43,7 +43,7 @@ function App() {
             } />
 
             <Route path="instructor/*" element={
-              <PrivateRoute allowedRoles={['Instructor']}>
+              <PrivateRoute allowedRoles={['instructor']}>
                 <Instructor />
               </PrivateRoute>
             } />

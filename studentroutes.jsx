@@ -1,8 +1,5 @@
 import MainDashboard from "./src/views/student";
-import Course from "./src/components/course";
 import Mylearning from "./src/views/student/Mylearning";
-import Learning from "@/views/student/component/learning";
-import Footer from "@/components/footer";
 // import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
 
 
