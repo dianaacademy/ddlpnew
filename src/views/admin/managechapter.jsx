@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db, storage } from "@/firebase.config";
 import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,6 @@ const NewChapter = () => {
   const [chapterType, setChapterType] = useState("video");
   const [chapterDetails, setChapterDetails] = useState({});
   const { toast } = useToast();
-
   const [file, setFile] = useState(null);
 
   const handleChapterDetailsChange = (e) => {
@@ -46,9 +46,9 @@ const NewChapter = () => {
     try {
       let fileUrl = "";
       if (file) {
-        const storageRef = storage.ref(`files/${file.name}`);
-        await storageRef.put(file);
-        fileUrl = await storageRef.getDownloadURL();
+        const storageRef = ref(storage, `files/${file.name}`);
+        await uploadBytes(storageRef, file);
+        fileUrl = await getDownloadURL(storageRef);
       }
 
       const chapterData = {
@@ -127,9 +127,9 @@ const NewChapter = () => {
           <div>
             <Input
               type="text"
-              placeholder="match the folowing"
-              name="matchfoloow"
-              value={chapterDetails.matchfoloow || ""}
+              placeholder="Match the Following"
+              name="matchFollow"
+              value={chapterDetails.matchFollow || ""}
               onChange={handleChapterDetailsChange}
               className="p-2 my-2 border rounded mr-2"
             />
@@ -156,7 +156,10 @@ const NewChapter = () => {
 
   return (
     <div className="chapter-form text-black p-5">
-      <h1 className="text-2xl font-bold mb-4">Add New Chapter</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">Add New Chapter</h1>
+        <Button onClick={handleAddChapter}>Submit</Button>
+      </div>
       <div className="mb-4">
         <div className="flex float-right">
           <select
@@ -168,7 +171,7 @@ const NewChapter = () => {
             <option value="quiz">Quiz</option>
             <option value="text">Text Document</option>
             <option value="lab">Lab</option>
-            <option value="match">match answer</option>
+            <option value="match">Match Answer</option>
           </select>
         </div>
         <Input
@@ -185,15 +188,14 @@ const NewChapter = () => {
           onChange={(e) => setChapterNo(e.target.value)}
           className="p-2 my-2 border rounded mr-2"
         />
-
-        {renderChapterDetailsForm()}
         <Input
           type="file"
           onChange={handleFileChange}
           className="p-2 my-2 border rounded mr-2"
         />
+
+        {renderChapterDetailsForm()}
       </div>
-      <Button onClick={handleAddChapter}>Add Chapter</Button>
     </div>
   );
 };

@@ -223,7 +223,7 @@ const CourseBuild = () => {
   }
 
   return (
-    <div className="course-builder text-black p-5">
+    <div className="course-builder text-black  p-5">
       <h1 className="text-2xl font-bold mb-4">{course.courseName}</h1>
       <Button
         variant="outline"
