@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/instructorsidebar";
-import Footer from "../../components/footer";
 import routes from "../../../instructorroutes";
 export default function instructor(props) {
   const { ...rest } = props;
@@ -62,9 +61,7 @@ export default function instructor(props) {
       {/* Navbar & Main Content */}
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
-        <main
-          className={`h-full flex-none transition-all  xl:ml-[270px]`}
-        >
+        <main className={`h-full flex-none transition-all  xl:ml-[25px]`}>
           {/* Routes */}
           <div className="h-full">
             <Navbar
@@ -85,7 +82,6 @@ export default function instructor(props) {
               </Routes>
             </div>
             <div className="p-3">
-              <Footer />
             </div>
           </div>
         </main>

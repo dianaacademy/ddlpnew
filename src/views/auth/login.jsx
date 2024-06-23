@@ -68,7 +68,7 @@ const LoginPage = () => {
                     navigate('/admin');
                 } else if (userData.role === "instructor") {
                     navigate('/instructor');
-                } else if (userData.role === "creator") {
+                } else if (userData.role === "Creator") {
                     navigate('/creator');
                 } else {
                     navigate('/student');

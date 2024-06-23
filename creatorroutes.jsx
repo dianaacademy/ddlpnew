@@ -1,23 +1,25 @@
 import MainDashboard from "./src/views/creator";
-import Course from "./src/components/course";
-import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
 import LAbbuilder from "./src/views/creator/Labbuilder/Labbuilder"
 import Labfind from "./src/views/creator/Labfind";
-// import Boards from "./views/admin/usermanagement";
-// import Reports from  "./views/admin/reports"
-// import Employe from "./views/admin/employes";
-// import SalarySlipGenerator from "./views/admin/Tools";
-// import Teams from "./views/teams";
-// import Task from "./views/tasks";
-// import AttendanceReport from "./views/admin/reports/components/AttendanceReport";
-// import Dianacoonect from "./views/admin/dianaconnect/dianaconnect";
+import CourseTable from "@/views/admin/courses";
+import ModuleBuild from "@/views/admin/Modulebuild";
+import NewChapter from "@/views/admin/managechapter";
+import CourseViewer from "@/views/admin/CourseViewer";
+import CourseBuild from "@/views/admin/Coursebuild";
+import EditChapter from "@/views/admin/Editchapter";
+
 import {
   MdHome,
   MdFingerprint,
 
 } from "react-icons/md";
-// import Alerts from "views/admin/alerts";
+import {
+  Home,
+  User,
+  Package2,
+  SquarePen,
+} from "lucide-react"
 
 const routes = [
   {
@@ -27,19 +29,13 @@ const routes = [
     icon: <MdHome />,
     component: <MainDashboard />,
   },
+
   {
-    name: "allcourses",
+    name: "courses",
     layout: "/creator",
-    path: "alcourse",
-    icon: <MdFingerprint />,
-    component: <Course />,
-  },
-  {
-    name: "quizbuilder",
-    layout: "/creator",
-    path: "quizbbuild",
-    icon: <MdFingerprint />,
-    component: <QuizBuilder />,
+    path: "courses",
+    icon: <SquarePen />,
+    component: <CourseTable />,
   },
   {
     name: "addcourse",
@@ -49,12 +45,43 @@ const routes = [
     component: <CourseAdd />,
   },
   {
-    name: "addcourse",
+    // name: "courses",
     layout: "/creator",
-    path: "addcourse",
-    icon: <MdFingerprint />,
-    component: <CourseAdd />,
-  }, 
+    path: "courses/:slug",
+    // icon: <BookType />,
+    component: <CourseViewer />,
+  },
+  {
+    // name: "courses",
+    layout: "/creator",
+    path: "courses/build/:slug",
+    // icon: <BookType />,
+    component: <CourseBuild />,
+  },
+  {
+    // name: "courses",
+    layout: "/creator",
+    path: "courses/build/:slug/module/:moduleId",
+    // icon: <BookType />,
+    component: <ModuleBuild />,
+  },
+  {
+    // name: "courses",
+    layout: "/creator",
+    path: "courses/build/:slug/module/:moduleId/chapter/new",
+    // icon: <BookType />,
+    component: <NewChapter />,
+  },
+  {
+    // name: "courses",
+    layout: "/creator",
+    path: "courses/build/:slug/module/:moduleId/chapter/:chapterId/edit",
+    // icon: <BookType />,
+    component: <EditChapter />,
+  },
+
+
+
    {
     name: "buildlab",
     layout: "/creator",

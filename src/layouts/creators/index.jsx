@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/creatorsidebar";
-import Footer from "../../components/footer";
 import routes from "../../../creatorroutes";
 export default function Creator(props) {
   const { ...rest } = props;
@@ -63,7 +62,7 @@ export default function Creator(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all  xl:ml-[300px]`}
+          className={`h-full flex-none transition-all  xl:ml-[25px]`}
         >
           {/* Routes */}
           <div className="h-full">
@@ -83,9 +82,6 @@ export default function Creator(props) {
                   element={<Navigate to="/creator/default" replace />}
                 />
               </Routes>
-            </div>
-            <div className="p-3">
-              <Footer />
             </div>
           </div>
         </main>
