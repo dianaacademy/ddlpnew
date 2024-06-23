@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate  } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import ChapterQuizform from "./chapterQuizform";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import LabBuilder from "../creator/Labbuilder/Labbuilder";
 
 const EditChapter = () => {
   const { slug, moduleId, chapterId } = useParams();
   const navigate = useNavigate();
   const [chapter, setChapter] = useState(null);
-  const [chapterno, setChapterNo] = useState(null);
-
+  const [chapterno, setChapterNo] = useState("");
   const [loading, setLoading] = useState(true);
   const [chapterName, setChapterName] = useState("");
   const [chapterType, setChapterType] = useState("video");
   const [chapterDetails, setChapterDetails] = useState({});
-  const [questions, setQuestions] = useState([{ question: '', options: [{ option: '', isCorrect: false }] }]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -55,6 +55,13 @@ const EditChapter = () => {
     }));
   };
 
+  const handleQuillChange = (value) => {
+    setChapterDetails((prevDetails) => ({
+      ...prevDetails,
+      content: value,
+    }));
+  };
+
   const handleSaveChapter = async () => {
     if (!chapterName) return;
 
@@ -73,7 +80,7 @@ const EditChapter = () => {
         title: "Chapter Updated",
         description: `Chapter "${chapterName}" has been updated successfully.`,
       });
-      navigate(-1); 
+      navigate(-1);
 
     } catch (error) {
       console.error("Error updating chapter: ", error);
@@ -102,28 +109,46 @@ const EditChapter = () => {
         );
       case "quiz":
         return (
-          <ChapterQuizform questions={questions} setQuestions={setQuestions} />
+          <ChapterQuizform
+            questions={chapterDetails.questions || []}
+            setQuestions={(questions) =>
+              setChapterDetails((prev) => ({ ...prev, questions }))
+            }
+          />
         );
       case "text":
         return (
           <div>
-            <Textarea
-              placeholder="Text Content"
-              name="textContent"
-              value={chapterDetails.textContent || ""}
-              onChange={handleChapterDetailsChange}
-              className="p-2 my-2 border rounded mr-2"
+            <ReactQuill
+              theme="snow"
+              value={chapterDetails.content || ""}
+              onChange={handleQuillChange}
             />
           </div>
         );
       case "lab":
         return (
           <div>
-            <Input
+            {/* <Input
               type="url"
               placeholder="Lab Instructions URL"
               name="labInstructionsUrl"
               value={chapterDetails.labInstructionsUrl || ""}
+              onChange={handleChapterDetailsChange}
+              className="p-2 my-2 border rounded mr-2"
+            /> */}
+
+<LabBuilder/>
+          </div>
+        );
+      case "match":
+        return (
+          <div>
+            <Input
+              type="text"
+              placeholder="Match the Following"
+              name="matchFollow"
+              value={chapterDetails.matchFollow || ""}
               onChange={handleChapterDetailsChange}
               className="p-2 my-2 border rounded mr-2"
             />
@@ -153,9 +178,9 @@ const EditChapter = () => {
           onChange={(e) => setChapterName(e.target.value)}
           className="p-2 my-2 border rounded mr-2"
         />
-             <Input
-          type="text"
-          placeholder="Chapter Name"
+        <Input
+          type="number"
+          placeholder="Chapter No"
           value={chapterno}
           onChange={(e) => setChapterNo(e.target.value)}
           className="p-2 my-2 border rounded mr-2"
@@ -169,6 +194,7 @@ const EditChapter = () => {
           <option value="quiz">Quiz</option>
           <option value="text">Text Document</option>
           <option value="lab">Lab</option>
+          <option value="match">Match Answer</option>
         </select>
         {renderChapterDetailsForm()}
       </div>

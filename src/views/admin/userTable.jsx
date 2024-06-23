@@ -5,12 +5,15 @@ import { Card, CardTitle, CardContent } from '@/components/ui/card';
 import { Button  } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
+import { SkeletonCard } from './components/skeltoncard';
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +34,7 @@ const UserTable = () => {
         setUsers(usersList);
         setFilteredUsers(usersList);
       }
+      setIsLoading(false);
     };
 
     fetchUsers();
@@ -57,7 +61,16 @@ const UserTable = () => {
 
   return (
     <>
-      <Card>
+
+
+{isLoading ? (
+
+<SkeletonCard/>
+): (
+<div>
+
+  
+<Card>
     <CardContent>
     <div className='flex mt-4 justify-between'>
     <CardTitle className="px-2 py-2">Existing Users</CardTitle>
@@ -114,6 +127,15 @@ const UserTable = () => {
           </div>
         </div>
       )}
+
+
+
+  
+</div>
+
+
+)}
+
     </>
   );
 };

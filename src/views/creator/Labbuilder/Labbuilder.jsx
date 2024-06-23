@@ -1,24 +1,20 @@
-// src/components/LabBuilder.js
-import  { useState } from 'react';
-import {  ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { useState } from 'react';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
-import { storage , db } from '../../../firebase.config';
+import { storage, db } from '../../../firebase.config';
 
-
-function LabBuilder() {
+function LabBuilder({ onLabDetailsChange }) {
   const [image, setImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [question, setQuestion] = useState('');
   const [answerArea, setAnswerArea] = useState(null);
-
-
-  console.log(question, answerArea)
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       setImage(URL.createObjectURL(file));
       setImageFile(file);
+      onLabDetailsChange({ imageUrl: URL.createObjectURL(file) });
     }
   };
 
@@ -26,7 +22,9 @@ function LabBuilder() {
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    setAnswerArea({ x, y });
+    const area = { x, y };
+    setAnswerArea(area);
+    onLabDetailsChange({ answerArea: area });
   };
 
   const handleSaveLab = async () => {
@@ -42,11 +40,12 @@ function LabBuilder() {
     const labData = {
       imageUrl,
       question,
-      answerArea
+      answerArea,
     };
 
     await addDoc(collection(db, 'labs'), labData);
     alert('Lab saved!');
+    onLabDetailsChange({ imageUrl, question, answerArea });
   };
 
   return (
@@ -56,7 +55,10 @@ function LabBuilder() {
       <input
         type="text"
         value={question}
-        onChange={(e) => setQuestion(e.target.value)}
+        onChange={(e) => {
+          setQuestion(e.target.value);
+          onLabDetailsChange({ question: e.target.value });
+        }}
         placeholder="Enter the question"
         className="mb-2 p-2 border rounded w-full"
       />
@@ -64,7 +66,7 @@ function LabBuilder() {
         onClick={() => setAnswerArea(null)}
         className="mb-2 p-2 bg-blue-500 text-white rounded"
       >
-       reset answer area
+        Reset Answer Area
       </button>
       <div className="relative">
         {image && (

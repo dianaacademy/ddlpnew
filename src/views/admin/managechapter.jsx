@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import ChapterQuizform from "./chapterQuizform";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
+import LabBuilder from "../creator/Labbuilder/Labbuilder";
 const NewChapter = () => {
   const navigate = useNavigate();
   const { slug, moduleId } = useParams();
@@ -135,17 +135,16 @@ const NewChapter = () => {
             />
           </div>
         );
-
       case "lab":
         return (
           <div>
-            <Input
-              type="url"
-              placeholder="Lab Instructions URL"
-              name="labInstructionsUrl"
-              value={chapterDetails.labInstructionsUrl || ""}
-              onChange={handleChapterDetailsChange}
-              className="p-2 my-2 border rounded mr-2"
+            <LabBuilder
+              onLabDetailsChange={(labDetails) =>
+                setChapterDetails((prevDetails) => ({
+                  ...prevDetails,
+                  ...labDetails,
+                }))
+              }
             />
           </div>
         );

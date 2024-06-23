@@ -11,6 +11,7 @@ const CourseViewer = () => {
     const [loading, setLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({});
+    const [imageLoading, setImageLoading] = useState(true);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -54,8 +55,8 @@ const CourseViewer = () => {
     if (loading) {
         return (
             <div className="course-viewer p-5">
-                    <Skeleton className="h-8 w-1/2" />
-                    <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-8 w-24" />
                 <Skeleton className="h-64 w-full mb-4" />
                 <Skeleton className="h-4 w-3/4 mb-2" />
                 <Skeleton className="h-4 w-1/2 mb-2" />
@@ -172,10 +173,12 @@ const CourseViewer = () => {
                 </div>
             ) : (
                 <div className="course-details space-y-4">
+                    {imageLoading && <Skeleton className="h-64 w-full mb-4" />}
                     <img
-                        className="w-full h-64 object-cover rounded-md mb-4"
+                        className={`w-full h-64 object-cover rounded-md mb-4 ${imageLoading ? 'hidden' : 'block'}`}
                         src={course.thumbnailUrl}
                         alt={course.courseName}
+                        onLoad={() => setImageLoading(false)}
                     />
                     <p><strong>Description:</strong> {course.courseDesc}</p>
                     <p><strong>Duration:</strong> {course.courseDuration}</p>
@@ -193,4 +196,3 @@ const CourseViewer = () => {
 };
 
 export default CourseViewer;
-

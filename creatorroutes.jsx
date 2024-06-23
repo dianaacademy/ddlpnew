@@ -2,7 +2,7 @@ import MainDashboard from "./src/views/creator";
 import Course from "./src/components/course";
 import QuizBuilder from "./src/views/admin/QuizForm";
 import CourseAdd from "./src/views/admin/Courseadd";
-import LAbbuilder from "./src/views/creator/Labbuilder"
+import LAbbuilder from "./src/views/creator/Labbuilder/Labbuilder"
 import Labfind from "./src/views/creator/Labfind";
 // import Boards from "./views/admin/usermanagement";
 // import Reports from  "./views/admin/reports"

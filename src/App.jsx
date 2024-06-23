@@ -1,5 +1,6 @@
-import './App.css'
-import {BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './App.css';
 import Home from './components/Home/home';
 import ErrorPage from './components/404';
 import 'swiper/css';
@@ -18,72 +19,67 @@ import { AuthProvider } from './auth/hooks/useauth';
 import PrivateRoute from './utils/PrivateRoutes';
 import CourseBuild from './views/admin/Coursebuild';
 import ModuleBuild from './views/admin/Modulebuild';
+import SplashScreen from './views/admin/SplashScreen';
 
 function App() {
-    return (
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const handleReload = () => {
+      setShowSplash(true);
+    };
+    window.addEventListener('beforeunload', handleReload);
+    return () => {
+      window.removeEventListener('beforeunload', handleReload);
+    };
+  }, []);
+
+  const handleAnimationEnd = () => {
+    setShowSplash(false);
+  };
+
+  return (
     <>
-		<BrowserRouter>
-    <AuthProvider>
-    <Routes>
-      {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={<Home />} />
-      <Route path="*" element={<ErrorPage />} />
-      <Route path="signup" element={<SignupPage />} />
-      <Route path="login" element={<LoginPage />} />
-      <Route path="blog" element={<Blog />} />
-      <Route path="lab" element={<Lab />} />
-      <Route path="viewer" element={<CourseViewPage />} />
-      <Route path="student/mylearning/learn/:slug" element={<Learning />} />
-      
-      {/* <Route path="admin/courses/:slug" element={<CourseViewer/>} />
-
-      <Route path="admin/courses/build/:slug" element={<CourseBuild/>} />
-      <Route path="admin/courses/build/:slug/module/:moduleId" element={<ModuleBuild/>} /> */}
-
-
-
-
-
-
-      
-
-
-
-      <Route path="admin/*" element={
-              <PrivateRoute allowedRoles={['Admin']}>
-                <Admin />
-
-              </PrivateRoute>
-            } />
-
-            <Route path="instructor/*" element={
-              <PrivateRoute allowedRoles={['instructor']}>
-                <Instructor />
-              </PrivateRoute>
-            } />
-
-            <Route path="student/*" element={
-              <PrivateRoute allowedRoles={['Student']}>
-                <Student />
-              </PrivateRoute>
-            } />
-
-            <Route path="creator/*" element={
-              <PrivateRoute allowedRoles={['Creator']}>
-                <Creator />
-              </PrivateRoute>
-            } />
-
-
-
-
-    </Routes>
-    </AuthProvider>
-    
-  </BrowserRouter>
-      
+      {showSplash ? (
+        <SplashScreen onAnimationEnd={handleAnimationEnd} />
+      ) : (
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<ErrorPage />} />
+              <Route path="signup" element={<SignupPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="blog" element={<Blog />} />
+              <Route path="lab" element={<Lab />} />
+              <Route path="viewer" element={<CourseViewPage />} />
+              <Route path="student/mylearning/learn/:slug" element={<Learning />} />
+              <Route path="admin/*" element={
+                <PrivateRoute allowedRoles={['Admin']}>
+                  <Admin />
+                </PrivateRoute>
+              } />
+              <Route path="instructor/*" element={
+                <PrivateRoute allowedRoles={['instructor']}>
+                  <Instructor />
+                </PrivateRoute>
+              } />
+              <Route path="student/*" element={
+                <PrivateRoute allowedRoles={['Student']}>
+                  <Student />
+                </PrivateRoute>
+              } />
+              <Route path="creator/*" element={
+                <PrivateRoute allowedRoles={['Creator']}>
+                  <Creator />
+                </PrivateRoute>
+              } />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;

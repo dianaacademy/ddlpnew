@@ -52,13 +52,13 @@ function MainDashboard() {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
+    <div>
       {isLoading ? (
         <>
           <SkeletonCard />
         </>
       ) : (
-        <>
+        <div  className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
           <Card className="w-[350px]">
             <CardHeader>
               <CardTitle>Total peoples</CardTitle>
@@ -163,7 +163,7 @@ function MainDashboard() {
               </form>
             </CardContent>
           </Card>
-        </>
+        </div>
       )}
     </div>
   );

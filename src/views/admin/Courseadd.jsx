@@ -1,8 +1,13 @@
-import  { useState } from 'react';
-import { Input, Textarea, Button } from "@material-tailwind/react";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from "@/components/ui/textarea";
 import { db, storage } from '../../firebase.config';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { Card } from '@/components/ui/card';
+import { toast } from 'react-toastify';
+
 const CourseAdd = () => {
   const [courseName, setCourseName] = useState('');
   const [tutorName, setTutorName] = useState('');
@@ -50,6 +55,7 @@ const CourseAdd = () => {
         null,
         (error) => {
           console.error('Error uploading thumbnail:', error);
+          toast.error('Error uploading thumbnail.');
         },
         async () => {
           const thumbnailUrl = await getDownloadURL(uploadTask.snapshot.ref);
@@ -81,19 +87,20 @@ const CourseAdd = () => {
           setWhatuLearn('');
           setMaterialInclue('');
           setCourseDuration('');
-          setMaxStudents('');
+          setMaxStudents(0);
           setCategory('');
           setCoursePrice('');
-          setDifficultyLevel('');
-          setIsPublic('');
-          setEnableQA('');
-
+          setDifficultyLevel("All Levels");
+          setIsPublic(true);
+          setEnableQA(false);
           setThumbnailFile(null);
-          console.log('Course added successfully!');
+
+          toast.success('Course added successfully!');
         }
       );
     } catch (error) {
       console.error('Error adding course:', error);
+      toast.error('Error adding course.');
     }
   };
 
@@ -101,6 +108,7 @@ const CourseAdd = () => {
     e.preventDefault();
     if (courseName.trim() === '' || courseDesc.trim() === '' || !thumbnailFile) {
       console.log('Please fill in all fields and upload a thumbnail.');
+      toast.error('Please fill in all fields and upload a thumbnail.');
       return;
     }
 
@@ -123,36 +131,40 @@ const CourseAdd = () => {
   };
 
   return (
-    <div className="flex relative dark:bg-main-dark-bg">
-      <div className=" dark:bg-main-dark-bg bg-main-bg min-h-screen">
-        <div className="flex  items-center mt-20">
-          <div className="w-full  px-4">
-            <div className="mb-4 text-align:center">
-              <h1>Add Course</h1>
-            </div>
-            <div className="mb-4">
-              <Input
-                label="Course Name"
-                value={courseName}
-                onChange={(e) => setCourseName(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <Input
-                label="Tutor Name"
-                value={tutorName}
-                onChange={(e) => setTutorName(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <Textarea
-                label="Course Description"
-                value={courseDesc}
-                onChange={(e) => setCourseDesc(e.target.value)}
-              />
-            </div>
-            <div>
+    <div className="flex text-black justify-center relative dark:bg-main-dark-bg">
+      <Card className="mt-4 flex justify-center">
+        <div className="dark:bg-main-dark-bg bg-main-bg min-h-screen">
+          <div className="flex items-center mt-4">
+            <div className="w-full px-4">
+              <div className="mb-4 text-align:center">
+                <h1>Add Course</h1>
+              </div>
               <div className="mb-4">
+                <label htmlFor="Course Name">Course Name</label>
+                <Input
+                  label="Course Name"
+                  value={courseName}
+                  onChange={(e) => setCourseName(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="Tutor Name">Tutor Name</label>
+                <Input
+                  label="Tutor Name"
+                  value={tutorName}
+                  onChange={(e) => setTutorName(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="Course Description">Course Description</label>
+                <Textarea
+                  label="Course Description"
+                  value={courseDesc}
+                  onChange={(e) => setCourseDesc(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="Max Students">Max Students</label>
                 <Input
                   label="Max Students"
                   value={maxStudent}
@@ -160,6 +172,7 @@ const CourseAdd = () => {
                 />
               </div>
               <div className="mb-4">
+                <label htmlFor="What Will I Learn?">What Will I Learn?</label>
                 <Textarea
                   label="What Will I Learn?"
                   value={whatuLearn}
@@ -167,6 +180,7 @@ const CourseAdd = () => {
                 />
               </div>
               <div className="mb-4">
+                <label htmlFor="Materials Included">Materials Included</label>
                 <Textarea
                   label="Materials Included"
                   value={materialInclue}
@@ -174,6 +188,7 @@ const CourseAdd = () => {
                 />
               </div>
               <div className="mb-4">
+                <label htmlFor="Total Course Duration">Total Course Duration</label>
                 <Input
                   label="Total Course Duration"
                   value={courseDuration}
@@ -181,15 +196,15 @@ const CourseAdd = () => {
                 />
               </div>
               <div className="mb-4">
+                <label htmlFor="Course Thumbnail">Course Thumbnail</label>
                 <Input
                   type="file"
                   label="Course Thumbnail"
                   onChange={(e) => setThumbnailFile(e.target.files[0])}
                 />
               </div>
-              <div className=" p-8 border-solid rounded-lg shadow-md">
+              <div className="p-8 border-solid rounded-lg shadow-md">
                 <h2 className="text-black text-2xl mb-4">Course Settings</h2>
-
                 <div className="flex flex-col mb-4">
                   <div className="grid grid-cols-2">
                     <label
@@ -197,7 +212,7 @@ const CourseAdd = () => {
                       htmlFor="maxStudents"
                     >
                       Maximum Students
-                      <span className="text-sm text-gray-500 ">
+                      <span className="text-sm text-gray-500">
                         (Number of students that can enrol in this course. Set 0 for no
                         limits.)
                       </span>
@@ -237,7 +252,6 @@ const CourseAdd = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="flex flex-col mb-4">
                   <div className="grid grid-cols-2">
                     <label
@@ -260,7 +274,6 @@ const CourseAdd = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="mb-4">
                   <div className="grid grid-cols-2">
                     <label className="flex text-black mb-2" htmlFor="difficultyLevel">
@@ -280,49 +293,41 @@ const CourseAdd = () => {
                     </select>
                   </div>
                 </div>
-
                 <div className="mb-4">
                   <div className="grid grid-cols-2 items-center">
                     <label className="flex flex-col text-black mb-2">
                       Public Course
-                      <span className="text-sm text-gray-500 ">
+                      <span className="text-sm text-gray-500">
                         (Make This Course Public. No enrollment required.)
                       </span>
                     </label>
-
                     <label className="switch inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         value=""
                         className="sr-only peer"
                         checked={isPublic}
-                        onChange={() => {
-                          setIsPublic(!isPublic);
-                        }}
+                        onChange={() => setIsPublic(!isPublic)}
                       />
                       <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
                     </label>
                   </div>
                 </div>
-
                 <div className="mb-4">
                   <div className="grid grid-cols-2 items-center">
                     <label className="flex flex-col text-black mb-2">
                       Q&A
-                      <span className="text-sm text-gray-500 ">
+                      <span className="text-sm text-gray-500">
                         (Enable Q&A section for your course)
                       </span>
                     </label>
-
                     <label className="switch inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         value=""
                         className="sr-only peer"
                         checked={enableQA}
-                        onChange={() => {
-                          setEnableQA(!enableQA);
-                        }}
+                        onChange={() => setEnableQA(!enableQA)}
                       />
                       <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
                     </label>
@@ -330,12 +335,12 @@ const CourseAdd = () => {
                 </div>
               </div>
               <div className="mb-4 mt-5" type="submit" onClick={Submit}>
-                <Button variant="filled">Add Course</Button>
+                <Button variant="outline">Add Course</Button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
