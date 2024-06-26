@@ -55,6 +55,8 @@ function App() {
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />
               <Route path="course/:slug" element={<Course />} />
+              <Route path="course" element={<Course />} />
+
 
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
               <Route path="admin/*" element={
