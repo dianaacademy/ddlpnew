@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo/01.png";
+import { useAuth  } from "@/auth/hooks/useauth";
 
 const phoneNumber = "+44 7441441208";
 const address = "40 Bank street, London, E14 5NR, United Kingdom ";
-
 
 let socialList = [
     {
@@ -27,23 +27,49 @@ let socialList = [
         iconName: 'icofont-rss-feed',
         siteLink: '#',
     },
-]
+];
 
 const Header = () => {
+    const { currentUser, role } = useAuth();
     const [menuToggle, setMenuToggle] = useState(false);
-	const [socialToggle, setSocialToggle] = useState(false);
-	const [headerFiexd, setHeaderFiexd] = useState(false);
+    const [socialToggle, setSocialToggle] = useState(false);
+    const [headerFixed, setHeaderFixed] = useState(false);
+    const navigate = useNavigate();
 
-	window.addEventListener("scroll", () => {
-		if (window.scrollY > 200) {
-			setHeaderFiexd(true);
-		} else {
-			setHeaderFiexd(false);
-		}
-	});
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 200) {
+                setHeaderFixed(true);
+            } else {
+                setHeaderFixed(false);
+            }
+        });
+
+        return () => {
+            window.removeEventListener("scroll", () => {});
+        };
+    }, []);
+
+    useEffect(() => {
+        if (currentUser) {
+            switch (role) {
+                case 'admin':
+                    navigate('/admin/default');
+                    break;
+                case 'creator':
+                    navigate('/creator/default');
+                    break;
+                case 'student':
+                    navigate('/student/default');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [currentUser, role, navigate]);
 
     return (
-        <header className={`header-section  ${headerFiexd ? "header-fixed bg-black fadeInUp" : ""}`}>
+        <header className={`header-section text-black ${headerFixed ? "header-fixed  fadeInUp" : ""}`}>
             <div className={`header-top ${socialToggle ? "open" : ""}`}>
                 <div className="container">
                     <div className="header-top-area">
@@ -60,38 +86,40 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-            <div className="header-bottom">
+            <div className="backdrop-filter backdrop-blur-lg  bg-opacity-30  shadow-lg rounded-lg p-4 px-0 py-0">
                 <div className="container">
                     <div className="header-wrapper">
-                    <div className="logo">
-                    <Link to="/">
-                    <img src={logo} alt="logo" style={{    width: '60%' }} />
-                       </Link>
-                    </div>
-
+                        <div className="logo">
+                            <Link to="/">
+                                <img src={logo} alt="logo" style={{ width: '60%' }} />
+                            </Link>
+                        </div>
                         <div className="menu-area">
                             <div className="menu">
                                 <ul className={`lab-ul ${menuToggle ? "active" : ""}`}>
-                                <li><NavLink to="/">Home</NavLink></li>
-                                <li><NavLink to="/course">Courses</NavLink></li>
-                                    <li><NavLink to="/blog">Blog</NavLink></li>
-                                    <li className="menu-item-has-children">
-                                        <a href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-offset="0,0">Pages</a>
-                                        <ul className="lab-ul dropdown-menu">
-                                            <li><NavLink to="/about">About</NavLink></li>
-                                            <li><NavLink to="/team">Team</NavLink></li>
-                                            <li><NavLink to="/instructor">Instructor</NavLink></li>
-                                        </ul>
-                                    </li>
+                                    <li><NavLink to="/">Home</NavLink></li>
+                                    <li><NavLink to="/course">Courses</NavLink></li>
                                     <li><NavLink to="/contact">Contact</NavLink></li>
                                 </ul>
                             </div>
-                            
-                            <Link to="/lab" className="signup"> <span>LAB TEST</span> </Link>
-                            <Link to="/login" className="login"><i className="icofont-user"></i> <span>LOG IN</span> </Link>
-                            <Link to="/signup" className="signup"><i className="icofont-users"></i> <span>SIGN UP</span> </Link>
-
-                            <div className={`header-bar d-lg-none ${menuToggle ? "active" : "" }`} onClick={() => setMenuToggle(!menuToggle)}>
+                            {currentUser ? (
+                                <Link to={role === 'student' ? "/student/default" : "/admin/default"} className="login">
+                                    <i className="icofont-user"></i>
+                                    <span>{role === 'student' ? "My Learning" : "Dashboard"}</span>
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link to="/login" className="login">
+                                        <i className="icofont-user"></i>
+                                        <span>LOG IN</span>
+                                    </Link>
+                                    <Link to="/signup" className="signup">
+                                        <i className="icofont-users"></i>
+                                        <span>SIGN UP</span>
+                                    </Link>
+                                </>
+                            )}
+                            <div className={`header-bar d-lg-none ${menuToggle ? "active" : ""}`} onClick={() => setMenuToggle(!menuToggle)}>
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -105,6 +133,6 @@ const Header = () => {
             </div>
         </header>
     );
-}
- 
+};
+
 export default Header;

@@ -20,6 +20,7 @@ import PrivateRoute from './utils/PrivateRoutes';
 import CourseBuild from './views/admin/Coursebuild';
 import ModuleBuild from './views/admin/Modulebuild';
 import SplashScreen from './views/admin/SplashScreen';
+import Course from './components/course';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -53,6 +54,8 @@ function App() {
               <Route path="blog" element={<Blog />} />
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />
+              <Route path="course/:slug" element={<Course />} />
+
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
               <Route path="admin/*" element={
                 <PrivateRoute allowedRoles={['Admin']}>
