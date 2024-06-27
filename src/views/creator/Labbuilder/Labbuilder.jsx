@@ -35,7 +35,7 @@ function LabBuilder({ onLabDetailsChange }) {
 
     const storageRef = ref(storage, `labsimages/${imageFile.name}`);
     await uploadBytes(storageRef, imageFile);
-    const imageUrl = await getDownloadURL(storageRef);
+    const imageUrl = await getDownloadURL(storageRef) ;
 
     const labData = {
       imageUrl,

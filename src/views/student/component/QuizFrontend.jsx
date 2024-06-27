@@ -1,13 +1,17 @@
-import  { useState, useEffect } from 'react';
-import './assests/RadioButton.css';
+import { useState, useEffect } from 'react';
 
-
-const QuizFrontend = ({ quiz }) => {
+const QuizFrontend = ({ quiz, chapterTitle }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState(new Array(quiz.questions.length).fill(null));
+  const [userAnswers, setUserAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const [celebration, setCelebration] = useState(false);
+
+  useEffect(() => {
+    if (quiz && quiz.questions) {
+      setUserAnswers(new Array(quiz.questions.length).fill(null));
+    }
+  }, [quiz]);
 
   const handleAnswerChange = (optionIndex) => {
     const newUserAnswers = [...userAnswers];
@@ -28,15 +32,13 @@ const QuizFrontend = ({ quiz }) => {
     quiz.questions.forEach((question, questionIndex) => {
       const correctOptionIndex = question.options.findIndex((option) => option.isCorrect);
       if (userAnswers[questionIndex] === correctOptionIndex) {
-        score++ ;
+        score++;
       }
     });
     setScore(score);
     setShowResult(true);
     setCelebration(true);
   };
-
-  const currentQuestion = quiz.questions[currentQuestionIndex];
 
   useEffect(() => {
     if (celebration) {
@@ -47,60 +49,58 @@ const QuizFrontend = ({ quiz }) => {
     }
   }, [celebration]);
 
+  if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+    return <div>No quiz data available.</div>;
+  }
+
+  const currentQuestion = quiz.questions[currentQuestionIndex];
+
   return (
-    <div className="quiz-frontend" style={{ backgroundColor: '', minHeight: '100vh', padding: '20px' }}>
+    <div className="bg-white min-h-screen ">
       {!showResult && (
-        <div className= "bg-opacity-30 backdrop-blur-sm" style={{ backgroundColor: '', borderRadius: '10px', padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ color: '#fff', fontSize: '24px', marginBottom: '20px' }}>{quiz.course}</h1>
-          <div key={currentQuestionIndex} style={{ marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <h2 style={{ color: '#fff', fontSize: '18px', marginRight: '10px' }}>
+        <div className="bg-white bg-opacity-30  rounded-lg p-5 max-w-3xl  ">
+          <h1 className="text-gray-800 font-bold text-2xl mb-5">{chapterTitle || "Quiz"}</h1>
+          <div key={currentQuestionIndex} className="mb-5">
+            <div className="flex items-center mb-3">
+              <h2 className="text-gray-800 text-lg mr-3">
                 Question {currentQuestionIndex + 1} of {quiz.questions.length}
               </h2>
-              <div style={{ backgroundColor: '#e74c3c', height: '20px', width: '200px', borderRadius: '10px', position: 'relative' }}>
+              <div className="bg-gray-200 h-2.5 flex-grow rounded-full overflow-hidden">
                 <div
-                  style={{
-                    backgroundColor: '#2ecc71',
-                    height: '100%',
-                    width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%`,
-                    borderRadius: '10px',
-                    transition: 'width 0.5s ease',
-                  }}
+                  className="bg-green-500 h-full transition-all duration-500 ease-in-out"
+                  style={{ width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%` }}
                 />
               </div>
             </div>
-            <p style={{ color: '#fff' }}>{currentQuestion.question}</p>
-            <div style={{ marginTop: '10px' }}>
+            <p className="text-gray-800 text-base mb-4">👉 {currentQuestion.question}</p>
+            <div className="mt-3">
               {currentQuestion.options.map((option, optionIndex) => (
                 <label
                   key={optionIndex}
-                   
+                  className={`block p-3 mb-2 border border-gray-300 rounded-md cursor-pointer transition-colors duration-300 ${
+                    userAnswers[currentQuestionIndex] === optionIndex ? 'bg-blue-100' : 'bg-white'
+                  }`}
                 >
-                  <input
-                    type="radio"
-                    name={`question-${currentQuestionIndex}`}
-                    value={optionIndex}
-                    checked={userAnswers[currentQuestionIndex] === optionIndex}
-                    onChange={() => handleAnswerChange(optionIndex)}
-                    style={{ marginRight: '10px', cursor: 'pointer' }}
-                  />
-                  {option.option}
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name={`question-${currentQuestionIndex}`}
+                      value={optionIndex}
+                      checked={userAnswers[currentQuestionIndex] === optionIndex}
+                      onChange={() => handleAnswerChange(optionIndex)}
+                      className="form-radio h-5 w-5 text-blue-600"
+                    />
+                    <span className="ml-2 text-gray-700">{option.option}</span>
+                  </div>
                 </label>
               ))}
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex justify-between mt-5">
             {currentQuestionIndex > 0 && (
               <button
                 onClick={handlePreviousQuestion}
-                style={{
-                  backgroundColor: 'rgb(57 73 171 / var(--tw-bg-opacity))',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}
+                className="bg-blue-500 text-white px-5 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300"
               >
                 Previous
               </button>
@@ -108,28 +108,14 @@ const QuizFrontend = ({ quiz }) => {
             {currentQuestionIndex < quiz.questions.length - 1 ? (
               <button
                 onClick={handleNextQuestion}
-                style={{
-                  backgroundColor: 'rgb(57 73 171 / var(--tw-bg-opacity))',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}
+                className="bg-blue-500 text-white px-5 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300"
               >
                 Next
               </button>
             ) : (
               <button
                 onClick={handleSubmitQuiz}
-                style={{
-                  backgroundColor: 'rgb(57 73 171 / var(--tw-bg-opacity))',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                }}
+                className="bg-green-500 text-white px-5 py-2 rounded-md hover:bg-green-600 transition-colors duration-300"
               >
                 Submit
               </button>
@@ -138,106 +124,40 @@ const QuizFrontend = ({ quiz }) => {
         </div>
       )}
       {showResult && (
-        <div style={{ backgroundColor: '#2c3e50', borderRadius: '10px', padding: '20px', maxWidth: '800px', margin: '0 auto', position: 'relative', minHeight: '80vh',  alignContent: 'center' }}>
+        <div className="bg-white rounded-lg p-5 max-w-3xl mx-auto relative min-h-[80vh] shadow-md">
           <button
             onClick={() => setShowResult(false)}
-            style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: '#fff',
-              cursor: 'pointer',
-            }}
+            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <h2 style={{ color: '#fff', fontSize: '64px', marginBottom: '20px', textAlign: 'center' }} >Result</h2>
-          <p style={{ color: '#fff', textAlign: 'center',fontSize: '21px', }}>
+          <h2 className="text-gray-800 text-4xl mb-5 text-center">Result</h2>
+          <p className="text-gray-800 text-center text-2xl">
             You scored {score} out of {quiz.questions.length} questions.
           </p>
           {celebration && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 100,
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: '#fff',
-                  borderRadius: '10px',
-                  padding: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  minWidth: '100vh',
-                  maxWidth: '800px',
-                }}
-              >
-                <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>Congratulations!</h2>
-                <p style={{ marginBottom: '20px'}}>You have completed the quiz.</p>
-                <div style={{ display: 'flex' }}>
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      backgroundColor: '#f1c40f',
-                      borderRadius: '50%',
-                      marginRight: '10px',
-                      animation: 'celebration 1s infinite',
-                    }}
-                  />
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      backgroundColor: '#e67e22',
-                      borderRadius: '50%',
-                      marginRight: '10px',
-                      animation: 'celebration 1s infinite 0.2s',
-                    }}
-                  />
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      backgroundColor: '#2ecc71',
-                      borderRadius: '50%',
-                      animation: 'Celebration 1s infinite 0.4s',
-                    }}
-                  />
+            <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-90 z-10">
+              <div className="bg-white rounded-lg p-5 flex flex-col items-center shadow-md">
+                <h2 className="text-3xl mb-3 text-gray-800">Congratulations!</h2>
+                <p className="mb-5 text-gray-600">You have completed the quiz.</p>
+                <div className="flex">
+                  {[0, 1, 2].map((index) => (
+                    <div
+                      key={index}
+                      className={`w-5 h-5 rounded-full ${
+                        index === 0 ? 'bg-yellow-400' : index === 1 ? 'bg-orange-400' : 'bg-green-400'
+                      } ${index < 2 ? 'mr-3' : ''} animate-bounce`}
+                      style={{ animationDelay: `${index * 0.2}s` }}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           )}
         </div>
       )}
-
-      <style>{` 
-        @keyframes celebration {
-          0% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-          100% {
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 };

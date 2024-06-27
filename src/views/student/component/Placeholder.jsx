@@ -4,7 +4,7 @@ const Placeholder = () => {
   const [questions, setQuestions] = useState([
     { id: 1, image: 'https://ik.imagekit.io/growthx100/635deda7acede75ff87bd0a3-xcj-computer-motherboard-gaming-atx.jpg?updatedAt=1714125409004', answer: '', options: ['Option 1', 'Option 2', 'Option 3'] },
     { id: 2, answer: '', options: ['Option 4', 'Option 5', 'Option 6'] },
-    { id: 3, answer: '', options: ['Option 7', 'Option 8', 'Option 9'] },
+    { id: 3, answer:  '', options: ['Option 7', 'Option 8', 'Option 9'] },
     { id: 4, answer : '', options: ['Option 10', 'Option 11', 'Option 12'] },
     { id: 5, answer: '', options: ['Option 13', 'Option 14', 'Option 15'] }
   ]);

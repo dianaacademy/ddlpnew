@@ -110,7 +110,7 @@ const MatchQuiz = () => {
           font-weight: bold;
           color: var(--neon-color);
           border: 0.125rem solid var(--neon-color);
-          border-radius: 0.25rem;
+          border-radius: 0.25rem ;
           text-shadow: 0 0 0.125rem hsla(0, 0%, 100%, 0.3),
             0 0 0.45rem var(--neon-color);
           box-shadow: inset 0 0 0.5rem 0 var(--neon-color),

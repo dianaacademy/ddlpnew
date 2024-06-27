@@ -11,13 +11,17 @@ import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoN
 import css from "./CourseViewPage.module.css";
 import QuizRouter from "./QuizRouter";
 import MatchQuiz from "./MatchQuiz";
+import parse from 'html-react-parser';
+import ReactQuill from "react-quill";
+import QuizFrontend from "./QuizFrontend";
+import LabContent from "./LabContent";
+import 'react-quill/dist/quill.snow.css' ; 
 
 
-const TextContent = ({ textContent }) => {
+const Content = ({ content }) => {
   return (
     <div className="text-content p-4 text-sm">
-     
-      {textContent || <p>No text content available.</p>}
+      {content ? parse(content) : <p>No text content available.</p>}
     </div>
   );
 };
@@ -25,13 +29,16 @@ const TextContent = ({ textContent }) => {
 const QuizContent = ({ quizContent }) => {
   return (
     <div className="quiz-content p-4">
-      
-      <QuizRouter/>
-   
-      {/* {quizContent || <p>No quiz content available.</p>} */}
+      <QuizFrontend quiz={{ questions: quizContent, course: "Your Course Name" }} />
     </div>
   );
 };
+
+
+
+
+
+
 const MatchContent = ({ matchContent }) => {
   return (
     <div className="quiz-content p-4">
@@ -107,7 +114,7 @@ const Learning = () => {
       ttl: moduleData.moduleName || '',
       lects: moduleData.lectures || '',
       dur: moduleData.duration || '',
-      list: moduleData.chapters.map(chapter => ({
+      list: (moduleData.chapters || []).map(chapter => ({
         id: chapter.id,
         ttl: chapter.chapterName || '',
         dur: chapter.duration || '',
@@ -117,12 +124,25 @@ const Learning = () => {
         resources: chapter.resources || [],
         details: {
           videoUrl: chapter.details?.videoUrl || '',
-          textContent: chapter.details?.textContent || '',
+          content: chapter.details?.content || '',
+          imageUrl: chapter.details?.imageUrl || '',
+          question: chapter.details?.question || '',
+          answerArea: chapter.details?.answerArea || {},
           quizContent: chapter.details?.quizContent || '',
+          questions: (chapter.details?.questions || []).map(question => ({
+            question: question.question || '',
+            hint: question.hint || '',
+            options: (question.options || []).map(option => ({
+              option: option.option || '',
+              isCorrect: option.isCorrect || false
+            }))
+          }))
         }
       }))
     };
   };
+  
+  
 
   const handleChapterClick = (chapterId) => {
     const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
@@ -136,14 +156,24 @@ const Learning = () => {
           setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.details.videoUrl }} />);
           break;
         case 'text':
-          console.log('textContent:', chapterData.details.textContent); 
-          setChapterContent(<TextContent textContent={chapterData.details.textContent} />);
+          console.log('Content:', chapterData.details.content); 
+          setChapterContent(<Content content={chapterData.details.content} />);
           break;
         case 'quiz':
-          setChapterContent(<QuizContent quizContent={chapterData.details.quizContent} />);
-          break;
+            console.log('quiz:', chapterData.details.questions); 
+            setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
+            break;
+
         case 'match':
           setChapterContent(<MatchQuiz matchContent={chapterData.details.matchContent} />);
+          break;
+          case 'lab':
+          console.log('Lab data:', chapterData);
+          setChapterContent(
+            <div className="lab-content p-4">
+              <LabContent labData={chapterData} />
+            </div>
+          );
           break;
         default:
           setChapterContent(<div>Unsupported content type</div>);
@@ -165,7 +195,7 @@ const Learning = () => {
   }
 
   return (
-    <div className={css.outterDiv}>
+    <div className= {css.outterDiv }>
       <CourseVideoNavbar data={data} />
       <div className={css.bdy}>
         <div
@@ -180,7 +210,7 @@ const Learning = () => {
           >
             {chapterContent || <VideoPlayer data={{ autoplay: true }} />}
           </div>
-          <CourseViewTabComponent />
+          {/* <CourseViewTabComponent /> */}
         </div>
         <div
           className={css.right}
@@ -192,7 +222,7 @@ const Learning = () => {
             btnTxt="Launch Assessment"
           />
           <CourseContentComponent
-            title="Course Content"
+            title="Course Content "
             data={courseData}
             playerWidthSetter={setPlayerFullWidth}
              onChapterClick={handleChapterClick}

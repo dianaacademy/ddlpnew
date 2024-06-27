@@ -77,12 +77,12 @@ function Navbar() {
           </SheetContent>
         </Sheet>
         <div className="flex w-60% items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <form className="ml-auto   flex-1 sm:flex-initial">
+          <form className="ml-auto   flex-1 sm:flex-initial max-w-fit		">
             <div className="relative px-4 ">
               <Search className="absolute left-2.5 pr-6  top-2.5 h-4 w-14 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search products..."
+                placeholder="Search courses..."
                 className=" bg-slate-700 mx-4 sm:w-[300px] md:w-[200px] lg:w-[400px] border border-indigo-600 "
               />
             </div>

@@ -71,8 +71,8 @@ const CourseContentComponent = (props) => {
                           key={`subItem-${subItem.id}`}
                           onClick={() => onChapterClick(subItem.id)}
                         >
-                          <div className={css.descBdyLeft}>
-                            <CustomCheckboxUtil
+                          <div className={css.s}>
+                            {/* <CustomCheckboxUtil
                               state={toggleDrpDwn[subItem.id] ?? false}
                               name={subItem.id}
                               id={subItem.id}
@@ -89,7 +89,7 @@ const CourseContentComponent = (props) => {
                                 gap: "0",
                                 margin: "0.5rem",
                               }}
-                            />
+                            /> */}
                           </div>
                           <div className={css.descBdyRight}>
                             <div className={css.sbTtl}>{subItem.ttl}</div>

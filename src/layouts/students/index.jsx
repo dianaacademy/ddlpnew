@@ -67,7 +67,7 @@ export default function Student(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
         {/* Main Content */}
         <main
-          className={`h-full flex-none transition-all   main-dashboard-container`}
+          className={`h-full flex-none transition-all   main-dashboard-container p-0 `}
         >
           {/* Routes */}
           <div className="h-full">

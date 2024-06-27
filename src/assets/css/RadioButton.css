@@ -23,13 +23,13 @@ input {
 
 main {
   margin: auto;
-  padding: 1.5em 0;
+  padding: 0!important;
   width: 100%;
 }
 
 form {
   margin: auto;
-  max-width: 20em;
+  /* max-width: 20em; */
   position: relative;
   width: calc(100% - 3em);
 }
