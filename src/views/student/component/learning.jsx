@@ -4,19 +4,14 @@ import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import "../../../components/ui/loader.css";
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
-import DetailDPComponent from "../../../components/CourseVideoComponents/DetailDPComponent/DetailDPComponent";
 import CourseContentComponent from "../../../components/CourseVideoComponents/CourseContentComponent/CourseContentComponent";
-import CourseViewTabComponent from "../../../components/CourseVideoComponents/CourseViewTabComponents/CourseViewTabComponent/CourseViewTabComponent";
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
 import css from "./CourseViewPage.module.css";
-import QuizRouter from "./QuizRouter";
 import MatchQuiz from "./MatchQuiz";
 import parse from 'html-react-parser';
-import ReactQuill from "react-quill";
 import QuizFrontend from "./QuizFrontend";
 import LabContent from "./LabContent";
-import 'react-quill/dist/quill.snow.css' ; 
-
+import 'react-quill/dist/quill.snow.css';
 
 const Content = ({ content }) => {
   return (
@@ -59,6 +54,7 @@ const Learning = () => {
   const [chapterContent, setChapterContent] = useState(null);
   const [data, setData] = useState({ title: "" }); 
   const [playerFullWidth, setPlayerFullWidth] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -141,14 +137,11 @@ const Learning = () => {
       }))
     };
   };
-  
-  
 
   const handleChapterClick = (chapterId) => {
     const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
 
     if (chapterData) {
-      console.log('Chapter Data:', chapterData);
       setActiveChapter(chapterData);
 
       switch(chapterData.type) {
@@ -156,19 +149,15 @@ const Learning = () => {
           setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.details.videoUrl }} />);
           break;
         case 'text':
-          console.log('Content:', chapterData.details.content); 
           setChapterContent(<Content content={chapterData.details.content} />);
           break;
         case 'quiz':
-            console.log('quiz:', chapterData.details.questions); 
-            setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
-            break;
-
+          setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
+          break;
         case 'match':
           setChapterContent(<MatchQuiz matchContent={chapterData.details.matchContent} />);
           break;
-          case 'lab':
-          console.log('Lab data:', chapterData);
+        case 'lab':
           setChapterContent(
             <div className="lab-content p-4">
               <LabContent labData={chapterData} />
@@ -184,10 +173,16 @@ const Learning = () => {
     }
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">
-      <div className="loader"></div>
-    </div>
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader"></div>
+      </div>
+    );
   }
 
   if (!courseInfo) {
@@ -195,38 +190,36 @@ const Learning = () => {
   }
 
   return (
-    <div className= {css.outterDiv }>
-      <CourseVideoNavbar data={data} />
+    <div className={css.outterDiv}>
+      <div className={css.stickyHeader}>
+        <CourseVideoNavbar data={data} />
+      </div>
+      
       <div className={css.bdy}>
+        {sidebarOpen && (
+          <div className={css.right}>
+            <CourseContentComponent
+              title="Course Content"
+              data={courseData}
+              playerWidthSetter={setPlayerFullWidth}
+              onChapterClick={handleChapterClick}
+              onClose={toggleSidebar}
+              activeChapter={activeChapter}
+            />
+          </div>
+        )}
         <div
           className={css.left}
-          style={{ width: playerFullWidth ? "100%" : "75%" }}
+          style={{ width: sidebarOpen ? "75%" : "100%" }}
         >
-          <div
-            className={css.content}
-            style={{
-              height: playerFullWidth ? "700px" : "600px",
-            }}
-          >
+          {!sidebarOpen && (
+            <button className={css.openSidebarBtn} onClick={toggleSidebar}>
+              Open Sidebar
+            </button>
+          )}
+          <div className={css.content}>
             {chapterContent || <VideoPlayer data={{ autoplay: true }} />}
           </div>
-          {/* <CourseViewTabComponent /> */}
-        </div>
-        <div
-          className={css.right}
-          style={{ display: playerFullWidth ? "none" : "block" }}
-        >
-          <DetailDPComponent
-            title="Take a Diana Assessment to check your skills"
-            desc="Made by Diana, this generalized assessment is a great way to check in on your skills."
-            btnTxt="Launch Assessment"
-          />
-          <CourseContentComponent
-            title="Course Content "
-            data={courseData}
-            playerWidthSetter={setPlayerFullWidth}
-             onChapterClick={handleChapterClick}
-          />
         </div>
       </div>
     </div>

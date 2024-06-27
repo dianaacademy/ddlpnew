@@ -63,7 +63,7 @@ const LabContent = ({ labData }) => {
     <img 
       src="https://ik.imagekit.io/growthx100/icon(5).svg?updatedAt=1719486414686" 
       alt="wrong icon" 
-      width="30px" 
+      width="30px"  
     />
   </div>
 )}
