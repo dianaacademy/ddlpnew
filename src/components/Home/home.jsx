@@ -6,7 +6,6 @@ import Sponsor from "../sponsor";
 import Blog from "../blog";
 import Banner from "../banner";
 import Category from "../category";
-import Course from "../course";
 import Achievement from "../achievement";
 import About from "../about";
 import Instructor from "../instructor";
@@ -24,9 +23,8 @@ const Home = () => {
             <Header />
             <Banner />
             <Sponsor />
-            <Category />
-            <Course />
-            <About />
+            <Category />           
+             <About />
             <Instructor />
             <Student />
             <Blog />
