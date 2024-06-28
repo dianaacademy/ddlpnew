@@ -56,6 +56,10 @@ const Learning = () => {
   const [playerFullWidth, setPlayerFullWidth] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -172,10 +176,7 @@ const Learning = () => {
       setChapterContent(null);
     }
   };
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  
 
   if (loading) {
     return (
@@ -212,11 +213,14 @@ const Learning = () => {
           className={css.left}
           style={{ width: sidebarOpen ? "75%" : "100%" }}
         >
-          {!sidebarOpen && (
-            <button className={css.openSidebarBtn} onClick={toggleSidebar}>
-              Open Sidebar
-            </button>
-          )}
+        {!sidebarOpen && (
+  <button className={css.openSidebarBtn} onClick={toggleSidebar} style={{ display: 'flex', alignItems: 'center' }}>
+    <img src="https://ik.imagekit.io/growthx100/icon(9).svg?updatedAt=1719580145816" alt="icon" style={{ marginRight: '8px' ,width:'15px'}} />
+    Menu
+  </button>
+)}
+
+      
           <div className={css.content}>
             {chapterContent || <VideoPlayer data={{ autoplay: true }} />}
           </div>

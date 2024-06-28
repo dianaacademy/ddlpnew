@@ -67,6 +67,10 @@
   scrollbar-color: #555 #f5f5f5;
 }
 
+.activeChapter {
+  background-color: #000; /* or any color you prefer */
+}
+
 
 .openSidebarBtn {
   position: fixed;

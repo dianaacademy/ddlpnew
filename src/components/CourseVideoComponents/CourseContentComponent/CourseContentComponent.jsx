@@ -1,19 +1,42 @@
+// CourseContentComponent.jsx
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import CustomCheckboxUtil from "../../../utils/CustomCheckboxUtil/CustomCheckboxUtil";
-
 import closeIcon from "/icons/close.png";
-import playIcon from "/icons/play-button.png";
 import downArrowIcon from "/icons/down-arrow.svg";
 import openFolderIcon from "/icons/open-folder.png";
 
 import css from "./CourseContentComponent.module.css";
 
+const icons = {
+  video: {
+    black: "https://ik.imagekit.io/growthx100/icon(10).svg?updatedAt=1719582119207",
+    white: "https://ik.imagekit.io/growthx100/Group%20(1).svg?updatedAt=1719584006148"
+  },
+  quiz: {
+    black: "https://ik.imagekit.io/growthx100/icon(11).svg?updatedAt=1719582119349",
+    white: "https://ik.imagekit.io/growthx100/Group%20(3).svg?updatedAt=1719584006218"
+  },
+  lab: {
+    black: "https://ik.imagekit.io/growthx100/icon(13).svg?updatedAt=1719582119148",
+    white: "https://ik.imagekit.io/growthx100/Group.svg?updatedAt=1719584006179"
+  },
+  text: {
+    black: "https://ik.imagekit.io/growthx100/icon(14).svg?updatedAt=1719582580684",
+    white: "https://ik.imagekit.io/growthx100/Group%20(2).svg?updatedAt=1719584006212"
+  }
+};
+
 const CourseContentComponent = (props) => {
-  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {} } = props;
+  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {}, onClose = () => {}, activeChapter } = props;
   const [toggleBox, setToggleBox] = useState({});
   const [toggleDrpDwn, setToggleDrpDwn] = useState({});
+
+  const getIcon = (type, isActive) => {
+    const iconSet = icons[type] || icons.video; // Default to video if type is not recognized
+    return isActive ? iconSet.white : iconSet.black;
+  };
 
   return (
     <div className={css.outterDiv}>
@@ -23,7 +46,7 @@ const CourseContentComponent = (props) => {
             <span className={css.ttl}>{title}</span>
             <span
               className={css.imgBox}
-              onClick={() => playerWidthSetter((p) => !p)}
+              onClick={onClose}
             >
               <img src={closeIcon} alt="close icon" className={css.closeIcon} />
             </span>
@@ -65,37 +88,25 @@ const CourseContentComponent = (props) => {
                 {toggleBox[id] ? (
                   <div className={css.tabBdy}>
                     {item.list?.map((subItem) => {
+                      const isActive = activeChapter && activeChapter.id === subItem.id;
                       return (
                         <div
-                          className={css.descBdy}
+                          className={`${css.descBdy} ${isActive ? css.activeChapter : ''}`}
                           key={`subItem-${subItem.id}`}
                           onClick={() => onChapterClick(subItem.id)}
                         >
                           <div className={css.s}>
-                            {/* <CustomCheckboxUtil
-                              state={toggleDrpDwn[subItem.id] ?? false}
-                              name={subItem.id}
-                              id={subItem.id}
-                              onChange={(e) => {
-                                setToggleDrpDwn((prev) => {
-                                  return {
-                                    ...prev,
-                                    [e.target?.name]: !prev[e.target?.name],
-                                  };
-                                });
-                              }}
-                              extraCss={{
-                                width: "40px",
-                                gap: "0",
-                                margin: "0.5rem",
-                              }}
-                            /> */}
+                            {/* Checkbox code removed as per your previous version */}
                           </div>
                           <div className={css.descBdyRight}>
                             <div className={css.sbTtl}>{subItem.ttl}</div>
                             <div className={css.sbBox}>
                               <span className={css.subDur}>
-                                <img src={playIcon} className={css.plyIcon} />
+                                <img 
+                                  src={getIcon(subItem.type, isActive)} 
+                                  className={css.plyIcon} 
+                                  alt={`${subItem.type} icon`}
+                                />
                                 <span className={css.subDurTxt}>
                                   {subItem.dur}
                                 </span>
