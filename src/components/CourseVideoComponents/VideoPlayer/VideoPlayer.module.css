@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   margin-inline: auto;
-  background-color: var(--gray);
+  background-color: #fff;
   position: relative;
 }
 
@@ -94,6 +94,7 @@
 .rightControls {
   display: flex;
   align-items: center;
+ 
 }
 
 .btn {
@@ -106,7 +107,7 @@
 .plyBtn {
   padding: 2px 5px;
   width: max-content;
-  color: var(--gray);
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
 }
@@ -115,7 +116,7 @@
   margin: 0.5rem;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--white);
+  color: #fff;
 }
 
 .icon {
@@ -123,7 +124,12 @@
   height: 25px;
   margin: 0.5rem;
   cursor: pointer;
+  
 }
+
+._btn_1t2vv_199 {
+  
+  display: flex;}
 
 .expandIcon,
 .settingsIcon,
@@ -183,7 +189,7 @@
   bottom: 3rem;
   right: -1rem;
   color: var(--white);
-  background-color: var(--gray);
+  background-color: #fff;
 }
 
 .playbackMenu {
@@ -192,8 +198,8 @@
   position: absolute;
   bottom: 3rem;
   left: 0rem;
-  color: var(--white);
-  background-color: var(--gray);
+  color: #fff;
+  background-color: #fff;
 }
 
 .captionLangItem,

@@ -9,6 +9,27 @@
   height: 100%;
 }
 
+.activeChapter {
+  background-color: #fa7139; 
+  padding: 10px;
+    margin-right: 20px;
+    border-radius: 5px;
+    padding-left: 20px;
+    color: white;
+    margin-left: 10px;
+/* or any color you prefer */
+}
+.activeChapter:hover {
+  background-color: #fa7139; 
+  padding: 10px;
+    margin-right: 20px;
+    border-radius: 5px;
+    padding-left: 20px;
+    color: white;
+    margin-left: 10px;
+/* or any color you prefer */
+}
+
 .titleBox {
   width: 100%;
   padding: 1rem;
@@ -107,11 +128,18 @@
 .descBdy {
   padding: 0.5rem 1rem;
   display: flex;
+  padding: 10px;
+    margin-right: 20px;
+    border-radius: 5px;
+    padding-left: 20px;
+    margin-left: 10px;
+
+
 }
 
-.descBdy:hover {
+/* .descBdy:hover {
   background-color: var(--gray86);
-}
+} */
 
 .descBdyLeft {
   width: 10%;
@@ -136,6 +164,7 @@
 }
 
 .plyIcon {
+  margin-top:5px;
   width: 13px;
   height: 13px;
 }

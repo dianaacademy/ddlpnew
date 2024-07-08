@@ -336,12 +336,13 @@ const VideoPlayer = (props) => {
                 alt="backward icon"
                 onClick={reversePlaybackHandler}
               />
-              <img
+              {/* forword and backward icon */}
+              {/* <img
                 className={[css.forwardIcon, css.icon].join(" ")}
                 src={forwardIcon}
                 alt="forward icon"
                 onClick={forwardPlaybackHanlder}
-              />
+              /> */}
             </button>
             <div id="buttonBox" className={css.buttonBox}>
               {playbackOptionsBox ? (

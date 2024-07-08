@@ -7,8 +7,27 @@ import openFolderIcon from "/icons/open-folder.png";
 
 import { getCompletedChapters, markChapterAsComplete } from "../../../views/student/component/Progressservice"; // Import your progress tracking functions
 
+const icons = {
+  video: {
+    black: "https://ik.imagekit.io/growthx100/icon(10).svg?updatedAt=1719582119207",
+    white: "https://ik.imagekit.io/growthx100/Group%20(1).svg?updatedAt=1719584006148"
+  },
+  quiz: {
+    black: "https://ik.imagekit.io/growthx100/icon(11).svg?updatedAt=1719582119349",
+    white: "https://ik.imagekit.io/growthx100/Group%20(3).svg?updatedAt=1719584006218"
+  },
+  lab: {
+    black: "https://ik.imagekit.io/growthx100/icon(13).svg?updatedAt=1719582119148",
+    white: "https://ik.imagekit.io/growthx100/Group.svg?updatedAt=1719584006179"
+  },
+  text: {
+    black: "https://ik.imagekit.io/growthx100/icon(14).svg?updatedAt=1719582580684",
+    white: "https://ik.imagekit.io/growthx100/Group%20(2).svg?updatedAt=1719584006212"
+  }
+};
+
 const CourseContentComponent = (props) => {
-  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {} } = props;
+  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {}, onClose = () => {}, activeChapter } = props;
   const [toggleBox, setToggleBox] = useState({});
   const [toggleDrpDwn, setToggleDrpDwn] = useState({});
   const [completedChapters, setCompletedChapters] = useState([]);
@@ -35,6 +54,11 @@ const CourseContentComponent = (props) => {
   };
 
 
+
+  const getIcon = (type, isActive) => {
+    const iconSet = icons[type] || icons.video; // Default to video if type is not recognized
+    return isActive ? iconSet.white : iconSet.black;
+  };
 
   return (
     <div className="flex">

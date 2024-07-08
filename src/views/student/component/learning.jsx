@@ -174,7 +174,6 @@ const Learning = () => {
     const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
 
     if (chapterData) {
-      console.log('Chapter Data:', chapterData);
       setActiveChapter(chapterData);
 
       switch (chapterData.type) {
@@ -210,6 +209,7 @@ const Learning = () => {
       await setLastVisitedChapter(slug, chapterId);
     }
   };
+  
 
   if (loading) {
     return (
