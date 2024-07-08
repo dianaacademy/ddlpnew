@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import "../../../components/ui/loader.css";
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
-import DetailDPComponent from "../../../components/CourseVideoComponents/DetailDPComponent/DetailDPComponent";
 import CourseContentComponent from "../../../components/CourseVideoComponents/CourseContentComponent/CourseContentComponent";
-import CourseViewTabComponent from "../../../components/CourseVideoComponents/CourseViewTabComponents/CourseViewTabComponent/CourseViewTabComponent";
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
-import css from "./CourseViewPage.module.css";
-import QuizRouter from "./QuizRouter";
 import MatchQuiz from "./MatchQuiz";
 import parse from 'html-react-parser';
-import ReactQuill from "react-quill";
 import QuizFrontend from "./QuizFrontend";
 import LabContent from "./LabContent";
-import 'react-quill/dist/quill.snow.css' ; 
+import 'react-quill/dist/quill.snow.css';
+import { Card } from "@/components/ui/card";
+import closeIcon from "../../../assets/images/icon/01.png";
+import { SidebarCloseIcon } from "lucide-react";
 
+import {
+  markChapterAsComplete,
+  getCompletedChapters,
+  getLastVisitedChapter,
+  setLastVisitedChapter
+} from "../../../views/student/component/Progressservice";
 
 const Content = ({ content }) => {
   return (
@@ -32,20 +36,13 @@ const QuizContent = ({ quizContent }) => {
       <QuizFrontend quiz={{ questions: quizContent, course: "Your Course Name" }} />
     </div>
   );
-};
-
-
-
-
-
+}
 
 const MatchContent = ({ matchContent }) => {
   return (
     <div className="quiz-content p-4">
       <h1>Match Content</h1>
-      <MatchQuiz/>
-   
-      {/* {quizContent || <p>No quiz content available.</p>} */}
+      <MatchQuiz />
     </div>
   );
 };
@@ -57,8 +54,10 @@ const Learning = () => {
   const [loading, setLoading] = useState(true);
   const [activeChapter, setActiveChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState(null);
-  const [data, setData] = useState({ title: "" }); 
-  const [playerFullWidth, setPlayerFullWidth] = useState(false);
+  const [data, setData] = useState({ title: "" });
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [completedChapters, setCompletedChapters] = useState([]);
+  const [lastVisitedChapter, setLastVisitedChapterState] = useState(null);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -108,6 +107,21 @@ const Learning = () => {
     fetchCourseData();
   }, [slug]);
 
+  useEffect(() => {
+    const fetchProgressData = async () => {
+      try {
+        const completedChapters = await getCompletedChapters(slug);
+        const lastVisitedChapter = await getLastVisitedChapter(slug);
+        setCompletedChapters(completedChapters);
+        setLastVisitedChapterState(lastVisitedChapter);
+      } catch (error) {
+        console.error('Error fetching progress data:', error);
+      }
+    };
+
+    fetchProgressData();
+  }, [slug]);
+
   const formatModuleData = (moduleData) => {
     return {
       id: moduleData.id || '',
@@ -141,33 +155,45 @@ const Learning = () => {
       }))
     };
   };
-  
-  
 
-  const handleChapterClick = (chapterId) => {
+  // const handleNextChapter = () => {
+  //   if (currentChapterIndex !== null && currentChapterIndex < data.flatMap(module => module.list).length - 1) {
+  //     const nextChapter = data.flatMap(module => module.list)[currentChapterIndex + 1];
+  //     handleChapterClick(nextChapter.id, nextChapter.moduleId, currentChapterIndex + 1);
+  //   }
+  // };
+
+  // const handlePreviousChapter = () => {
+  //   if (currentChapterIndex !== null && currentChapterIndex > 0) {
+  //     const prevChapter = data.flatMap(module => module.list)[currentChapterIndex - 1];
+  //     handleChapterClick(prevChapter.id, prevChapter.moduleId, currentChapterIndex - 1);
+  //   }
+  // };
+
+  const handleChapterClick = async (chapterId) => {
     const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
 
     if (chapterData) {
       console.log('Chapter Data:', chapterData);
       setActiveChapter(chapterData);
 
-      switch(chapterData.type) {
+      switch (chapterData.type) {
         case 'video':
           setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.details.videoUrl }} />);
           break;
         case 'text':
-          console.log('Content:', chapterData.details.content); 
+          console.log('Content:', chapterData.details.content);
           setChapterContent(<Content content={chapterData.details.content} />);
           break;
         case 'quiz':
-            console.log('quiz:', chapterData.details.questions); 
-            setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
-            break;
+          console.log('quiz:', chapterData.details.questions);
+          setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
+          break;
 
         case 'match':
           setChapterContent(<MatchQuiz matchContent={chapterData.details.matchContent} />);
           break;
-          case 'lab':
+        case 'lab':
           console.log('Lab data:', chapterData);
           setChapterContent(
             <div className="lab-content p-4">
@@ -176,60 +202,75 @@ const Learning = () => {
           );
           break;
         default:
-          setChapterContent(<div>Unsupported content type</div>);
+          setChapterContent(<div>Unknown chapter type</div>);
       }
-    } else {
-      console.log("Chapter data not found");
-      setChapterContent(null);
+
+      // Mark chapter as complete and set it as the last visited chapter
+      await markChapterAsComplete(slug, chapterId);
+      await setLastVisitedChapter(slug, chapterId);
     }
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">
-      <div className="loader"></div>
-    </div>
-  }
-
-  if (!courseInfo) {
-    return <div>Course not found</div>;
+    return (
+      <div className="flex justify-center ">
+        <div className="loader mt-[300px] flex items-center "></div>
+      </div>
+    );
   }
 
   return (
-    <div className= {css.outterDiv }>
-      <CourseVideoNavbar data={data} />
-      <div className={css.bdy}>
-        <div
-          className={css.left}
-          style={{ width: playerFullWidth ? "100%" : "75%" }}
-        >
-          <div
-            className={css.content}
-            style={{
-              height: playerFullWidth ? "700px" : "600px",
-            }}
-          >
-            {chapterContent || <VideoPlayer data={{ autoplay: true }} />}
-          </div>
-          {/* <CourseViewTabComponent /> */}
+    <>
+      <CourseVideoNavbar title={data.title} />
+      <div className="flex">
+        <div className={`overflow-y-auto h-screen ${isSidebarCollapsed ? 'w-0' : 'w-1/5'} transition-width duration-300`}>
+          {!isSidebarCollapsed && (
+            <Card>
+              <span
+                className="flex float-right cursor-pointer"
+                onClick={() => setIsSidebarCollapsed(true)}
+              >
+                <SidebarCloseIcon />
+              </span>
+              <CourseContentComponent
+                title="Course "
+                data={courseData}
+                playerWidthSetter={setIsSidebarCollapsed}
+                onChapterClick={handleChapterClick}
+                completedChapters={completedChapters}
+              />
+            </Card>
+          )}
         </div>
-        <div
-          className={css.right}
-          style={{ display: playerFullWidth ? "none" : "block" }}
-        >
-          <DetailDPComponent
-            title="Take a Diana Assessment to check your skills"
-            desc="Made by Diana, this generalized assessment is a great way to check in on your skills."
-            btnTxt="Launch Assessment"
-          />
-          <CourseContentComponent
-            title="Course Content "
-            data={courseData}
-            playerWidthSetter={setPlayerFullWidth}
-             onChapterClick={handleChapterClick}
-          />
+        <div className={`${isSidebarCollapsed ? 'w-full' : 'w-4/5'} h-screen transition-width duration-300`}>
+          <Card>
+            {isSidebarCollapsed && (
+              <span
+                className="flex float-left cursor-pointer"
+                onClick={() => setIsSidebarCollapsed(false)}
+              >
+                <SidebarCloseIcon />
+              </span>
+            )}
+            <div className="w-2/3 p-4">
+              <div className="flex justify-between mb-4">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
+                >
+                  Previous
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
+                >
+                  Next
+                </button>
+              </div>
+              {chapterContent}
+            </div>
+          </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

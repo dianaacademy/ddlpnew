@@ -89,6 +89,176 @@
   }
 }
 
+/* CourseContentComponent.module.css */
+
+/* Outer container */
+.outterDiv {
+  margin: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Inner container */
+.innerDiv {
+  padding: 10px;
+}
+
+/* Title box */
+.titleBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ttl {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.imgBox {
+  cursor: pointer;
+}
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Body content */
+.bdy {
+  padding: 10px;
+}
+
+/* Tab container */
+.tab {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Tab title section */
+.tabTitleBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+.tabTitleLeft {
+  flex: 1;
+}
+
+.tabTtl {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.tabDesc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Toggle icon */
+.tabTitleRight {
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.iconReverse {
+  transform: rotate(180deg);
+}
+
+/* Tab body */
+.tabBdy {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* Sub item description body */
+.descBdy {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.descBdy:hover {
+  background-color: #f0f0f0;
+}
+
+/* Sub item title */
+.sbTtl {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Sub item box */
+.sbBox {
+  display: flex;
+  align-items: center;
+}
+
+/* Play icon */
+.plyIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+/* Dropdown icon */
+.subIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.drowDownIcon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.3s ease;
+}
+
+.reverseDrowDownIcon {
+  transform: rotate(180deg);
+}
+
+/* Resources dropdown */
+.subDrpItemsBox {
+  padding-left: 20px;
+}
+
+.resItem {
+  display: block;
+  padding: 5px 0;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.resItem:hover {
+  color: #007bff;
+}
+
+.resItemIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+
 
 
   

@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import ChapterQuizform from "./chapterQuizform";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
+import hljs from 'highlight.js';
+import "highlight.js/styles/atom-one-dark.min.css";
 import LabBuilder from "../creator/Labbuilder/Labbuilder";
 const NewChapter = () => {
   const navigate = useNavigate();
@@ -19,6 +22,25 @@ const NewChapter = () => {
   const [chapterDetails, setChapterDetails] = useState({});
   const { toast } = useToast();
   const [file, setFile] = useState(null);
+
+
+  const toolbarOptions = [
+    ["bold", "italic", "underline"], // toggled buttons
+    ["blockquote", "code-block"],
+    ["link", "image", "video",],
+    [{ header: 1 }, { header: 2 }], // custom button values
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+
+    ["clean"], // remove formatting button
+  ];
+
+  const modules = {
+    // syntax: true,
+    // Equivalent to { toolbar: { container: '#toolbar' }}
+    toolbar: toolbarOptions,
+  };
 
   const handleChapterDetailsChange = (e) => {
     const { name, value } = e.target;
@@ -116,9 +138,11 @@ const NewChapter = () => {
         return (
           <div>
             <ReactQuill
-              theme="snow"
+              theme="bubble"
               value={chapterDetails.content || ""}
+              placeholder="chapter content"
               onChange={handleQuillChange}
+              modules={modules}
             />
           </div>
         );

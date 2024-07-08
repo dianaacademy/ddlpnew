@@ -9,7 +9,7 @@ import Category from "../category";
 import Achievement from "../achievement";
 import About from "../about";
 import Instructor from "../instructor";
-
+import "../../index.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
@@ -19,7 +19,8 @@ import '../../assets/css/style.min.css';
 const Home = () => {
    
     return (
-        <Fragment>  
+     <div className="">
+           <Fragment >  
             <Header />
             <Banner />
             <Sponsor />
@@ -31,6 +32,7 @@ const Home = () => {
             <Achievement />
             <Footer />
         </Fragment>
+     </div>
     );
 }
  

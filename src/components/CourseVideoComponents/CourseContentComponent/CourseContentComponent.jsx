@@ -1,177 +1,152 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import CustomCheckboxUtil from "../../../utils/CustomCheckboxUtil/CustomCheckboxUtil";
-
-import closeIcon from "/icons/close.png";
 import playIcon from "/icons/play-button.png";
 import downArrowIcon from "/icons/down-arrow.svg";
 import openFolderIcon from "/icons/open-folder.png";
 
-import css from "./CourseContentComponent.module.css";
+import { getCompletedChapters, markChapterAsComplete } from "../../../views/student/component/Progressservice"; // Import your progress tracking functions
 
 const CourseContentComponent = (props) => {
   const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {} } = props;
   const [toggleBox, setToggleBox] = useState({});
   const [toggleDrpDwn, setToggleDrpDwn] = useState({});
+  const [completedChapters, setCompletedChapters] = useState([]);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(null);
+
+  useEffect(() => {
+    const fetchCompletedChapters = async () => {
+      try {
+        const chapters = await getCompletedChapters(); // Assuming a function to get completed chapters
+        setCompletedChapters(chapters);
+      } catch (error) {
+        console.error("Error fetching completed chapters:", error);
+      }
+    };
+
+    fetchCompletedChapters();
+  }, []);
+
+  const handleChapterClick = async (chapterId, moduleId, index) => {
+    await onChapterClick(chapterId, moduleId);
+    await markChapterAsComplete(chapterId); // Mark chapter as complete
+    setCompletedChapters((prev) => [...prev, chapterId]); // Update local state
+    setCurrentChapterIndex(index); // Set the current chapter index
+  };
+
+
 
   return (
-    <div className={css.outterDiv}>
-      <div className={css.innerDiv}>
-        {title ? (
-          <div className={css.titleBox}>
-            <span className={css.ttl}>{title}</span>
-            <span
-              className={css.imgBox}
-              onClick={() => playerWidthSetter((p) => !p)}
-            >
-              <img src={closeIcon} alt="close icon" className={css.closeIcon} />
-            </span>
+    <div className="flex">
+      <div className=" p-4">
+        {title && (
+          <div className="flex justify-between  mb-4">
+            <span className="text-xl font-bold">{title}</span>
+         
           </div>
-        ) : null}
-        <div className={css.bdy}>
-          {data?.map((item, id) => {
-            return (
-              <div className={css.tab} key={`tab-${id}`}>
-                <div
-                  className={css.tabTitleBox}
-                  onClick={() =>
-                    setToggleBox((p) => {
-                      return { ...p, [id]: !p[id] };
-                    })
-                  }
-                >
-                  <div className={css.tabTitleLeft}>
-                    <div className={css.tabTtl}>{`Section ${id + 1}: ${
-                      item.ttl
-                    }`}</div>
-                    <div className={css.tabDesc}>
-                      <span>10/10</span>
-                      <span></span>
-                      <span>40 min</span>
+        )}
+        <div>
+          {data?.map((item, id) => (
+            <div key={`tab-${id}`} className="mb-2">
+              <div
+                className="flex justify-between  cursor-pointer p-2 "
+                onClick={() =>
+                  setToggleBox((p) => {
+                    return { ...p, [id]: !p[id] };
+                  })
+                }
+              >
+                <div>
+                  <div className="font-semibold">{item.ttl}</div>
+                  <div className="text-sm text-gray-600">
+                    <span>{item.completedCount}</span>                  
                     </div>
-                  </div>
-                  <div className={css.tabTitleRight}>
-                    <img
-                      src={downArrowIcon}
-                      alt="down arrow"
-                      className={[
-                        css.icon,
-                        toggleBox[id] ? css.iconReverse : null,
-                      ].join(" ")}
-                    />
-                  </div>
+
                 </div>
-                {toggleBox[id] ? (
-                  <div className={css.tabBdy}>
-                    {item.list?.map((subItem) => {
-                      return (
-                        <div
-                          className={css.descBdy}
-                          key={`subItem-${subItem.id}`}
-                          onClick={() => onChapterClick(subItem.id)}
-                        >
-                          <div className={css.s}>
-                            {/* <CustomCheckboxUtil
-                              state={toggleDrpDwn[subItem.id] ?? false}
-                              name={subItem.id}
-                              id={subItem.id}
-                              onChange={(e) => {
-                                setToggleDrpDwn((prev) => {
+                <div>
+                  <img
+                    src={downArrowIcon}
+                    alt="down arrow"
+                    className={`w-4 h-4 flex float-right transition-transform ${toggleBox[id] ? "transform rotate-180" : ""}`}
+                  />
+                </div>
+              </div>
+              {toggleBox[id] && (
+                <div className="p-2 bg-white border border-gray-200">
+                  {item.list?.map((subItem, subIndex) => (
+                    <div
+                      key={`subItem-${subItem.id}`}
+                      className={`flex justify-between items-center p-2 my-2 border rounded cursor-pointer ${completedChapters.includes(subItem.id) ? "bg-green-100" : "bg-gray-50"}`}
+                      onClick={() => handleChapterClick(subItem.id, item.id, subIndex)}
+                    >
+                      <div className="flex items-center">
+                        <div className={`w-4 h-4 mr-2 ${completedChapters.includes(subItem.id) ? "bg-green-500" : "bg-gray-200"}`} />
+                        <div className="font-medium">{subItem.ttl}</div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="flex items-center text-sm text-gray-600 mr-4">
+                          <img src={playIcon} className="w-4 h-4 mr-1" />
+                          <span>{subItem.dur}</span>
+                        </span>
+                        {subItem?.resources?.length > 0 && (
+                          <div className="relative">
+                            <div
+                              className="flex items-center text-sm text-blue-500 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setToggleDrpDwn((p) => {
                                   return {
-                                    ...prev,
-                                    [e.target?.name]: !prev[e.target?.name],
+                                    [subItem.id]: p[subItem.id]
+                                      ? !p[subItem.id]
+                                      : true,
                                   };
                                 });
                               }}
-                              extraCss={{
-                                width: "40px",
-                                gap: "0",
-                                margin: "0.5rem",
-                              }}
-                            /> */}
-                          </div>
-                          <div className={css.descBdyRight}>
-                            <div className={css.sbTtl}>{subItem.ttl}</div>
-                            <div className={css.sbBox}>
-                              <span className={css.subDur}>
-                                <img src={playIcon} className={css.plyIcon} />
-                                <span className={css.subDurTxt}>
-                                  {subItem.dur}
-                                </span>
-                              </span>
-                              {subItem?.resources?.length > 0 ? (
-                                <span className={css.subDrp}>
-                                  <div
-                                    className={css.subDrpBox}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setToggleDrpDwn((p) => {
-                                        return {
-                                          [subItem.id]: p[subItem.id]
-                                            ? !p[subItem.id]
-                                            : true,
-                                        };
-                                      });
-                                    }}
+                            >
+                              <img
+                                src={openFolderIcon}
+                                alt="icon"
+                                className="w-4 h-4 mr-1"
+                              />
+                              <span>Resources</span>
+                              <img
+                                src={downArrowIcon}
+                                alt="dropdown icon"
+                                className={`w-3 h-3 ml-1 transition-transform ${toggleDrpDwn[subItem.id] ? "transform rotate-180" : ""}`}
+                              />
+                            </div>
+                            {toggleDrpDwn[subItem.id] && (
+                              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
+                                {subItem?.resources?.map((resItem) => (
+                                  <Link
+                                    key={`resItem-${resItem.id}`}
+                                    download={resItem.downloadable}
+                                    to={resItem.link}
+                                    className="flex items-center p-2 hover:bg-gray-100"
+                                    onClick={(e) => e.stopPropagation()}
                                   >
                                     <img
-                                      src={openFolderIcon}
+                                      src={resItem.icon}
                                       alt="icon"
-                                      className={css.subIcon}
+                                      className="w-4 h-4 mr-2"
                                     />
-                                    <div className={css.subDrpTxt}>
-                                      Resources
-                                    </div>
-                                    <img
-                                      src={downArrowIcon}
-                                      icon="dropdown icon"
-                                      className={[
-                                        css.drowDownIcon,
-                                        toggleDrpDwn[subItem.id]
-                                          ? css.reverseDrowDownIcon
-                                          : null,
-                                      ].join(" ")}
-                                    />
-                                  </div>
-                                  {toggleDrpDwn[subItem.id] ? (
-                                    <div className={css.subDrpItemsBox}>
-                                      {subItem?.resources?.map((resItem) => {
-                                        return (
-                                          <Link
-                                            key={`resItem-${resItem.id}`}
-                                            download={resItem.downloadable}
-                                            to={resItem.link}
-                                            className={css.resItem}
-                                            onClick={(e) => e.stopPropagation()}
-                                          >
-                                            <img
-                                              src={resItem.icon}
-                                              alt="icon"
-                                              className={css.resItemIcon}
-                                            />
-                                            <span className={css.resItemTxt}>
-                                              {resItem.text}
-                                            </span>
-                                          </Link>
-                                        );
-                                      })}
-                                    </div>
-                                  ) : null}
-                                </span>
-                              ) : null}
-                            </div>
+                                    <span>{resItem.text}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
+  
     </div>
   );
 };

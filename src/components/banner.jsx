@@ -54,7 +54,7 @@ const shapeList = [
 
 const Banner = () => {
     return (
-        <section className="banner-section">
+        <section className="banner-section ">
             <div className="container">
                 <div className="section-wrapper">
                     <div className="row align-items-center">
@@ -88,8 +88,8 @@ const Banner = () => {
                     </div>
                 </div>
             </div>
-            <div className="all-shapes"></div>
-            <div className="cbs-content-list d-none">
+            <div className="all-shapes "></div>
+            <div className="cbs-content-list ">
                 <ul className="lab-ul">
                     {shapeList.map((val, i) => (
                         <li className={val.className} key={i}><a href={val.link}>{val.name}</a></li>

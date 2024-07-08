@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import {
@@ -14,13 +15,14 @@ import {
   Menu,
   Package2,
   Search,
-} from "lucide-react"
-import { Button } from "./ui/button"
+} from "lucide-react";
 import { useAuth, doSignOut } from "@/auth/hooks/useauth"
 function Navbar() {
   const navigate = useNavigate()
   const { currentUser } = useAuth();
   const {role}= useAuth();
+
+  console.log(currentUser);
 
 
   return (
@@ -110,10 +112,17 @@ function Navbar() {
           </form>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <CircleUser className="h-5 w-5" />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
+            <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 w-14 h-14 rounded-full flex items-center justify-center">          {currentUser?.photoURL ? (
+            <img
+              className="rounded-full w-12 h-12"
+              src={currentUser.photoURL}
+              alt="User profile"
+            />
+          ) : (
+            <CircleUser className="text-white w-12 h-12" />
+          )}
+        </div>
+              
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>   {currentUser && (
@@ -125,7 +134,7 @@ function Navbar() {
               <DropdownMenuItem> { currentUser.displayName }</DropdownMenuItem>
               <DropdownMenuItem>{ role }</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <button onClick={() => { doSignOut().then(() => { navigate('/login') }) }} className='text-sm text-blue-600 underline'> <DropdownMenuItem >Logout</DropdownMenuItem></button>
+              <Button variant="destructive" onClick={() => { doSignOut().then(() => { navigate('/login') }) }} className='text-sm'> <DropdownMenuItem >Logout</DropdownMenuItem></Button>
 
             </DropdownMenuContent>
           </DropdownMenu>

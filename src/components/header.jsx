@@ -56,9 +56,12 @@ const Header = () => {
                 case 'admin':
                     navigate('/admin/default');
                     break;
-                case 'creator':
+                case 'Creator':
                     navigate('/creator/default');
                     break;
+                case 'Instructor':
+                    navigate('/instructor/default');
+                    break;    
                 case 'student':
                     navigate('/student/default');
                     break;
@@ -103,9 +106,9 @@ const Header = () => {
                                 </ul>
                             </div>
                             {currentUser ? (
-                                <Link to={role === 'student' ? "/student/default" : "/admin/default"} className="login">
+                                <Link to={role === 'Student' ? "/student/default" : "/admin/default"} className="login">
                                     <i className="icofont-user"></i>
-                                    <span>{role === 'student' ? "My Learning" : "Dashboard"}</span>
+                                    <span>{role === 'Student' ? "My Learning" : "Dashboard"}</span>
                                 </Link>
                             ) : (
                                 <>
