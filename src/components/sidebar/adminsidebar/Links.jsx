@@ -30,7 +30,7 @@ export function SidebarLinks(props) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link to={route.layout + "/" + route.path} className="flex items-center justify-center h-14 w-14">
+                  <Link to={route.layout + "/" + route.path} className="flex items-center justify-center pr-8 h-14 w-14">
                     <span
                       className={`${
                         activeRoute(route.path)

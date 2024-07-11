@@ -14,7 +14,7 @@ import {
 const Sidebar = ({ open, onClose }) => {
   return (
     <div
-      className={`mt-6     ${
+      className={`mt-6 pr-2     ${
         open ? "translate-x-0" : "-translate-x-96"
       }`}
     >
