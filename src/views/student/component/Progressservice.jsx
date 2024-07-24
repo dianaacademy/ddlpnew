@@ -36,6 +36,7 @@ export const getCompletedChapters = async (courseId) => {
     return [];
   }
 };
+console.log(getCompletedChapters);
 
 // Function to set the last visited chapter
 export const setLastVisitedChapter = async (courseId, chapterId) => {

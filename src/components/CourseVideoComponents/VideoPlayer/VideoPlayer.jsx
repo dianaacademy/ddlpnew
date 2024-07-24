@@ -17,13 +17,15 @@ import notesIcon from "/icons/videoPlayer/notes.png";
 import leftArrowIcon from "/icons/videoPlayer/left-arrow.png";
 import rightArrowIcon from "/icons/videoPlayer/right-arrow.png";
 
-import video from "../../../../public/videos/Coding.mp4";
+// import video from "https://dianalearningportal.com/wp-content/uploads/2024/07/video1-1.mp4";
+// import video from "../../../../public/videos/Coding.mp4";
 // import video from "/videos/sample2.mp4";
 import { useEffect } from "react";
 
 const VideoPlayer = (props) => {
   const { playerWidthState, playerWidthSetter, data } = props;
-  const { autoplay = false } = data;
+  const { autoplay = false, videoUrl } = data;
+  
   const [videoState, setVideostate] = useState(false);
   const [playbackOptionsBox, setPlaybackOptionsBox] = useState(false);
   const [playbackSpeedOption, setPlaybackSpeedOption] = useState("1.0");
@@ -422,7 +424,7 @@ const VideoPlayer = (props) => {
             </div>
             <div id="captionsBox" className={css.captionsBox}>
               {captionsMenuBar ? (
-                <div className={css.captionsMenu}>
+            <div className={css.captionsMenu}>
                   {captionsLangOptions?.map((item, id) => {
                     return (
                       <div
@@ -529,14 +531,15 @@ const VideoPlayer = (props) => {
         </div>
       </div>
       <video
-        ref={videoPlayer}
-        controlsList="nodownload"
-        className={css.video}
-        onClick={videoPlayerHandler}
-        id="video"
-      >
-        <source src={video} type="video/webm" />
-        <source src={video} type="video/mp4" />
+          ref={videoPlayer}
+          controlsList="nodownload"
+          className={css.video}
+          onClick={videoPlayerHandler}
+          id="video"
+          autoPlay="true"
+        >
+          <source src={videoUrl} type="video/mp4" />
+          <source src={videoUrl} type="video/webm" />
       </video>
       {arrowsToggle ? (
         <div

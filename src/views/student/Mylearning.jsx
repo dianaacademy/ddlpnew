@@ -25,7 +25,7 @@ const MyLearning = () => {
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
               const enrolledCourseIds = [];
-              querySnapshot.forEach((doc) => {
+              querySnapshot.forEach((doc) => { 
                 const studentData = doc.data();
                 if (studentData.enrolledCourses) {
                   enrolledCourseIds.push(...studentData.enrolledCourses);

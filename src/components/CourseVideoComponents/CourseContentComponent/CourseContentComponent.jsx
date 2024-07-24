@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import playIcon from "/icons/play-button.png";
 import downArrowIcon from "/icons/down-arrow.svg";
 import openFolderIcon from "/icons/open-folder.png";
-
-import { getCompletedChapters, markChapterAsComplete } from "../../../views/student/component/Progressservice"; // Import your progress tracking functions
+import { BookOpenCheck } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { FlaskConical } from 'lucide-react';
 
 const icons = {
   video: {
@@ -13,47 +14,37 @@ const icons = {
     white: "https://ik.imagekit.io/growthx100/Group%20(1).svg?updatedAt=1719584006148"
   },
   quiz: {
-    black: "https://ik.imagekit.io/growthx100/icon(11).svg?updatedAt=1719582119349",
-    white: "https://ik.imagekit.io/growthx100/Group%20(3).svg?updatedAt=1719584006218"
+    black: BookOpenCheck,
+    white: BookOpenCheck
   },
   lab: {
-    black: "https://ik.imagekit.io/growthx100/icon(13).svg?updatedAt=1719582119148",
-    white: "https://ik.imagekit.io/growthx100/Group.svg?updatedAt=1719584006179"
+    black: FlaskConical,
+    white: FlaskConical
   },
   text: {
-    black: "https://ik.imagekit.io/growthx100/icon(14).svg?updatedAt=1719582580684",
-    white: "https://ik.imagekit.io/growthx100/Group%20(2).svg?updatedAt=1719584006212"
+    black: FileText,
+    white: FileText
   }
 };
 
 const CourseContentComponent = (props) => {
-  const { title = "", data = [], playerWidthSetter = () => {}, onChapterClick = () => {}, onClose = () => {}, activeChapter } = props;
+  const { 
+    title = "", 
+    data = [], 
+    playerWidthSetter = () => {}, 
+    onChapterClick = () => {}, 
+    completedChapters = [], 
+    activeChapter,
+    currentChapterIndex,
+    totalChapters
+  } = props;
+
   const [toggleBox, setToggleBox] = useState({});
   const [toggleDrpDwn, setToggleDrpDwn] = useState({});
-  const [completedChapters, setCompletedChapters] = useState([]);
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(null);
 
-  useEffect(() => {
-    const fetchCompletedChapters = async () => {
-      try {
-        const chapters = await getCompletedChapters(); // Assuming a function to get completed chapters
-        setCompletedChapters(chapters);
-      } catch (error) {
-        console.error("Error fetching completed chapters:", error);
-      }
-    };
-
-    fetchCompletedChapters();
-  }, []);
-
-  const handleChapterClick = async (chapterId, moduleId, index) => {
-    await onChapterClick(chapterId, moduleId);
-    await markChapterAsComplete(chapterId); // Mark chapter as complete
-    setCompletedChapters((prev) => [...prev, chapterId]); // Update local state
-    setCurrentChapterIndex(index); // Set the current chapter index
+  const handleChapterClick = (chapterId, moduleId, index) => {
+    onChapterClick(chapterId, moduleId);
   };
-
-
 
   const getIcon = (type, isActive) => {
     const iconSet = icons[type] || icons.video; // Default to video if type is not recognized
@@ -62,18 +53,17 @@ const CourseContentComponent = (props) => {
 
   return (
     <div className="flex">
-      <div className=" p-4">
+      <div className="p-4">
         {title && (
-          <div className="flex justify-between  mb-4">
+          <div className="flex justify-between mb-4">
             <span className="text-xl font-bold">{title}</span>
-         
           </div>
         )}
-        <div>
+        <div className="min-w-80">
           {data?.map((item, id) => (
             <div key={`tab-${id}`} className="mb-2">
               <div
-                className="flex justify-between  cursor-pointer p-2 "
+                className="flex justify-between cursor-pointer p-2 min-w-14"
                 onClick={() =>
                   setToggleBox((p) => {
                     return { ...p, [id]: !p[id] };
@@ -83,9 +73,8 @@ const CourseContentComponent = (props) => {
                 <div>
                   <div className="font-semibold">{item.ttl}</div>
                   <div className="text-sm text-gray-600">
-                    <span>{item.completedCount}</span>                  
-                    </div>
-
+                    <span>{item.completedCount || 0} / {item.list?.length || 0} completed</span>                  
+                  </div>
                 </div>
                 <div>
                   <img
@@ -96,7 +85,7 @@ const CourseContentComponent = (props) => {
                 </div>
               </div>
               {toggleBox[id] && (
-                <div className="p-2 bg-white border border-gray-200">
+                <div className="p-2 bg-white">
                   {item.list?.map((subItem, subIndex) => (
                     <div
                       key={`subItem-${subItem.id}`}
@@ -104,12 +93,14 @@ const CourseContentComponent = (props) => {
                       onClick={() => handleChapterClick(subItem.id, item.id, subIndex)}
                     >
                       <div className="flex items-center">
-                        <div className={`w-4 h-4 mr-2 ${completedChapters.includes(subItem.id) ? "bg-green-500" : "bg-gray-200"}`} />
-                        <div className="font-medium">{subItem.ttl}</div>
+                        <div className={`w-4 h-4 mr-2 rounded-full ${
+                          completedChapters.includes(subItem.id) ? "bg-green-500" : "bg-gray-200"
+                        }`} />
+                        <div className="font-medium max-w-[90%]">{subItem.ttl}</div>
                       </div>
                       <div className="flex items-center">
-                        <span className="flex items-center text-sm text-gray-600 mr-4">
-                          <img src={playIcon} className="w-4 h-4 mr-1" />
+                        <span className="flex items-center text-sm text-gray-600 mr-4 min-w-[15px]">
+                          <img src={playIcon} className="w-4 h-4 mr-1" alt="play" />
                           <span>{subItem.dur}</span>
                         </span>
                         {subItem?.resources?.length > 0 && (
@@ -170,7 +161,6 @@ const CourseContentComponent = (props) => {
           ))}
         </div>
       </div>
-  
     </div>
   );
 };
