@@ -88,9 +88,6 @@ const AllCoursesComponent = () => {
   return (
     <div className={css.outerDiv}>
       <div className={css.topBar}>
-        <div className={css.filters}>
-          {/* Add filter components here */}
-        </div>
       </div>
       <div className={css.bdy}>
         {courses.map((course) => (
