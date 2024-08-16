@@ -42,7 +42,7 @@ const LabContent = ({ labData }) => {
         />
         {feedback && (
           <div
-            style={{
+            style={{ 
               position: 'absolute',
               left: `${feedback.x}px`,
               top: `${feedback.y}px`,

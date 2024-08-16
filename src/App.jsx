@@ -63,7 +63,7 @@ function App() {
                 </PrivateRoute>
               } />
               <Route path="student/*" element={ <PrivateRoute allowedRoles={['Student']}><Student /></PrivateRoute>
-              } />
+            }/>
               <Route path="creator/*" element={
                 <PrivateRoute allowedRoles={['Creator']}>
                   <Creator />

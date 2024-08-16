@@ -8,6 +8,7 @@ const CourseVideoNavbar = ({ title, moduleName, chapterName, completedChapters, 
     if (text.length <= limit) return text;
     return text.slice(0, limit) + '...';
   };
+  
 
   const getCourseDetails = () => {
     let details = title;
@@ -36,7 +37,7 @@ const CourseVideoNavbar = ({ title, moduleName, chapterName, completedChapters, 
       <div className={css.right}>
         <div className={css.progressInfo}>
           <span className={css.progressText}>
-          🟢{completedChapters} Out of {totalChapters} Chapters ({completionPercentage}% Completed)
+          🟢{completedChapters} Out of {totalChapters} Chapters ({completionPercentage}% Completed) 
           </span>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import "../../../components/ui/loader.css";
+import Lottie from "lottie-react";
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
 import CourseContentComponent from "../../../components/CourseVideoComponents/CourseContentComponent/CourseContentComponent";
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
@@ -14,6 +14,7 @@ import 'react-quill/dist/quill.snow.css';
 import { Card } from "@/components/ui/card";
 import { SidebarCloseIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import "./CourseViewPage.module.css";
+import "./LottieLoader.css";
 
 import {
   markChapterAsComplete,
@@ -39,7 +40,7 @@ const QuizContent = ({ quizContent }) => {
 };
 
 const MatchContent = ({ matchContent }) => {
-  return (
+  return ( 
     <div className="quiz-content p-4">
       <h1>Match Content</h1>
       <MatchQuiz matchContent={matchContent} />
@@ -60,6 +61,13 @@ const Learning = () => {
   const [lastVisitedChapter, setLastVisitedChapterState] = useState(null);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [currentModuleName, setCurrentModuleName] = useState("");
+  const [animationData, setAnimationData] = useState(null);
+
+  useEffect(() => {
+    fetch("https://lottie.host/d684aa48-68fe-4b9a-9c97-c8c8b17f7136/2efFrG33MG.json")
+      .then(response => response.json())
+      .then(data => setAnimationData(data));
+  }, []);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -96,11 +104,9 @@ const Learning = () => {
 
           const formattedData = modulesData.map(moduleData => formatModuleData(moduleData));
           
-          // Sort modules by modnum
           formattedData.sort((a, b) => a.modnum - b.modnum);
           
           setCourseData(formattedData);
-          
           
         } else {
           console.log('No such course document!');
@@ -108,12 +114,14 @@ const Learning = () => {
       } catch (error) {
         console.error('Error fetching course data:', error);
       } finally {
-        setLoading(false);
+        if (animationData) {
+          setLoading(false);
+        }
       }
     };
 
     fetchCourseData();
-  }, [slug]);
+  }, [slug, animationData]);
 
   useEffect(() => {
     if (courseData.length > 0 && courseData[0].list.length > 0) {
@@ -121,7 +129,6 @@ const Learning = () => {
       handleChapterClick(firstChapter.id);
     }
   }, [courseData]);
-
 
   useEffect(() => {
     const fetchProgressData = async () => {
@@ -173,7 +180,6 @@ const Learning = () => {
       }))
     };
 
-    // Sort chapters by chanum
     formattedModule.list.sort((a, b) => a.chanum - b.chanum);
 
     return formattedModule;
@@ -217,7 +223,6 @@ const Learning = () => {
           setChapterContent(<div>Unsupported content type</div>);
       }
 
-      // Mark chapter as complete and set it as the last visited chapter
       await markChapterAsComplete(slug, chapterId);
       await setLastVisitedChapter(slug, chapterId);
     } else {
@@ -240,7 +245,6 @@ const Learning = () => {
 
   const renderChapterOpener = () => {
     if (!activeChapter) return null;
-    
     const totalChapters = allChapters.length;
     const completedCount = completedChapters.length;
     
@@ -249,8 +253,15 @@ const Learning = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loader"></div>
+      <div className="lottie-loader-container">
+        {animationData && (
+          <Lottie 
+            animationData={animationData} 
+            loop={true}
+            autoplay={true}
+            className="lottie-loader"
+          />
+        )}
       </div>
     );
   }

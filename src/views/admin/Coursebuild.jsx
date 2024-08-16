@@ -28,7 +28,7 @@ const CourseBuild = () => {
   const [editingModuleId, setEditingModuleId] = useState(null);
   const [showModuleform, SetShowmoduleform] = useState(false);
   const [showModuleEditform, SetShowEditmoduleform] = useState(false);
-  const [moduleToDelete, setModuleToDelete] = useState(null); // State to track module to be deleted
+  const [moduleToDelete, setModuleToDelete] = useState(null); 
 
   const { toast } = useToast(); // Initialize the toast
 

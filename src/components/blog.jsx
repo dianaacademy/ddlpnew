@@ -25,7 +25,7 @@ const blogList = [
         date: 'April 23,2022',
         desc: 'Pluoresnts customize prancing apcentered customer service anding ands asing straelg Interacvely cordinate performe',
         btnText: 'Read more',
-        commentCount: '4',
+        commentCount: '4', 
     },
     {
         imgUrl: 'assets/images/blog/03.jpg',
