@@ -51,26 +51,16 @@ function App() {
               <Route path="blog" element={<Blog />} />
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />
-              <Route path="course/:slug" element={<Course />} />
+              <Route path="course/:slug" element={<Course/>} />
               <Route path="course" element={<Course />} />
-
-
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
-              <Route path="admin/*" element={
-                <PrivateRoute allowedRoles={['Admin']}>
-                  <Admin />
-                </PrivateRoute>
-              } />
+              <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
               <Route path="instructor/*" element={
-                <PrivateRoute allowedRoles={['instructor']}>
-                  <Instructor />
+                <PrivateRoute allowedRoles={['instructor']}><Instructor />
                 </PrivateRoute>
               } />
-              <Route path="student/*" element={
-                <PrivateRoute allowedRoles={['Student']}>
-                  <Student />
-                </PrivateRoute>
-              } />
+              <Route path="student/*" element={ <PrivateRoute allowedRoles={['Student']}><Student /></PrivateRoute>
+            }/>
               <Route path="creator/*" element={
                 <PrivateRoute allowedRoles={['Creator']}>
                   <Creator />

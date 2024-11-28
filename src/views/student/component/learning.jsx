@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from '../../../firebase.config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import "../../../components/ui/loader.css";
+import Lottie from "lottie-react";
 import VideoPlayer from "../../../components/CourseVideoComponents/VideoPlayer/VideoPlayer";
 import CourseContentComponent from "../../../components/CourseVideoComponents/CourseContentComponent/CourseContentComponent";
 import CourseVideoNavbar from "../../../components/LayoutComponents/CourseVideoNavbar/CourseVideoNavbar";
@@ -12,8 +12,9 @@ import QuizFrontend from "./QuizFrontend";
 import LabContent from "./LabContent";
 import 'react-quill/dist/quill.snow.css';
 import { Card } from "@/components/ui/card";
-import closeIcon from "../../../assets/images/icon/01.png";
-import { SidebarCloseIcon } from "lucide-react";
+import { SidebarCloseIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import "./CourseViewPage.module.css";
+import "./LottieLoader.css";
 
 import {
   markChapterAsComplete,
@@ -36,13 +37,13 @@ const QuizContent = ({ quizContent }) => {
       <QuizFrontend quiz={{ questions: quizContent, course: "Your Course Name" }} />
     </div>
   );
-}
+};
 
 const MatchContent = ({ matchContent }) => {
-  return (
+  return ( 
     <div className="quiz-content p-4">
       <h1>Match Content</h1>
-      <MatchQuiz />
+      <MatchQuiz matchContent={matchContent} />
     </div>
   );
 };
@@ -58,6 +59,15 @@ const Learning = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [completedChapters, setCompletedChapters] = useState([]);
   const [lastVisitedChapter, setLastVisitedChapterState] = useState(null);
+  const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [currentModuleName, setCurrentModuleName] = useState("");
+  const [animationData, setAnimationData] = useState(null);
+
+  useEffect(() => {
+    fetch("https://lottie.host/d684aa48-68fe-4b9a-9c97-c8c8b17f7136/2efFrG33MG.json")
+      .then(response => response.json())
+      .then(data => setAnimationData(data));
+  }, []);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -93,19 +103,32 @@ const Learning = () => {
           );
 
           const formattedData = modulesData.map(moduleData => formatModuleData(moduleData));
+          
+          formattedData.sort((a, b) => a.modnum - b.modnum);
+          
           setCourseData(formattedData);
+          
         } else {
           console.log('No such course document!');
         }
       } catch (error) {
         console.error('Error fetching course data:', error);
       } finally {
-        setLoading(false);
+        if (animationData) {
+          setLoading(false);
+        }
       }
     };
 
     fetchCourseData();
-  }, [slug]);
+  }, [slug, animationData]);
+
+  useEffect(() => {
+    if (courseData.length > 0 && courseData[0].list.length > 0) {
+      const firstChapter = courseData[0].list[0];
+      handleChapterClick(firstChapter.id);
+    }
+  }, [courseData]);
 
   useEffect(() => {
     const fetchProgressData = async () => {
@@ -123,14 +146,16 @@ const Learning = () => {
   }, [slug]);
 
   const formatModuleData = (moduleData) => {
-    return {
+    const formattedModule = {
       id: moduleData.id || '',
       ttl: moduleData.moduleName || '',
       lects: moduleData.lectures || '',
       dur: moduleData.duration || '',
+      modnum: moduleData.moduleno || '',
       list: (moduleData.chapters || []).map(chapter => ({
         id: chapter.id,
         ttl: chapter.chapterName || '',
+        chanum: chapter.chapterno || '',
         dur: chapter.duration || '',
         preview: true,
         type: chapter.type || '',
@@ -150,50 +175,44 @@ const Learning = () => {
               option: option.option || '',
               isCorrect: option.isCorrect || false
             }))
-          }))
+          }))  
         }
       }))
     };
+
+    formattedModule.list.sort((a, b) => a.chanum - b.chanum);
+
+    return formattedModule;
   };
 
-  // const handleNextChapter = () => {
-  //   if (currentChapterIndex !== null && currentChapterIndex < data.flatMap(module => module.list).length - 1) {
-  //     const nextChapter = data.flatMap(module => module.list)[currentChapterIndex + 1];
-  //     handleChapterClick(nextChapter.id, nextChapter.moduleId, currentChapterIndex + 1);
-  //   }
-  // };
-
-  // const handlePreviousChapter = () => {
-  //   if (currentChapterIndex !== null && currentChapterIndex > 0) {
-  //     const prevChapter = data.flatMap(module => module.list)[currentChapterIndex - 1];
-  //     handleChapterClick(prevChapter.id, prevChapter.moduleId, currentChapterIndex - 1);
-  //   }
-  // };
+  const allChapters = courseData.flatMap(module => module.list);
 
   const handleChapterClick = async (chapterId) => {
-    const chapterData = courseData.flatMap(module => module.list).find(chapter => chapter.id === chapterId);
-
-    if (chapterData) {
+    const index = allChapters.findIndex(chapter => chapter.id === chapterId);
+    if (index !== -1) {
+      setCurrentChapterIndex(index);
+      const chapterData = allChapters[index];
       setActiveChapter(chapterData);
 
-      switch (chapterData.type) {
+      const currentModule = courseData.find(module => 
+        module.list.some(chapter => chapter.id === chapterId)
+      );
+      setCurrentModuleName(currentModule ? currentModule.ttl : "");
+
+      switch(chapterData.type) {
         case 'video':
           setChapterContent(<VideoPlayer data={{ autoplay: true, videoUrl: chapterData.details.videoUrl }} />);
           break;
         case 'text':
-          console.log('Content:', chapterData.details.content);
           setChapterContent(<Content content={chapterData.details.content} />);
           break;
         case 'quiz':
-          console.log('quiz:', chapterData.details.questions);
           setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
           break;
-
         case 'match':
-          setChapterContent(<MatchQuiz matchContent={chapterData.details.matchContent} />);
+          setChapterContent(<MatchContent matchContent={chapterData.details.matchContent} />);
           break;
         case 'lab':
-          console.log('Lab data:', chapterData);
           setChapterContent(
             <div className="lab-content p-4">
               <LabContent labData={chapterData} />
@@ -201,76 +220,123 @@ const Learning = () => {
           );
           break;
         default:
-          setChapterContent(<div>Unknown chapter type</div>);
+          setChapterContent(<div>Unsupported content type</div>);
       }
 
-      // Mark chapter as complete and set it as the last visited chapter
       await markChapterAsComplete(slug, chapterId);
       await setLastVisitedChapter(slug, chapterId);
+    } else {
+      console.log("Chapter data not found");
+      setChapterContent(null);
     }
   };
-  
+
+  const handleNextChapter = () => {
+    if (currentChapterIndex < allChapters.length - 1) {
+      handleChapterClick(allChapters[currentChapterIndex + 1].id);
+    }
+  };
+
+  const handlePreviousChapter = () => {
+    if (currentChapterIndex > 0) {
+      handleChapterClick(allChapters[currentChapterIndex - 1].id);
+    }
+  };
+
+  const renderChapterOpener = () => {
+    if (!activeChapter) return null;
+    const totalChapters = allChapters.length;
+    const completedCount = completedChapters.length;
+    
+    // Add your chapter opener rendering logic here if needed
+  };
 
   if (loading) {
     return (
-      <div className="flex justify-center ">
-        <div className="loader mt-[300px] flex items-center "></div>
+      <div className="lottie-loader-container">
+        {animationData && (
+          <Lottie 
+            animationData={animationData} 
+            loop={true}
+            autoplay={true}
+            className="lottie-loader"
+          />
+        )}
       </div>
     );
   }
 
   return (
-    <>
-      <CourseVideoNavbar title={data.title} />
-      <div className="flex">
-        <div className={`overflow-y-auto h-screen ${isSidebarCollapsed ? 'w-0' : 'w-1/5'} transition-width duration-300`}>
+    <div className="flex flex-col h-screen">
+      <div className="sticky top-0 z-10 shadow-sm	">
+        <CourseVideoNavbar 
+          title={data.title}
+          moduleName={currentModuleName}
+          chapterName={activeChapter ? activeChapter.ttl : ""}
+          completedChapters={completedChapters.length}
+          totalChapters={allChapters.length}
+        />
+      </div>
+      
+      <div className="flex flex-1 overflow-hidden">
+        <div className={`overflow-y-auto custom-scrollbar ${isSidebarCollapsed ? 'w-0' : 'w-1/4'} transition-all duration-300 border-r-2	`}>
           {!isSidebarCollapsed && (
-            <Card>
-              <span
-                className="flex float-right cursor-pointer"
-                onClick={() => setIsSidebarCollapsed(true)}
-              >
+            <Card className="h-full">
+              <div className="">
+                <span
+                  className="flex float-right cursor-pointer pt-4 pr-5 z-30	sticky"
+                  onClick={() => setIsSidebarCollapsed(true)}
+                >
                 <SidebarCloseIcon />
-              </span>
-              <CourseContentComponent
-                title="Course "
-                data={courseData}
-                playerWidthSetter={setIsSidebarCollapsed}
-                onChapterClick={handleChapterClick}
-                completedChapters={completedChapters}
-              />
+                </span>
+                <CourseContentComponent
+                  title="Course Content"
+                  data={courseData}
+                  playerWidthSetter={setIsSidebarCollapsed}
+                  onChapterClick={handleChapterClick}
+                  completedChapters={completedChapters}
+                  activeChapter={activeChapter}
+                  currentChapterIndex={currentChapterIndex}
+                  totalChapters={allChapters.length}
+                />
+              </div>
             </Card>
           )}
         </div>
-        <div className={`${isSidebarCollapsed ? 'w-full' : 'w-4/5'} h-screen transition-width duration-300`}>
-          <Card>
+        <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'w-full' : 'w-3/4'} transition-all duration-300`}>
+          <Card className="flex-1 overflow-y-auto">
             {isSidebarCollapsed && (
               <span
-                className="flex float-left cursor-pointer"
+                className="flex float-left cursor-pointer mt-4 ml-4"
                 onClick={() => setIsSidebarCollapsed(false)}
               >
                 <SidebarCloseIcon />
               </span>
             )}
-            <div className="w-2/3 p-4">
-              <div className="flex justify-between mb-4">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
-                >
-                  Previous
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
-                >
-                  Next
-                </button>
-              </div>
+            <div className="p-4">
+              {renderChapterOpener()}
               {chapterContent}
             </div>
           </Card>
+          <div className="flex justify-between p-2 bg-white border-t">
+            <button
+              className="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
+              onClick={handlePreviousChapter}
+              disabled={currentChapterIndex === 0}
+            >
+              <ChevronLeft className="mr-2" /> Previous
+            </button>
+            <button
+              className="flex items-center justify-center bg-blue-500 text-white px-4 py-2 rounded disabled:bg-blue-200"
+              onClick={handleNextChapter}
+              disabled={currentChapterIndex === allChapters.length - 1}
+            >
+              Next <ChevronRight className="ml-2" />
+            </button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

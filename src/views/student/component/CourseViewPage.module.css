@@ -5,6 +5,28 @@
   flex-direction: column;
 }
 
+
+/* Custom scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #000 transparent;
+}
+
+/* For webkit browsers like Chrome, Safari, etc. */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #000; /* Change the color to match your design */
+  border-radius: 1px;
+}
+
+
 .stickyHeader {
   position: sticky;
   top: 0;

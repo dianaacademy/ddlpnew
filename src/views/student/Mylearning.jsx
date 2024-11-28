@@ -25,7 +25,7 @@ const MyLearning = () => {
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
               const enrolledCourseIds = [];
-              querySnapshot.forEach((doc) => {
+              querySnapshot.forEach((doc) => { 
                 const studentData = doc.data();
                 if (studentData.enrolledCourses) {
                   enrolledCourseIds.push(...studentData.enrolledCourses);
@@ -53,20 +53,19 @@ const MyLearning = () => {
   }
   return (
     <div>
-      <div className="font-Poppins font-bold text-white text-4xl font-Poppins mt-10 fontpop">
+      <div className="font-Poppins font-bold text-white text-4xl font-Poppins mt-6 fontpop">
         Hey ! {currentUser.displayName}
       </div>
-      <div className="font-Poppins text-white text-xl font-Poppins mt-3 fontpop mb-5">
-        Resume your Pending Courses
-      </div>
+      <div className="font-Poppins text-white text-xl font-Poppins mt-3 fontpop mb-5">Resume your Pending Courses</div>
       <div className="flex flex-wrap gap-4">
         {courses.map((course, index) => (
-          <Card className="w-1/4 bg-white rounded-lg shadow-md overflow-hidden" key={index}>
+          <Card className="w-1/5 bg-white rounded-lg shadow-md overflow-hidden" key={index}>
             <img
-              src={course.thumbnailUrl || "https://ik.imagekit.io/growthx100/default-image.jpg?updatedAt=1709902412480"}
-              alt={course.courseName}
-              className="w-full h-64 object-none bg-center"
-            />
+  src={course.thumbnailUrl || "https://ik.imagekit.io/growthx100/default-image.jpg?updatedAt=1709902412480"}
+  alt={course.courseName}
+  className="w-full h-auto object-cover"
+/>
+
             <div className="p-4 bg-white">
               <span className="bg-teal-500 text-white text-xs font-semibold pl-3 pr-3 pt-1 pb-1 rounded-full">
                 NEW
@@ -75,6 +74,8 @@ const MyLearning = () => {
               <Link to={`/student/mylearning/learn/${course.id}`}>
                 <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
                   resume
+
+                  
                 </CardFooter>
               </Link>
             </div>

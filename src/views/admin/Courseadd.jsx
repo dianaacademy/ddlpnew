@@ -6,7 +6,8 @@ import { db, storage } from '../../firebase.config';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Card } from '@/components/ui/card';
-import { toast } from 'react-toastify';
+import { Loader2 } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const CourseAdd = () => {
   const [courseName, setCourseName] = useState('');
@@ -19,325 +20,287 @@ const CourseAdd = () => {
   const [coursePrice, setCoursePrice] = useState('');
   const [materialInclue, setMaterialInclue] = useState('');
   const [thumbnailFile, setThumbnailFile] = useState(null);
-  const [maxStudents, setMaxStudents] = useState(0);
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [difficultyLevel, setDifficultyLevel] = useState("All Levels");
   const [isPublic, setIsPublic] = useState(true);
   const [enableQA, setEnableQA] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const difficultyLevels = ["All Levels", "Beginner", "Intermediate", "Expert"];
+  const categories = ["BIG DATA", "Linux", "Azure","Cyber Security","DevOps", "5G", "AWS", "BlockChain", "Diana HR", "AI", "VMWARE"];
 
-  const handleNewCourse = async (
-    courseName,
-    tutorName,
-    courseDesc,
-    maxStudent,
-    whatuLearn,
-    materialInclue,
-    courseDuration,
-    thumbnailFile,
-    maxStudents,
-    category,
-    coursePrice,
-    difficultyLevel,
-    isPublic,
-    enableQA
-  ) => {
-    try {
-      // Generate a unique file name for the thumbnail
-      const timestamp = new Date().getTime();
-      const uniqueFileName = `${thumbnailFile.name}_${timestamp}`;
-
-      // Upload the thumbnail file to Firebase Storage
-      const thumbnailRef = ref(storage, `thumbnails/${uniqueFileName}`);
-      const uploadTask = uploadBytesResumable(thumbnailRef, thumbnailFile);
-
-      uploadTask.on(
-        'state_changed',
-        null,
-        (error) => {
-          console.error('Error uploading thumbnail:', error);
-          toast.error('Error uploading thumbnail.');
-        },
-        async () => {
-          const thumbnailUrl = await getDownloadURL(uploadTask.snapshot.ref);
-
-          // Add the course data to Firestore, including the thumbnail URL and additional fields
-          const courseRef = collection(db, 'courses');
-          await addDoc(courseRef, {
-            courseName,
-            tutorName,
-            courseDesc,
-            maxStudent,
-            whatuLearn,
-            materialInclue,
-            courseDuration,
-            thumbnailUrl,
-            maxStudents,
-            category,
-            coursePrice,
-            difficultyLevel,
-            isPublic,
-            enableQA,
-          });
-
-          // Clear the input fields after successful submission
-          setCourseName('');
-          setTutorName('');
-          setCourseDesc('');
-          setMaxStudent('');
-          setWhatuLearn('');
-          setMaterialInclue('');
-          setCourseDuration('');
-          setMaxStudents(0);
-          setCategory('');
-          setCoursePrice('');
-          setDifficultyLevel("All Levels");
-          setIsPublic(true);
-          setEnableQA(false);
-          setThumbnailFile(null);
-
-          toast.success('Course added successfully!');
-        }
-      );
-    } catch (error) {
-      console.error('Error adding course:', error);
-      toast.error('Error adding course.');
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnailFile(file);
+      uploadThumbnail(file);
     }
   };
 
-  const Submit = (e) => {
-    e.preventDefault();
-    if (courseName.trim() === '' || courseDesc.trim() === '' || !thumbnailFile) {
-      console.log('Please fill in all fields and upload a thumbnail.');
-      toast.error('Please fill in all fields and upload a thumbnail.');
-      return;
-    }
+  const uploadThumbnail = (file) => {
+    const timestamp = new Date().getTime();
+    const uniqueFileName = `${file.name}_${timestamp}`;
+    const thumbnailRef = ref(storage, `thumbnails/${uniqueFileName}`);
+    const uploadTask = uploadBytesResumable(thumbnailRef, file);
 
-    handleNewCourse(
-      courseName,
-      tutorName,
-      courseDesc,
-      maxStudent,
-      whatuLearn,
-      materialInclue,
-      courseDuration,
-      thumbnailFile,
-      maxStudents,
-      category,
-      coursePrice,
-      difficultyLevel,
-      isPublic,
-      enableQA
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress(progress);
+      },
+      (error) => {
+        console.error('Error uploading thumbnail:', error);
+        toast.error('Error uploading thumbnail.');
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setThumbnailUrl(downloadURL);
+        toast.success('Thumbnail uploaded successfully!');
+      }
     );
   };
 
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailUrl('');
+    setUploadProgress(0);
+  };
+
+  const handleNewCourse = async () => {
+    if (!thumbnailUrl) {
+      toast.error('Please upload a thumbnail.');
+      return;
+    }
+
+    setIsLoading(true);
+    const addCoursePromise = new Promise(async (resolve, reject) => {
+      try {
+        const courseRef = collection(db, 'courses');
+        await addDoc(courseRef, {
+          courseName,
+          tutorName,
+          courseDesc,
+          maxStudent,
+          whatuLearn,
+          materialInclue,
+          courseDuration,
+          thumbnailUrl,
+          category,
+          coursePrice,
+          difficultyLevel,
+          isPublic,
+          enableQA,
+        });
+
+        // Reset form fields
+        setCourseName('');
+        setTutorName('');
+        setCourseDesc('');
+        setMaxStudent('');
+        setWhatuLearn('');
+        setMaterialInclue('');
+        setCourseDuration('');
+        setCategory('');
+        setCoursePrice('');
+        setDifficultyLevel("All Levels");
+        setIsPublic(true);
+        setEnableQA(false);
+        setThumbnailFile(null);
+        setThumbnailUrl('');
+        setUploadProgress(0);
+
+        resolve('Course added successfully!');
+      } catch (error) {
+        console.error('Error adding course:', error);
+        reject('Error adding course.');
+      }
+    });
+
+    toast.promise(addCoursePromise, {
+      loading: 'Adding course...',
+      success: (message) => message,
+      error: (message) => message,
+    });
+
+    await addCoursePromise;
+    setIsLoading(false);
+  };
+
   return (
-    <div className="flex text-black justify-center relative dark:bg-main-dark-bg">
-      <Card className="mt-4 flex justify-center">
-        <div className="dark:bg-main-dark-bg bg-main-bg min-h-screen">
-          <div className="flex items-center mt-4">
-            <div className="w-full px-4">
-              <div className="mb-4 text-align:center">
-                <h1>Add Course</h1>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Course Name">Course Name</label>
-                <Input
-                  label="Course Name"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Tutor Name">Tutor Name</label>
-                <Input
-                  label="Tutor Name"
-                  value={tutorName}
-                  onChange={(e) => setTutorName(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Course Description">Course Description</label>
-                <Textarea
-                  label="Course Description"
-                  value={courseDesc}
-                  onChange={(e) => setCourseDesc(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Max Students">Max Students</label>
-                <Input
-                  label="Max Students"
-                  value={maxStudent}
-                  onChange={(e) => setMaxStudent(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="What Will I Learn?">What Will I Learn?</label>
-                <Textarea
-                  label="What Will I Learn?"
-                  value={whatuLearn}
-                  onChange={(e) => setWhatuLearn(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Materials Included">Materials Included</label>
-                <Textarea
-                  label="Materials Included"
-                  value={materialInclue}
-                  onChange={(e) => setMaterialInclue(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Total Course Duration">Total Course Duration</label>
-                <Input
-                  label="Total Course Duration"
-                  value={courseDuration}
-                  onChange={(e) => setCourseDuration(e.target.value)}
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="Course Thumbnail">Course Thumbnail</label>
-                <Input
-                  type="file"
-                  label="Course Thumbnail"
-                  onChange={(e) => setThumbnailFile(e.target.files[0])}
-                />
-              </div>
-              <div className="p-8 border-solid rounded-lg shadow-md">
-                <h2 className="text-black text-2xl mb-4">Course Settings</h2>
-                <div className="flex flex-col mb-4">
-                  <div className="grid grid-cols-2">
-                    <label
-                      className="flex flex-col text-black mb-2"
-                      htmlFor="maxStudents"
-                    >
-                      Maximum Students
-                      <span className="text-sm text-gray-500">
-                        (Number of students that can enrol in this course. Set 0 for no
-                        limits.)
-                      </span>
-                    </label>
-                    <div className="flex flex-col items-center">
-                      <input
-                        className="bg-white rounded-md px-4 py-2 w-24 mr-4"
-                        type="number"
-                        id="maxStudents"
-                        value={maxStudents}
-                        onChange={(e) => setMaxStudents(e.target.value)}
-                      />
-                    </div>
-                  </div>
+    <div className="container mx-auto px-4 py-8 ">
+      <Toaster position="top-right " />
+      <Card className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden ">
+        <div className="p-8">
+          <h1 className="text-black text-3xl mb-4">Add New Course</h1>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Course Name</label>
+              <Input value={courseName} onChange={(e) => setCourseName(e.target.value)} className="w-full" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Tutor Name</label>
+              <Input value={tutorName} onChange={(e) => setTutorName(e.target.value)} className="w-full" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Course Description</label>
+              <Textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full" rows={4} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">What Will Students Learn?</label>
+              <Textarea value={whatuLearn} onChange={(e) => setWhatuLearn(e.target.value)} className="w-full" rows={4} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Materials Included</label>
+              <Textarea value={materialInclue} onChange={(e) => setMaterialInclue(e.target.value)} className="w-full" rows={4} />
+            </div>
+            <div className="p-8 border-solid ">
+              <h2 className="text-black text-2xl mb-4">Course Settings</h2>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex flex-col text-black mb-2" htmlFor="maxStudents">
+                    Maximum Students
+                    <span className="text-sm text-gray-500 pr-5">
+                      (Number of students that can enrol in this course. Set 0 for no limits.)
+                    </span>
+                  </label>
+                  <Input
+                    type="number"
+                    id="maxStudents"
+                    value={maxStudent}
+                    onChange={(e) => setMaxStudent(e.target.value)}
+                    className="w-24"
+                  />
                 </div>
-                <div className="flex flex-col mb-4">
-                  <div className="grid grid-cols-2">
-                    <label
-                      className="flex flex-col text-black mb-2"
-                      htmlFor="categoryInput"
-                    >
-                      Category
-                    </label>
-                    <div className="flex flex-col items-center">
-                      <select
-                        className="bg-white rounded-md px-4 py-2 w-24 mr-4"
-                        id="categoryInput"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                      >
-                        <option value="Cyber Security">Cyber Security</option>
-                        <option value="AWS">AWS</option>
-                        <option value="BlockChain">BlockChain</option>
-                        <option value="Diana HR">Diana HR</option>
-                        {/* Add more options as needed */}
-                      </select>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex flex-col text-black mb-2" htmlFor="categoryInput">
+                    Category
+                  </label>
+                  <select
+                    className="bg-zinc-200 rounded-md px-4 py-2 w-48"
+                    id="categoryInput"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
-                <div className="flex flex-col mb-4">
-                  <div className="grid grid-cols-2">
-                    <label
-                      className="flex flex-col text-black mb-2"
-                      htmlFor="setPrice"
-                    >
-                      Price
-                    </label>
-                    <div className="flex flex-col items-center">
-                      <input
-                        className="bg-white rounded-md px-4 py-2 w-24 mr-4"
-                        type="text"
-                        id="coursePrice"
-                        value={"$" + coursePrice}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/^\$/, ""); // Remove $ if user manually enters it
-                          setCoursePrice(value);
-                        }}
-                      />
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex flex-col text-black mb-2" htmlFor="setPrice">
+                    Price
+                  </label>
+                  <Input
+                    type="text"
+                    id="coursePrice"
+                    value={"$  " + coursePrice}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/^\$/, "");
+                      setCoursePrice(value);
+                    }}
+                    className="w-48"
+                  />
                 </div>
-                <div className="mb-4">
-                  <div className="grid grid-cols-2">
-                    <label className="flex text-black mb-2" htmlFor="difficultyLevel">
-                      Difficulty Level
-                    </label>
-                    <select
-                      className="bg-zinc-200 rounded-md px-4 py-2"
-                      id="difficultyLevel"
-                      value={difficultyLevel}
-                      onChange={(e) => setDifficultyLevel(e.target.value)}
-                    >
-                      {difficultyLevels.map((level) => (
-                        <option key={level} value={level}>
-                          {level}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex text-black mb-2" htmlFor="difficultyLevel">
+                    Difficulty Level
+                  </label>
+                  <select
+                    className="bg-zinc-200 rounded-md px-4 py-2"
+                    id="difficultyLevel"
+                    value={difficultyLevel}
+                    onChange={(e) => setDifficultyLevel(e.target.value)}
+                  >
+                    {difficultyLevels.map((level) => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
                 </div>
-                <div className="mb-4">
-                  <div className="grid grid-cols-2 items-center">
-                    <label className="flex flex-col text-black mb-2">
-                      Public Course
-                      <span className="text-sm text-gray-500">
-                        (Make This Course Public. No enrollment required.)
-                      </span>
-                    </label>
-                    <label className="switch inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={isPublic}
-                        onChange={() => setIsPublic(!isPublic)}
-                      />
-                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
-                    </label>
-                  </div>
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex flex-col text-black mb-2">
+                    Public Course
+                    <span className="text-sm text-gray-500">
+                      (Make This Course Public. No enrollment required.)
+                    </span>
+                  </label>
+                  <label className="switch inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={isPublic}
+                      onChange={() => setIsPublic(!isPublic)}
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
+                  </label>
                 </div>
-                <div className="mb-4">
-                  <div className="grid grid-cols-2 items-center">
-                    <label className="flex flex-col text-black mb-2">
-                      Q&A
-                      <span className="text-sm text-gray-500">
-                        (Enable Q&A section for your course)
-                      </span>
-                    </label>
-                    <label className="switch inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={enableQA}
-                        onChange={() => setEnableQA(!enableQA)}
-                      />
-                      <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
-                    </label>
-                  </div>
+                <div className="grid grid-cols-2 items-center">
+                  <label className="flex flex-col text-black mb-2">
+                    Q&A
+                    <span className="text-sm text-gray-500">
+                      (Enable Q&A section for your course)
+                    </span>
+                  </label>
+                  <label className="switch inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={enableQA}
+                      onChange={() => setEnableQA(!enableQA)}
+                    />
+                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f79d7a] dark:peer-focus:ring-[#F16126] rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#F16126]"></div>
+                  </label>
                 </div>
-              </div>
-              <div className="mb-4 mt-5" type="submit" onClick={Submit}>
-                <Button variant="outline">Add Course</Button>
               </div>
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Course Thumbnail</label>
+              <input
+                type="file"
+                onChange={handleThumbnailChange}
+                className="block w-full text-sm text-gray-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-violet-50 file:text-violet-700
+                  hover:file:bg-violet-100"
+              />
+              {uploadProgress > 0 && uploadProgress < 100 && (
+                <div className="mt-2">
+                  <div className="bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div className="bg-blue-600 h-2.5 rounded-full" style={{width: `${uploadProgress}%`}}></div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">Uploading: {uploadProgress.toFixed(0)}%</p>
+                </div>
+              )}
+              {thumbnailUrl && (
+                <div className="mt-2">
+                  <img src={thumbnailUrl} alt="Thumbnail" className="w-32 h-32 object-cover rounded" />
+                  <button
+                    onClick={handleRemoveThumbnail}
+                    className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-8 flex justify-center">
+            <Button
+              onClick={handleNewCourse}
+              disabled={isLoading}
+              className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Adding Course...
+                </>
+              ) : (
+                'Add Course'
+              )}
+            </Button>
           </div>
         </div>
       </Card>

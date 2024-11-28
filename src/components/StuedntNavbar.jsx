@@ -18,7 +18,7 @@ import {
   Menu,
   Package2,
   Search,
-} from "lucide-react"
+} from "lucide-react" 
 import { Button } from "./ui/button"
 import SidebarLinks from "./sidebar/studentssidebar/Links";
 import { useAuth, doSignOut } from "@/auth/hooks/useauth"
