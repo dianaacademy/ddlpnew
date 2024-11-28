@@ -1,101 +1,41 @@
 import { EyeOpenIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { BsBuilding } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { useState, useEffect } from "react";
-import { collection, getDocs, query, limit, where, orderBy, startAfter, getCountFromServer } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
-
+import { Skeleton } from "@/components/ui/skeleton"; // Adjust the import path as necessary
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { debounce } from "lodash";
 export default function CourseTable() {
   const [courses, setCourses] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filteredCourses, setFilteredCourses] = useState([]); // Tracks filtered courses
+  const [searchTerm, setSearchTerm] = useState(""); // Tracks the search input
   const [imageLoading, setImageLoading] = useState([]);
-  const [lastVisible, setLastVisible] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [totalCourses, setTotalCourses] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const coursesPerPage = 15;
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    fetchCategories();
-    const searchParams = new URLSearchParams(location.search);
-    const categoryParam = searchParams.get('cat');
-    setSelectedCategory(categoryParam || "all");
-  }, [location.search]);
+    const fetchCourses = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "courses"));
+        const coursesList = querySnapshot.docs.map((doc, index) => ({
+          id: doc.id,
+          index,
+          ...doc.data(),
+        }));
+        setCourses(coursesList);
+        setFilteredCourses(coursesList); // Initialize filtered courses
+        setImageLoading(Array(coursesList.length).fill(true));
+      } catch (error) {
+        console.error("Error fetching courses: ", error);
+      }
+    };
 
-  useEffect(() => {
     fetchCourses();
-    updateTotalCourses();
-  }, [selectedCategory]);
-
-  const fetchCategories = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "courses"));
-      const uniqueCategories = new Set();
-      querySnapshot.docs.forEach(doc => {
-        const category = doc.data().category;
-        if (category) uniqueCategories.add(category);
-      });
-      setCategories(Array.from(uniqueCategories));
-    } catch (error) {
-      console.error("Error fetching categories: ", error);
-    }
-  };
-
-  const fetchCourses = async (loadMore = false) => {
-    setLoading(true);
-    try {
-      let q = query(collection(db, "courses"), orderBy("courseName"));
-      
-      if (selectedCategory !== "all") {
-        q = query(q, where("category", "==", selectedCategory));
-      }
-
-      if (loadMore && lastVisible) {
-        q = query(q, startAfter(lastVisible));
-      }
-
-      q = query(q, limit(coursesPerPage));
-
-      const querySnapshot = await getDocs(q);
-      const coursesList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setCourses(prev => loadMore ? [...prev, ...coursesList] : coursesList);
-      setImageLoading(Array(coursesList.length).fill(true));
-      setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      setHasMore(querySnapshot.docs.length === coursesPerPage);
-    } catch (error) {
-      console.error("Error fetching courses: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateTotalCourses = async () => {
-    try {
-      let q = collection(db, "courses");
-      if (selectedCategory !== "all") {
-        q = query(q, where("category", "==", selectedCategory));
-      }
-      const snapshot = await getCountFromServer(q);
-      setTotalCourses(snapshot.data().count);
-    } catch (error) {
-      console.error("Error getting total courses: ", error);
-    }
-  };
+  }, []);
 
   const handleImageLoad = (index) => {
     setImageLoading((prev) => {
@@ -105,119 +45,83 @@ export default function CourseTable() {
     });
   };
 
-  const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
-    setLastVisible(null);
-    setCourses([]);
-    if (value === "all") {
-      navigate("/admin/courses", { replace: true });
-    } else {
-      navigate(`?cat=${value}`, { replace: true });
-    }
-  };
+  // Debounced function to update search results
+  const debouncedSearch = debounce((term) => {
+    setFilteredCourses(
+      courses.filter((course) =>
+        course.courseName.toLowerCase().includes(term.toLowerCase())
+      )
+    );
+  }, 500); // 1-second debounce
 
-  const loadMoreCourses = async () => {
-    setLoadingMore(true);
-    await fetchCourses(true);
-    setLoadingMore(false);
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    debouncedSearch(term);
   };
 
   return (
     <>
-      <div className="m-4 flex items-center space-x-4">
-        <Select onValueChange={handleCategoryChange} value={selectedCategory}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <span>Total {totalCourses} Courses</span>
-      </div>
-      <div className="rounded-md bg-graident-dark">
-        <div className="w-[100%] md:w-full">
-          {loading ? (
-            <div className="mt-8 px-4 py-4 grid grid-cols-3 grid-flow-row gap-4">
-              {[...Array(6)].map((_, index) => (
-                <Card key={index} className="pb-4">
-                  <div className="pt-4">
-                    <CardContent className="pt-2">
-                      <div className="m-2">
+      <div className="rounded-md bg-graident-dark border-[0.5px] overflow-y-scroll ">
+    
+        <div className="w-[800px] md:w-full">
+        <div className="pt-4 md:ml-[900px]">
+          <form className="ml-auto flex-1 sm:flex-initial">
+            <div className="relative px-4">
+              <Search className="absolute left-2.5 pr-6 top-2.5 h-4 w-14 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search courses..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="mx-4 sm:w-[300px] md:w-[200px] lg:w-[400px]"
+              />
+            </div>
+          </form>
+        </div>
+          <div className="mt-8 px-4 py-4 grid grid-cols-3 grid-flow-row gap-4">
+            {filteredCourses?.map((course, index) => (
+              <Card key={course.id} className="pb-4">
+                <div className="pt-4">
+                  <CardTitle className="px-2 py-2">
+                    {course.courseName}
+                  </CardTitle>
+                  <CardContent className="pt-2">
+                    {imageLoading[index] && (
+                      <div>
                         <Skeleton className="h-8 w-1/2" />
                         <Skeleton className="h-8 w-24" />
                         <Skeleton className="h-4 w-3/4 mb-2" />
                         <Skeleton className="h-4 w-1/2 mb-2" />
                         <Skeleton className="h-4 w-full mb-2" />
                       </div>
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-8 px-4 py-4 grid grid-cols-3 grid-flow-row gap-4">
-              {courses.map((course, index) => (
-                <Card key={course.id} className="pb-4">
-                  <div className="pt-4">
-                    <CardTitle className="px-6 py-2 ">
-                      {course.courseName}
-                    </CardTitle>
-                    <CardContent className="pt-2">
-                      {imageLoading[index] && (
-                        <div className="m-2">
-                          <Skeleton className="h-8 w-1/2" />
-                          <Skeleton className="h-8 w-24" />
-                          <Skeleton className="h-4 w-3/4 mb-2" />
-                          <Skeleton className="h-4 w-1/2 mb-2" />
-                          <Skeleton className="h-4 w-full mb-2" />
-                        </div>
-                      )}
-                      <img
-                        className={`w-72 h-72 object-cover rounded-md ${
-                          imageLoading[index] ? "hidden" : "block"
-                        }`}
-                        height={300}
-                        width={300}
-                        src={course.thumbnailUrl}
-                        alt={course.courseName}
-                        onLoad={() => handleImageLoad(index)}
-                      />
-                      <Actions id={course.id} slug={course.id} />
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
+                    )}
+                    <img
+                      className={`w-72 h-72 object-cover rounded-md ${
+                        imageLoading[index] ? "hidden" : "block"
+                      }`}
+                      height={300}
+                      width={300}
+                      src={course.thumbnailUrl}
+                      alt={course.courseName}
+                      onLoad={() => handleImageLoad(index)}
+                    />
+                    <Actions id={course.id} slug={course.id} />
+                  </CardContent>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
-      {hasMore && courses.length < totalCourses && (
-        <div className="m-3 text-center ">
-          <Button onClick={loadMoreCourses} disabled={loadingMore}>
-            {loadingMore ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              'Load More'
-            )}
-          </Button>
-        </div>
-      )}
     </>
   );
 }
 
 const Actions = ({ id, slug }) => {
   return (
-    <div className="flex items-center gap-2 md:flex-wrap pt-3">
+    <div className="flex items-center gap-2 md:flex-wrap">
       <Link to={`${slug}`}>
         <Button className="flex gap-2 items-center" variant="outline">
           <EyeOpenIcon />

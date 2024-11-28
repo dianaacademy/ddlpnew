@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import Home from './components/Home/home';
@@ -14,11 +14,8 @@ import Creator from './layouts/creators';
 import Lab from "./layouts/labs";
 import CourseViewPage from './views/student/course-viewer/Courseviewer';
 import Learning from "@/views/student/component/learning";
-import CourseViewer from './views/admin/CourseViewer';
 import { AuthProvider } from './auth/hooks/useauth';
 import PrivateRoute from './utils/PrivateRoutes';
-import CourseBuild from './views/admin/Coursebuild';
-import ModuleBuild from './views/admin/Modulebuild';
 import SplashScreen from './views/admin/SplashScreen';
 import Course from './components/course';
 import CourseStudent from './components/Home/allcourses';
