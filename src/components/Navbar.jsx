@@ -22,8 +22,6 @@ function Navbar() {
   const { currentUser } = useAuth();
   const {role}= useAuth();
 
-  console.log(currentUser);
-
 
   return (
     <div>

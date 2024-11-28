@@ -1,6 +1,7 @@
 // src/components/SplashScreen.js
-import  { useEffect, useState } from 'react';
+import  { useEffect } from 'react';
 import ninjarunning from "../../assets/gifs/ninjarunning.gif";
+import success from "../../assets/gifs/achieve.gif";
 
 const SplashScreen = ({ onAnimationEnd }) => {
   useEffect(() => {
@@ -12,7 +13,7 @@ const SplashScreen = ({ onAnimationEnd }) => {
 
   return (
     <div className="splash-screen">
-      <img src={ninjarunning} alt="Ninja Running" />
+      <img src={success} alt="Ninja Running" />
     </div>
   );
 };
