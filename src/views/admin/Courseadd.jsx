@@ -16,6 +16,8 @@ const CourseAdd = () => {
   const [courseDuration, setCourseDuration] = useState('');
   const [maxStudent, setMaxStudent] = useState('');
   const [whatuLearn, setWhatuLearn] = useState('');
+  const [whoiscfor, SetWhoiscfor] = useState('');
+  const [reqins, SetReqins] = useState('');
   const [category, setCategory] = useState('');
   const [coursePrice, setCoursePrice] = useState('');
   const [materialInclue, setMaterialInclue] = useState('');
@@ -28,7 +30,7 @@ const CourseAdd = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const difficultyLevels = ["All Levels", "Beginner", "Intermediate", "Expert"];
-  const categories = ["BIG DATA", "Linux", "Azure","Cyber Security","DevOps", "5G", "AWS", "BlockChain", "Diana HR", "AI", "VMWARE"];
+  const categories = ["BIG DATA", "Linux", "Azure","Cyber Security","DevOps", "5G", "AWS", "BlockChain", "Diana HR", "AI", "VMWARE","Diana Junior", "Diana Junior Program","Web Development","Digital Marketing","Coding","Oracle", "Others"];
 
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
@@ -83,6 +85,8 @@ const CourseAdd = () => {
           courseDesc,
           maxStudent,
           whatuLearn,
+          whoiscfor,
+          reqins,
           materialInclue,
           courseDuration,
           thumbnailUrl,
@@ -99,6 +103,8 @@ const CourseAdd = () => {
         setCourseDesc('');
         setMaxStudent('');
         setWhatuLearn('');
+        SetWhoiscfor('');
+        SetReqins('');
         setMaterialInclue('');
         setCourseDuration('');
         setCategory('');
@@ -147,14 +153,22 @@ const CourseAdd = () => {
               <Textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full" rows={4} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">What Will Students Learn?</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">What Will I Learn?</label>
               <Textarea value={whatuLearn} onChange={(e) => setWhatuLearn(e.target.value)} className="w-full" rows={4} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Materials Included</label>
               <Textarea value={materialInclue} onChange={(e) => setMaterialInclue(e.target.value)} className="w-full" rows={4} />
             </div>
-            <div className="p-8 border-solid ">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Who Is This Course For</label>
+              <Textarea value={whoiscfor} onChange={(e) => SetWhoiscfor(e.target.value)} className="w-full" rows={4} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Requirements/Instructions</label>
+              <Textarea value={reqins} onChange={(e) => SetReqins(e.target.value)} className="w-full" rows={4} />
+            </div>
+            <div className=" border-solid ">
               <h2 className="text-black text-2xl mb-4">Course Settings</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 items-center">
@@ -172,6 +186,25 @@ const CourseAdd = () => {
                     className="w-24"
                   />
                 </div>
+                <div className="grid grid-cols-2 items-center">
+  <label className="flex flex-col text-black mb-2" htmlFor="courseDuration">
+    Total Course Duration
+    <span className="text-sm text-gray-500 pr-5">(in Hours.)</span>
+  </label>
+  <div className="flex items-center">
+    <input
+      type="number"
+      id="courseDuration"
+      value={courseDuration.replace(" hours", "")} // Show only the number in the input
+      onChange={(e) =>
+        setCourseDuration(e.target.value ? `${e.target.value} hours` : "")
+      }
+      className="w-24 border-gray-300 rounded-md"
+    />
+    <span className="ml-2">hours</span>
+  </div>
+</div>
+
                 <div className="grid grid-cols-2 items-center">
                   <label className="flex flex-col text-black mb-2" htmlFor="categoryInput">
                     Category
@@ -286,7 +319,7 @@ const CourseAdd = () => {
               )}
             </div>
           </div>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-left">
             <Button
               onClick={handleNewCourse}
               disabled={isLoading}

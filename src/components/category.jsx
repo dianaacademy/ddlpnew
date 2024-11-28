@@ -1,84 +1,55 @@
-
 import { Link } from "react-router-dom";
+import CyberIcon from "../assets/images/category/icon/01.svg";
+import aiIcon from "../assets/images/category/icon/ai.svg";
+import Devops from "../assets/images/category/icon/Devops.svg";
+import Blockchain from "../assets/images/category/icon/Blockchain.svg";
+import Azure from "../assets/images/category/icon/Azure.svg";
+import Linux from "../assets/images/category/icon/Linux.svg";
+import fiveG from "../assets/images/category/icon/5G.svg";
+import Bigdata from "../assets/images/category/icon/Bigdata.svg";
 
-const subTitle = "Popular Category";
-const title = "Popular Category For Learn";
-const btnText = "Browse All Categories";
-
-
+const title = "Top Categories";
 const categoryList = [
-    {
-        imgUrl: 'assets/images/category/icon/01.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Computer Science',
-        count: '24 Course',
-    },
-    {
-        imgUrl: 'assets/images/category/icon/02.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Civil Engineering',
-        count: '04 Course',
-    },
-    {
-        imgUrl: 'assets/images/category/icon/03.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Business Analysis',
-        count: '27 Course',
-    },
-    {
-        imgUrl: 'assets/images/category/icon/04.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Data Science Analytics',
-        count: '28 Course',
-    },
-    {
-        imgUrl: 'assets/images/category/icon/05.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Learning Management',
-        count: '78 Course',
-    },
-    {
-        imgUrl: 'assets/images/category/icon/06.jpg',
-        imgAlt: 'category rajibraj91 rajibraj',
-        title: 'Computer Engineering',
-        count: '38 Course',
-    },
-]
-
+    { imgUrl: CyberIcon, title: "Cyber Security", url: "/course?cat=CyberSecurity" },
+    { imgUrl: aiIcon, title: "artificial intelligence", url: "/course?cat=AI" },
+    { imgUrl: Devops, title: "DevOps", url: "/course?cat=DevOps" },
+    { imgUrl: Blockchain, title: "Blockchain ", url: "/course?cat=BlockChain" },
+    { imgUrl: Azure, title: "Linux", url: "/course?cat=Linux" },
+    { imgUrl: Linux, title: "Azure", url: "/course?cat=Azure" },
+    { imgUrl: Bigdata, title: "Bigdata", url: "/course?cat=BigData" },
+    { imgUrl: fiveG, title: "5G", url: "/course?cat=5G" },
+];
 
 const Category = () => {
     return (
-        <div className="category-section padding-tb">
-            <div className="container">
-                <div className="section-header text-center">
-                    <span className="subtitle">{subTitle}</span>
-                    <h2 className="title">{title}</h2>
+        <div className="category-section py-10">
+            <div className="container mx-auto">
+                <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold">{title}</h2>
                 </div>
-                <div className="section-wrapper">
-                    <div className="row g-2 justify-content-center row-cols-xl-6 row-cols-md-3 row-cols-sm-2 row-cols-1">
-                        {categoryList.map((val, i) => (
-                            <div className="col" key={i}>
-                                <div className="category-item text-center">
-                                    <div className="category-inner">
-                                        <div className="category-thumb">
-                                            <img src={`${val.imgUrl}`} alt={val.imgAlt} />
-                                        </div>
-                                        <div className="category-content">
-                                            <Link to="/course"><h6>{val.title}</h6></Link>
-                                            <span>{val.count}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>  
-                        ))}
-                    </div>
-                    <div className="text-center mt-5">
-                        <Link to="/course" className="lab-btn"><span>{btnText}</span></Link>
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {categoryList.map((category, index) => (
+                        <Link
+                            to={category.url}  // Custom URL for each category
+                            key={index}
+                            className="block bg-white border border-gray-200 rounded-lg  hover:shadow-lg hover:bg-gray-100 transition-all p-4 flex items-center space-x-4"
+                        >
+                            <div className="flex-shrink-0">
+                                <img
+                                    src={category.imgUrl}
+                                    alt={category.title}
+                                    className="w-12 h-12 object-contain"
+                                />
+                            </div>
+                            <div>
+                                <h6 className="text-lg font-semibold text-gray-800">{category.title}</h6>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>
     );
-}
- 
+};
+
 export default Category;

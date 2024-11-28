@@ -1,9 +1,9 @@
+import Exper from "../assets/images/about/icon/instructor.svg";
 
 
-
-const subTitle = "About Our Edukon";
-const title = "Good Qualification Services And Better Skills";
-const desc = "Distinctively provide acces mutfuncto users whereas transparent proceses somes ncentivize eficient functionalities rather than extensible archtectur communicate leveraged services and cross-platform.";
+const subTitle = "About Diana Advanced Tech Academy";
+const title = "Best IT Courses by IT Gigs";
+const desc = "Pioneering as the foremost global authority in providing unparalleled online training experiences and delivering world-class IT services, setting the benchmark for excellence and innovation.";
 
 
 
@@ -12,19 +12,19 @@ const aboutList = [
         imgUrl: 'assets/images/about/icon/01.jpg',
         imgAlt: 'about icon rajibraj91 rajibraj',
         title: 'Skilled Instructors',
-        desc: 'Distinctively provide acces mutfuncto users whereas communicate leveraged services',
+        desc: 'Flexible, interactive online courses accessible anytime, anywhere for all skill levels.',
     },
     {
         imgUrl: 'assets/images/about/icon/02.jpg',
         imgAlt: 'about icon rajibraj91 rajibraj',
         title: 'Get Certificate',
-        desc: 'Distinctively provide acces mutfuncto users whereas communicate leveraged services',
+        desc: 'Earn accredited certificates recognized by industry leaders to boost your career.',
     },
     {
         imgUrl: 'assets/images/about/icon/03.jpg',
         imgAlt: 'about icon rajibraj91 rajibraj',
         title: 'Online Classes',
-        desc: 'Distinctively provide acces mutfuncto users whereas communicate leveraged services',
+        desc: 'Experienced industry professionals providing expert guidance and personalized support.',
     },
 ]
 
@@ -60,8 +60,8 @@ const About = () => {
                     </div>
                     <div className="col">
                         <div className="about-left">
-                            <div className="about-thumb">
-                                <img src="assets/images/about/01.png" alt="about" />
+                            <div className="about-thumb ">
+                                <img src="assets/images/about/01.png" alt="about" className ="mt-6" />
                             </div>
                         </div>
                     </div>
@@ -71,4 +71,6 @@ const About = () => {
     );
 }
  
+
+
 export default About;

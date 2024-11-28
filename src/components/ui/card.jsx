@@ -1,12 +1,11 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "  bg-white text-zinc-950 shadow-sm  dark:bg-zinc-950 dark:text-zinc-50",
+      "  bg-white text-zinc-950  dark:bg-zinc-950 dark:text-zinc-50",
       className
     )}
     {...props} />
@@ -50,4 +49,27 @@ const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+const CardImage = React.forwardRef(({ className, src, alt, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("relative overflow-hidden rounded-t-md", className)}
+    {...props}
+  >
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-48 object-cover"
+    />
+  </div>
+))
+CardImage.displayName = "CardImage"
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardImage
+}

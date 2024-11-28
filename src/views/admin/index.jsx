@@ -61,7 +61,7 @@ function MainDashboard() {
         <div  className="grid grid-cols-3 grid-flow-row mt-10 gap-6 mx-4">
           <Card className="w-[350px]">
             <CardHeader>
-              <CardTitle>Total peoples</CardTitle>
+              <CardTitle>Total Users</CardTitle>
             </CardHeader>
             <CardContent>
               <form>
@@ -133,7 +133,7 @@ function MainDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="w-[350px]">
+          {/* <Card className="w-[350px]">
             <CardHeader>
               <CardTitle>Cybersecurity students</CardTitle>
             </CardHeader>
@@ -146,7 +146,7 @@ function MainDashboard() {
                 </div>
               </form>
             </CardContent>
-          </Card>
+          </Card> */}
 
           
           <Card className="w-[350px]">

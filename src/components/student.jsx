@@ -1,32 +1,45 @@
-
-
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Rating from "./rating";
 
 
 const subTitle = "Loved by 200,000+ students";
 const title = "Students Community Feedback";
-
+const VidURL = 'https://firebasestorage.googleapis.com/v0/b/ddlp-456ce.appspot.com/o/files%2FHomePage.mp4?alt=media&token=022dba09-2877-473d-a1ef-2acebbee2871';
 
 const studentList = [
     {
         imgUrl: 'assets/images/feedback/student/01.jpg',
-        imgAlt: 'student rajibraj91 rajibraj',
-        name: 'Oliver Beddows',
-        degi: 'UX designer',
-        desc: 'Rapidiously buildcollaboration anden deas sharing viaing and bleedng edgeing nterfaces fnergstcally plagiarize teams anbuilding paradgms whereas goingi forward process and monetze',
+        imgAlt: 'Diana',
+        name: 'Bret Phillips',
+        degi: 'Network Security Analyst, Zscaler',
+        desc: 'I highly recommend the CCNA course at Diana Advanced Tech Academy. The instructors are knowledgeable and provide practical insights. The course material is well-structured and engaging.',
     },
     {
         imgUrl: 'assets/images/feedback/student/02.jpg',
-        imgAlt: 'student rajibraj91 rajibraj',
-        name: 'Madley Pondor',
-        degi: 'UX designer',
-        desc: 'Rapidiously buildcollaboration anden deas sharing viaing and bleedng edgeing nterfaces fnergstcally plagiarize teams anbuilding paradgms whereas goingi forward process and monetze',
-    },
-]
-
+        imgAlt: 'Diana',
+        name: 'Kiran Bernard',
+        degi: 'Student, University of Bolton',
+        desc: 'I never knew cybersecurity could be so fascinating until I took the Cyber Security Analyst course at Diana Tech Academy. The instructors made the material come alive and showed me how exciting the field can be.',
+    }
+];
 
 const Student = () => {
+    const videoRef = useRef(null);
+    const [zoom, setZoom] = useState(1);
+
+    useEffect(() => {
+        const videoElement = videoRef.current;
+        if (videoElement) {
+            videoElement.play();
+            videoElement.loop = true;
+        }
+    }, []);
+
+    const handleZoom = (factor) => {
+        setZoom((prevZoom) => Math.max(1, prevZoom + factor));
+    };
+
     return (
         <div className="student-feedbak-section padding-tb shape-img">
             <div className="container">
@@ -38,9 +51,36 @@ const Student = () => {
                     <div className="row justify-content-center row-cols-lg-2 row-cols-1">
                         <div className="col">
                             <div className="sf-left">
-                                <div className="sfl-thumb">
-                                    <img src="assets/images/feedback/01.jpg" alt="student feedback" />
-                                    <a href="https://www.youtube.com/embed/MU3qrgR2Kkc" className="video-button popup" target="_blank"><i className="icofont-ui-play"></i></a>
+                                <div
+                                    className="sfl-thumb overflow-hidden relative"
+                                    style={{
+                                        width: '650px',
+                                        height: '450px',
+                                        position: 'relative',
+                                    }}
+                                >
+                                    <video
+                                        ref={videoRef}
+                                        src={VidURL}
+                                        muted
+                                        playsInline
+                                        style={{
+                                            transform: `scale(${zoom})`,
+                                            transformOrigin: 'center center', // Centered zoom
+                                            transition: 'transform 0.3s ease',
+                                            objectFit: 'cover',
+                                            width: '110%',
+                                            height: '110%',
+                                        }}
+                                    />
+                                </div>
+                                <div className="zoom-controls text-center mt-3">
+                                    <button onClick={() => handleZoom(0.1)} className="btn btn-primary">
+                                        Zoom In
+                                    </button>
+                                    <button onClick={() => handleZoom(-0.1)} className="btn btn-secondary mx-2">
+                                        Zoom Out
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +114,6 @@ const Student = () => {
             </div>
         </div>
     );
-}
- 
+};
+
 export default Student;

@@ -1,48 +1,46 @@
-
+import React from 'react';
 import CountUp from 'react-countup';
 
 const subTitle = "START TO SUCCESS";
-const title = "Achieve Your Goals With Edukon";
-
+const title = "Achieve Your Goals With Diana";
 
 const achievementList = [
     {
-        count: '30',
-        desc: 'Years of Language Education Experience',
+        count: '5',
+        desc: 'Years of Experience',
     },
     {
-        count: '3084',
-        desc: 'Learners Enrolled in Edukon Courses',
+        count: '1555248',
+        desc: 'HAPPY STUDENTS',
     },
     {
-        count: '330',
-        desc: 'Qualified Teachers And Language Experts',
+        count: '244',
+        desc: 'OUR TEACHERS',
     },
     {
-        count: '2300',
-        desc: 'Innovative Foreign Language Courses',
+        count: '265',
+        desc: 'OUR COURSES',
     },
-]
+];
 
 const achieveList = [
     {
         imgUrl: 'assets/images/achive/01.png',
-        imgAlt: 'achive thumb rajibraj91 rajibraj',
+        imgAlt: 'Diana',
         title: 'Start Teaching Today',
-        desc: 'Seamlessly engage technically sound coaborative reintermed goal oriented content rather than ethica',
+        desc: 'Share your knowledge, inspire students, and build a rewarding teaching career now!',
         btnText: 'Become A Instructor',
-        siteLink: '#',
+        siteLink: 'https://dianalearningportal.com/dashboard-page/',
     },
     {
         imgUrl: 'assets/images/achive/02.png',
-        imgAlt: 'achive thumb rajibraj91 rajibraj',
+        imgAlt: 'Diana',
         title: 'If You Join Our Course',
-        desc: 'Seamlessly engage technically sound coaborative reintermed goal oriented content rather than ethica',
+        desc: 'Gain skills, expert guidance, and a path to success in your chosen field!',
         btnText: 'Register For Free',
-        siteLink: '#',
+        siteLink: '/signup',
     },
-]
-
+];
 
 const Achievement = () => {
     return (
@@ -89,10 +87,19 @@ const Achievement = () => {
                             ))}
                         </div>
                     </div>
+                    
+                    {/* New Section for the Added Image */}
+                    <div className="achieve-image mt-20 text-center">
+                        <img 
+                            src="assets/images/achive/Ac01.webp" 
+                            alt="Achievement Highlight" 
+                            className="img-fluid"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
     );
-}
- 
+};
+
 export default Achievement;

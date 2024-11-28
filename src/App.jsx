@@ -21,6 +21,8 @@ import CourseBuild from './views/admin/Coursebuild';
 import ModuleBuild from './views/admin/Modulebuild';
 import SplashScreen from './views/admin/SplashScreen';
 import Course from './components/course';
+import CourseStudent from './components/Home/allcourses';
+
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -51,6 +53,7 @@ function App() {
               <Route path="*" element={<ErrorPage />} />
               <Route path="signup" element={<SignupPage />} />
               <Route path="login" element={<LoginPage />} />
+              <Route path="course" element={<CourseStudent />} />
               <Route path="blog" element={<Blog />} />
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />

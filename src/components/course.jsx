@@ -1,72 +1,187 @@
-import React from 'react'
-import StudentHires from './studenthire'
-import Header from './header'
-function course() {
-  return (
-    <div>
-        <div className="min-h-screen  bg-gray-100">
-   <Header/>
-      <main>
-        <div className="max-w-7xl pt-40  mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="bg-white overflow-hidden shadow sm:rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Upskilling Courses upgraded for 10X greater outcomes</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-black text-white p-6 rounded-lg shadow-lg">
-                  <h3 className="text-xl font-bold mb-2">Coding Ninjas TechVarsity</h3>
-                  <p className="mb-4">2 years program for 1st to pre-final year college students</p>
-                  <ul className="list-disc list-inside mb-4">
-                    <li>Get job assistance</li>
-                    <li>Complete CS education</li>
-                    <li>2 year flexible student track</li>
-                  </ul>
-                  <button className="bg-orange-500 text-white px-4 py-2 rounded">Explore TechVarsity</button>
-                </div>
-                <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg">
-                  <h3 className="text-xl font-bold mb-2">Job Bootcamp</h3>
-                  <p className="mb-4">Extensive program for working professionals</p>
-                  <ul className="list-disc list-inside mb-4">
-                    <li>Get job assistance</li>
-                    <li>FSD/Data career tracks</li>
-                    <li>9 months intensive bootcamp</li>
-                  </ul>
-                  <button className="bg-orange-500 text-white px-4 py-2 rounded">Explore Job Bootcamp</button>
-                </div>
-              </div>
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { db } from "@/firebase.config";
+import { doc, getDoc } from "firebase/firestore";
+
+// UI Component Imports
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const CourseViewer = () => {
+    const { slug } = useParams(); 
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [enrollmentData, setEnrollmentData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+    });
+
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const courseRef = doc(db, "courses", slug);
+                const courseSnap = await getDoc(courseRef);
+                if (courseSnap.exists()) {
+                    setCourse(courseSnap.data());
+                } else {
+                    console.log("No such course!");
+                }
+            } catch (error) {
+                console.error("Error fetching course: ", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourse();
+    }, [slug]);
+
+    const handleEnrollmentDataChange = (e) => {
+        setEnrollmentData({
+            ...enrollmentData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleEnrollmentSubmit = (e) => {
+        e.preventDefault();
+        // Handle enrollment submission logic here
+        console.log("Enrollment data:", enrollmentData);
+    };
+
+    if (loading) {
+        return (
+            <div className="course-viewer p-5">
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-64 w-full mb-4" />
+                <Skeleton className="h-4 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2 mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-2/3 mb-2" />
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-4 w-1/4 mb-2" />
+                <Skeleton className="h-4 w-3/4 mb-2" />
             </div>
-          </div>
-        </div>
-      </main>
-    </div>
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl">
-        <h2 className="text-blue-600 text-sm font-semibold">FOR BEGINNERS AND EXPERIENCED LEARNERS</h2>
-        <h1 className="text-3xl font-bold text-gray-800 my-4">Data Structures and Algorithms In Java Course</h1>
-        <p className="text-gray-600 mb-6">
-          This is the course to pick if you are just getting into coding and want to build a strong foundation. Widely used in IT industry.
-        </p>
-        <button className="bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600">
-          Enrol now
-        </button>
-        <div className="mt-6 flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="text-yellow-500 text-2xl">&#9733;</span>
-            <span className="text-gray-800 text-xl ml-2">4.8</span>
-          </div>
-          <div className="text-gray-600">30K+ Learners enrolled</div>
-          <div className="text-gray-600">60+ Hours of lectures</div>
-          <div className="text-gray-600">350+ Problems</div>
-        </div>
-      </div>
-      <div className="mt-8">
-        <img src="path_to_your_image" alt="Instructor" className="w-64 h-64 object-cover rounded-full mx-auto" />
-      </div>
-    </div>
+        );
+    }
 
-    <StudentHires/>
-      
-    </div>
-  )
-}
+    if (!course) {
+        return <div>Course not found</div>;
+    }
 
-export default course
+    return (
+        <div className=" ml-52 mr-52 course-page grid grid-cols-1 lg:grid-cols-[2.5fr_1.5fr] gap-6 p-6">
+            {/* Left Section: Image and Course Details */}
+            <div>
+                {/* Course Image */}
+                {/* <div className=" text-left mb-6">
+                    <img
+                        src={course.thumbnailUrl || "https://via.placeholder.com/800x400"}
+                        alt={course.name || "Course thumbnail"}
+                        className=" h-[400px] object-contain rounded-md"
+                    />
+                </div> */}
+    
+                {/* Course Details */}
+                <div>
+                    <h2 className="text-4xl font-bold mb-4 mt-3">{course.courseName || "Course Name"}</h2>
+                    <h2 className="text-xl font-semibold mt-6 mb-2">About Course</h2>
+                    <p className="mb-4">{course.courseDesc || "No description available."}</p>
+    
+                    <h2 className="text-xl font-semibold mt-6 mb-2">What Will you Learn</h2>
+                    <p className="whitespace-pre-wrap mb-4">{course.whatuLearn || "No schedule provided."}</p>
+                    <h2 className="text-xl font-semibold mt-6 mb-2">Who is this Course For</h2>
+                    <p className="whitespace-pre-wrap mb-4">{course.whoiscfor || "No schedule provided."}</p>
+                    <h2 className="text-xl font-semibold mt-6 mb-2">Requirements/Instructions</h2>
+                    <p className="whitespace-pre-wrap mb-4">{course.reqins || "No schedule provided."}</p>
+    
+                    <h2 className="text-xl font-semibold mt-6 mb-2">Details</h2>
+                    <p><strong>Duration:</strong> {course.courseDuration || "N/A"}</p>
+                    <p><strong>Difficulty Level:</strong> {course.difficultyLevel || "N/A"}</p>
+                    <p><strong>Maximum Students:</strong> {course.maxStudent || "N/A"}</p>
+                </div>
+            </div>
+    
+            {/* Right Section: Price and Enrollment */}
+            <div className="lg:sticky lg:top-6 h-fit">
+                <div className="bg-gray-100 p-6 rounded-md shadow-md">
+                    <div className="mb-4">
+                        <span className="text-xl font-bold text-black-500">${course.coursePrice || "0.00"}</span>
+                    </div>
+    
+                    {/* Dialog Trigger */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                                Enroll Now
+                            </Button>
+                        </DialogTrigger>
+    
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Enroll in "{course.courseName || "Course"}"</DialogTitle>
+                            </DialogHeader>
+                            <form onSubmit={handleEnrollmentSubmit} className="space-y-4">
+                                <div>
+                                    <Label htmlFor="name">Name</Label>
+                                    <Input
+                                        id="name"
+                                        name="name"
+                                        value={enrollmentData.name}
+                                        onChange={handleEnrollmentDataChange}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={enrollmentData.email}
+                                        onChange={handleEnrollmentDataChange}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="phone">Phone</Label>
+                                    <Input
+                                        id="phone"
+                                        name="phone"
+                                        type="tel"
+                                        value={enrollmentData.phone}
+                                        onChange={handleEnrollmentDataChange}
+                                        required
+                                    />
+                                </div>
+                                <DialogFooter>
+                                    <Button type="submit">Submit</Button>
+                                </DialogFooter>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+    
+                    <div className="mt-6 text-center">
+                        <h3 className="text-sm font-medium text-gray-600">A course by</h3>
+                        <p className="font-semibold text-gray-800">{course.tutorName || "Unknown Tutor"}</p>
+                        <div className=" text-left mb-6 rounded-md	">
+                        <img
+                        src={course.thumbnailUrl || "https://via.placeholder.com/800x400"}
+                        alt={course.name || "Course thumbnail"}
+                        className="  mt-10 object-contain rounded-md"
+                        />
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );   
+};
+
+export default CourseViewer;

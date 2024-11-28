@@ -23,13 +23,13 @@ const Home = () => {
            <Fragment >  
             <Header />
             <Banner />
-            <Sponsor />
+            
             <Category />           
              <About />
-            <Instructor />
+            {/* <Instructor /> */}
             <Student />
-            <Blog />
             <Achievement />
+            <Blog />
             <Footer />
         </Fragment>
      </div>

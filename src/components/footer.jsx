@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 
-const newsTitle = "Want Us To Email You About Special Offers And Updates?";
+const newsTitle = "Want To Updates, What's Happening in Tech";
 const siteTitle = "Site Map";
 const useTitle = "Useful Links";
 const socialTitle = "Social Contact";
@@ -15,7 +15,7 @@ const siteList = [
     // },
     {
         text: 'Feedback',
-        link: '#',
+        link: 'https://dianaadvancedtechacademy.uk/submit-feedback/',
     },
     // {
     //     text: 'Plugins',
@@ -34,42 +34,36 @@ const siteList = [
 const useList = [
     {
         text: 'About Us',
-        link: '#',
+        link: 'https://dianaadvancedtechacademy.uk/about-us/',
     },
-    {
-        text: 'Help Link',
-        link: '#',
-    },
+    
     {
         text: 'Terms & Conditions',
-        link: '#',
+        link: 'https://dianaadvancedtechacademy.uk/terms-and-conditions/',
     },
-    {
-        text: 'Contact Us',
-        link: '#',
-    },
+    
     {
         text: 'Privacy Policy',
-        link: '#',
+        link: 'https://dianaadvancedtechacademy.uk/privacy-policy/',
     },
 ]
 
 const socialList = [
     {
         text: 'Facebook',
-        link: '#',
+        link: 'https://www.facebook.com/dianaadvancedtech/',
     },
     {
         text: 'Twitter',
-        link: '#',
+        link: 'https://twitter.com/academydiana',
     },
     {
         text: 'Instagram',
-        link: '#',
+        link: 'https://www.instagram.com/dianaadvancedtech/',
     },
     {
-        text: 'YouTube',
-        link: '#',
+        text: 'Linkedin',
+        link: 'https://www.linkedin.com/in/diana-academy/',
     },
     // {
     //     text: 'Github',
@@ -79,8 +73,12 @@ const socialList = [
 
 const supportList = [
     {
-        text: 'Help Center',
-        link: '#',
+        text: 'Help',
+        link: 'mailto:info@dianaadvancedtechacademy.uk',
+    },
+    {
+        text: 'Contact Us',
+        link: 'https://dianaadvancedtechacademy.uk/contactus/',
     },
     // {
     //     text: 'Paid with Mollie',
@@ -94,10 +92,7 @@ const supportList = [
     //     text: 'Changelog',
     //     link: '#',
     // },
-    {
-        text: 'Contact Support',
-        link: '#',
-    },
+    
 ]
 
 
