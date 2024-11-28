@@ -1,6 +1,5 @@
-// src/components/SplashScreen.js
-import  { useEffect } from 'react';
-import ninjarunning from "../../assets/gifs/ninjarunning.gif";
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 import success from "../../assets/gifs/achieve.gif";
 
 const SplashScreen = ({ onAnimationEnd }) => {
@@ -16,6 +15,11 @@ const SplashScreen = ({ onAnimationEnd }) => {
       <img src={success} alt="Ninja Running" />
     </div>
   );
+};
+
+// Define prop types
+SplashScreen.propTypes = {
+  onAnimationEnd: PropTypes.func.isRequired, // Ensure this prop is a function and mandatory
 };
 
 export default SplashScreen;
