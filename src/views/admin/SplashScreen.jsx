@@ -6,7 +6,7 @@ const SplashScreen = ({ onAnimationEnd }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onAnimationEnd();
-    }, 2000); // Adjust timing as needed for your animation
+    }, 2000); // Adju   st timing as needed for your animation
     return () => clearTimeout(timer);
   }, [onAnimationEnd]);
 

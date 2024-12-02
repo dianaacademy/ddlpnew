@@ -12,6 +12,7 @@ import Allstudentlearningcourse from "@/views/admin/Allstudentlearningcourse";
 import ModuleBuild from "@/views/admin/Modulebuild";
 import NewChapter from "@/views/admin/managechapter";
 import EditChapter from "@/views/admin/Editchapter";
+import Document from "@/views/admin/Document";
 import {
   Home,
   User,
@@ -68,6 +69,13 @@ const routes = [
     path: "studentslearning",
     icon: <MdAdd />,
     component: <Allstudentlearningcourse />,
+  },
+  {
+    name: "add document",
+    layout: "/admin",
+    path: "Documents",
+    icon: <SquarePen />,
+    component: <Document />,
   },
   {
     // name: "courses",

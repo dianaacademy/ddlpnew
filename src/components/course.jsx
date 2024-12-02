@@ -6,11 +6,9 @@ import { doc, getDoc } from "firebase/firestore";
 // UI Component Imports
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle,  } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 const CourseViewer = () => {
     const { slug } = useParams(); 
     const [course, setCourse] = useState(null);
@@ -77,18 +75,7 @@ const CourseViewer = () => {
 
     return (
         <div className=" ml-52 mr-52 course-page grid grid-cols-1 lg:grid-cols-[2.5fr_1.5fr] gap-6 p-6">
-            {/* Left Section: Image and Course Details */}
             <div>
-                {/* Course Image */}
-                {/* <div className=" text-left mb-6">
-                    <img
-                        src={course.thumbnailUrl || "https://via.placeholder.com/800x400"}
-                        alt={course.name || "Course thumbnail"}
-                        className=" h-[400px] object-contain rounded-md"
-                    />
-                </div> */}
-    
-                {/* Course Details */}
                 <div>
                     <h2 className="text-4xl font-bold mb-4 mt-3">{course.courseName || "Course Name"}</h2>
                     <h2 className="text-xl font-semibold mt-6 mb-2">About Course</h2>
@@ -125,7 +112,7 @@ const CourseViewer = () => {
     
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Enroll in "{course.courseName || "Course"}"</DialogTitle>
+                                <DialogTitle>Enroll in {course.courseName || "Course"}</DialogTitle>
                             </DialogHeader>
                             <form onSubmit={handleEnrollmentSubmit} className="space-y-4">
                                 <div>
