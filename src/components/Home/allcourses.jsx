@@ -1,18 +1,34 @@
-import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { useState, useEffect } from "react";
-import { collection, getDocs, query, limit, where, orderBy, startAfter, getCountFromServer } from "firebase/firestore";
-import { Card, CardTitle, CardContent, CardImage } from "@/components/ui/card";
+import {
+  collection,
+  getDocs,
+  query,
+  limit,
+  where,
+  orderBy,
+  startAfter,
+  getCountFromServer,
+} from "firebase/firestore";
+import { Card, CardImage } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Loader2, EyeIcon } from "lucide-react";
 
 export default function CourseStudent() {
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const [imageLoading, setImageLoading] = useState([]);
   const [lastVisible, setLastVisible] = useState(null);
   const [hasMore, setHasMore] = useState(true);
@@ -28,7 +44,7 @@ export default function CourseStudent() {
   useEffect(() => {
     fetchCategories();
     const searchParams = new URLSearchParams(location.search);
-    const categoryParam = searchParams.get('cat');
+    const categoryParam = searchParams.get("cat");
     setSelectedCategory(categoryParam || "all");
   }, [location.search]);
 
@@ -37,11 +53,31 @@ export default function CourseStudent() {
     updateTotalCourses();
   }, [selectedCategory]);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = courses.filter((course) =>
+        course.courseName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+    } else {
+      setFilteredCourses(courses);
+    }
+  }, [searchQuery, courses]);
+  const handleImageLoad = (index) => {
+    setImageLoading((prev) => {
+      const newImageLoading = [...prev];
+      newImageLoading[index] = false;
+      return newImageLoading;
+    });
+  };
+
+
+
   const fetchCategories = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "courses"));
       const uniqueCategories = new Set();
-      querySnapshot.docs.forEach(doc => {
+      querySnapshot.docs.forEach((doc) => {
         const category = doc.data().category;
         if (category) uniqueCategories.add(category);
       });
@@ -57,7 +93,7 @@ export default function CourseStudent() {
     setError(null);
     try {
       let q = query(collection(db, "courses"), orderBy("courseName"));
-      
+
       if (selectedCategory !== "all") {
         q = query(q, where("category", "==", selectedCategory));
       }
@@ -74,7 +110,7 @@ export default function CourseStudent() {
         ...doc.data(),
       }));
 
-      setCourses(prev => loadMore ? [...prev, ...coursesList] : coursesList);
+      setCourses((prev) => (loadMore ? [...prev, ...coursesList] : coursesList));
       setImageLoading(Array(coursesList.length).fill(true));
       setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
       setHasMore(querySnapshot.docs.length === coursesPerPage);
@@ -84,12 +120,6 @@ export default function CourseStudent() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const truncateName = (name, maxLength = 30) => {
-    return name.length > maxLength 
-      ? name.substring(0, maxLength) + '...' 
-      : name;
   };
 
   const updateTotalCourses = async () => {
@@ -104,14 +134,6 @@ export default function CourseStudent() {
       console.error("Error getting total courses: ", error);
       setError("Unable to count courses. Check your Firestore permissions.");
     }
-  };
-
-  const handleImageLoad = (index) => {
-    setImageLoading((prev) => {
-      const newImageLoading = [...prev];
-      newImageLoading[index] = false;
-      return newImageLoading;
-    });
   };
 
   const handleCategoryChange = (value) => {
@@ -144,11 +166,11 @@ export default function CourseStudent() {
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-6">
         <h1 className="text-4xl font-bold mb-6 text-gray-800">All Courses</h1>
-        
+
         <div className="flex flex-col md:flex-row gap-4">
           <div className="md:w-1/5 w-full">
-            <Select 
-              onValueChange={handleCategoryChange} 
+            <Select
+              onValueChange={handleCategoryChange}
               value={selectedCategory}
             >
               <SelectTrigger className="w-full bg-white rounded-md px-4 py-2 text-sm">
@@ -166,10 +188,18 @@ export default function CourseStudent() {
           </div>
 
           <div className="md:w-4/5 w-full">
+            <input
+              type="text"
+              className="w-full bg-white rounded-md px-4 py-2 mb-4"
+              placeholder="Search courses..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {(loading ? Array(6) : courses).map((course, index) => (
-                <Card 
-                  key={course?.id || index} 
+              {(loading ? Array(6) : filteredCourses).map((course, index) => (
+                <Card
+                  key={course?.id || index}
                   className="pb-4 flex flex-col h-full"
                 >
                   {course ? (
@@ -184,21 +214,15 @@ export default function CourseStudent() {
                         alt={course.courseName}
                         onLoad={() => handleImageLoad(index)}
                       />
-                      {imageLoading[index] && (
-                        <div className="px-4 py-2">
-                          <Skeleton className="h-8 w-1/2" />
-                        </div>
-                      )}
                       <div className="px-4 py-2 flex-grow">
                         <div className="text-lg font-medium h-12 mb-3">
-                          {truncateName(course.courseName, 40)}
+                          {course.courseName}
                         </div>
-                        
                       </div>
                       <div className="px-4 pb-2 mt-auto">
                         <Link to={`${course.id}`} className="w-full">
-                          <Button 
-                            className="flex gap-2 items-center w-full justify-center" 
+                          <Button
+                            className="flex gap-2 items-center w-full justify-center"
                             variant="outline"
                           >
                             <EyeIcon size={16} />
@@ -208,13 +232,7 @@ export default function CourseStudent() {
                       </div>
                     </>
                   ) : (
-                    <div className="px-4 py-2">
-                      <Skeleton className="h-8 w-1/2" />
-                      <Skeleton className="h-8 w-24" />
-                      <Skeleton className="h-4 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-1/2 mb-2" />
-                      <Skeleton className="h-4 w-full mb-2" />
-                    </div>
+                    <Skeleton className="h-8 w-1/2" />
                   )}
                 </Card>
               ))}
@@ -229,7 +247,7 @@ export default function CourseStudent() {
                       Loading...
                     </>
                   ) : (
-                    'Load More'
+                    "Load More"
                   )}
                 </Button>
               </div>
