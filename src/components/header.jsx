@@ -65,6 +65,9 @@ const Header = () => {
                 case 'Instructor':
                     navigate('/instructor/default');
                     break;    
+                case 'Kids':
+                    navigate('/Kids/default');
+                    break;    
                 case 'student':
                     navigate('/student/default');
                     break;
@@ -144,7 +147,7 @@ const Header = () => {
                             <div className="menu">
                                 <ul className={`lab-ul ${menuToggle ? "active" : ""}`}>
                                     <li><NavLink to="/">Home</NavLink></li>
-                                    <li><NavLink to="/course">Courses</NavLink></li>
+                                    {/* <li><NavLink to="/course">Courses</NavLink></li> */}
                                     <li><NavLink to="/contact">Contact</NavLink></li>
                                     <li><NavLink to="/contact">Help and Support</NavLink></li>
                                 </ul>

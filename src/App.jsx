@@ -9,6 +9,7 @@ import SignupPage from './views/auth/signup';
 import Admin from './layouts/admin';
 import Instructor from './layouts/instructor';
 import Student from './layouts/students';
+import Kids from './layouts/Kids';
 import Blog from './components/blog';
 import Creator from './layouts/creators';
 import Lab from "./layouts/labs";
@@ -19,6 +20,7 @@ import PrivateRoute from './utils/PrivateRoutes';
 import SplashScreen from './views/admin/SplashScreen';
 import Course from './components/course';
 import CourseStudent from './components/Home/allcourses';
+import DianaJuniorCoursesPage from './components/Home/KidsPViewer';
 
 
 function App() {
@@ -51,6 +53,7 @@ function App() {
               <Route path="signup" element={<SignupPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="course" element={<CourseStudent />} />
+              <Route path="Junior" element={<DianaJuniorCoursesPage/>}/>
               <Route path="blog" element={<Blog />} />
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />
@@ -58,9 +61,10 @@ function App() {
               <Route path="course" element={<Course />} />
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
               <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
+              <Route path="Kids/*" element={<PrivateRoute allowedRoles={['Kids']}> <Kids /></PrivateRoute>} />
               <Route path="instructor/*" element={
-                <PrivateRoute allowedRoles={['instructor']}><Instructor />
-                </PrivateRoute>
+              <PrivateRoute allowedRoles={['instructor']}><Instructor />
+              </PrivateRoute>
               } />
               <Route path="student/*" element={ <PrivateRoute allowedRoles={['Student']}><Student /></PrivateRoute>
             }/>

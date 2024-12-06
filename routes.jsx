@@ -1,4 +1,5 @@
 import MainDashboard from "./src/views/admin";
+
 import UserTable from "./src/views/admin/userTable";
 import CourseAdd from "./src/views/admin/Courseadd";
 import CourseTable from "@/views/admin/courses";
@@ -26,6 +27,7 @@ const routes = [
     icon: <Home />,
     component: <MainDashboard />,
   },
+
   {
     name: "users",
     layout: "/admin",

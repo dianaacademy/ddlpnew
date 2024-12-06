@@ -63,6 +63,12 @@ const Banner = () => {
     { name: 'Bigdata', link: '/course?cat=Bigdata' },
     { name: 'fiveG', link: '/course?cat=5G' },
   ];
+  const UserList = [
+    { name: 'Kids', link: '/junior' },
+    { name: 'Parents', link: '/parents' },
+    { name: 'Instructor', link: '/login' },
+    { name: 'Working Professional', link: '/course' },
+  ];
 
   const shapeList = [
     { name: '1.5M+ Happy Students ', link: '#', className: 'ccl-shape shape-1' },
@@ -92,13 +98,29 @@ const Banner = () => {
                   </h1>
                 </div>
                 <p className="desc">{desc}</p>
-                <form action="/">
+                {/* <form action="/">
                   <div className="banner-icon">
                     <i className="icofont-search"></i>
                   </div>
                   <input type="text" placeholder="Keywords of your course" />
                   <button type="submit">Search Course</button>
-                </form>
+                </form> */}
+                <div className="banner-category d-flex flex-wrap mt-10 text-bold">
+                  {/* <p>I'm: </p> */}
+                  <ul className="lab-ul flex flex-wrap gap-2">
+  {UserList.map((item, index) => (
+    <li key={index}>
+      <a 
+        href={item.link} 
+        className="block p-1 rounded hover:bg-gray-50 transition duration-300"
+      >
+        {item.name}
+      </a>
+    </li>
+  ))}
+</ul>
+
+                </div>
                 <div className="banner-category d-flex flex-wrap mt-10">
                   <p>Most Popular: </p>
                   <ul className="lab-ul flex flex-wrap gap-2">
@@ -115,6 +137,7 @@ const Banner = () => {
 </ul>
 
                 </div>
+                
               </div>
             </div>
             <div className="col-xxl-7 col-xl-6">

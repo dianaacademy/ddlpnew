@@ -30,7 +30,7 @@ const CourseAdd = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const difficultyLevels = ["All Levels", "Beginner", "Intermediate", "Expert"];
-  const categories = ["BIG DATA", "Linux", "Azure","Cyber Security","DevOps", "5G", "AWS", "BlockChain", "Diana HR", "AI", "VMWARE","Diana Junior", "Diana Junior Program","Web Development","Digital Marketing","Coding","Oracle", "Others"];
+  const categories = ["BIG DATA", "Linux", "Azure","Cyber Security","DevOps", "5G", "AWS", "BlockChain", "Diana HR", "AI", "VMWARE","Diana Junior", "Diana Junior Program","Web Development","Digital Marketing","Coding","Oracle","Diana Junior English", "Others"];
 
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
@@ -98,7 +98,7 @@ const CourseAdd = () => {
         });
 
         // Reset form fields
-        setCourseName('');
+        setCourseName(''); 
         setTutorName('');
         setCourseDesc('');
         setMaxStudent('');
