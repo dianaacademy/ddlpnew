@@ -6,9 +6,10 @@ import CourseTable from "@/views/admin/courses";
 import Coursebuild from "@/views/admin/Coursebuild";
 import CourseViewer from "@/views/admin/CourseViewer";
 import Instructor from "@/views/admin/instructor";
-import { Biohazard } from "lucide-react";
+import { Biohazard, BookMarked } from "lucide-react";
 import AssignCourse from "@/views/admin/AssignCourse";
 import { MdAdd } from "react-icons/md";
+
 import Allstudentlearningcourse from "@/views/admin/Allstudentlearningcourse";
 import ModuleBuild from "@/views/admin/Modulebuild";
 import NewChapter from "@/views/admin/managechapter";
@@ -20,6 +21,7 @@ import {
   Package2,
   SquarePen,
 } from "lucide-react"
+import DocumentTabs from "@/views/admin/docs";
 const routes = [
   {
     name: "Dashboard",
@@ -57,6 +59,13 @@ const routes = [
     path: "instructor",
     icon: <Biohazard />,
     component: <Instructor />,
+  },
+  {
+    name: "Docs",
+    layout: "/admin",
+    path: "docs",
+    icon: <BookMarked />,
+    component: <DocumentTabs />,
   },
   {
     name: "Assigncourse",

@@ -52,23 +52,20 @@ export default function Kids(props) {
   document.documentElement.dir = "ltr";
 
   return (
-    <div className="flex h-full w-full">
-      {/* Sidebar is always displayed */}
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
       <Sidebar open={open} onClose={() => setOpen(false)} />
       
-      {/* Main Content */}
-      <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
-        <main className="h-full flex-none transition-all p-0">
-          {/* Routes */}
-          <div className="h-full">
-            <Routes>
-              {getRoutes(routes)}
-              <Route
-                path="/"
-                element={<Navigate to="/Kids/default" replace />}
-              />
-            </Routes>
-          </div>
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto bg-lightPrimary dark:!bg-darkBlue">
+        <main className="w-full min-h-full p-4">
+          <Routes>
+            {getRoutes(routes)}
+            <Route
+              path="/"
+              element={<Navigate to="/Kids/default" replace />}
+            />
+          </Routes>
         </main>
       </div>
     </div>

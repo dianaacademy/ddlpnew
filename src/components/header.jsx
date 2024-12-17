@@ -149,7 +149,7 @@ const Header = () => {
                                     <li><NavLink to="/">Home</NavLink></li>
                                     {/* <li><NavLink to="/course">Courses</NavLink></li> */}
                                     <li><NavLink to="/contact">Contact</NavLink></li>
-                                    <li><NavLink to="/contact">Help and Support</NavLink></li>
+                                    <li><NavLink to="/help">Help and Support</NavLink></li>
                                 </ul>
                             </div>
                             {currentUser ? (

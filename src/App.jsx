@@ -21,6 +21,8 @@ import SplashScreen from './views/admin/SplashScreen';
 import Course from './components/course';
 import CourseStudent from './components/Home/allcourses';
 import DianaJuniorCoursesPage from './components/Home/KidsPViewer';
+import SupportCenterPage from './components/Home/helpandSupport';
+import ContactUsPage from './components/Home/ContactPage';
 
 
 function App() {
@@ -51,8 +53,10 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="*" element={<ErrorPage />} />
               <Route path="signup" element={<SignupPage />} />
+              <Route path="contact" element={<ContactUsPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="course" element={<CourseStudent />} />
+              <Route path="help" element={<SupportCenterPage />} />
               <Route path="Junior" element={<DianaJuniorCoursesPage/>}/>
               <Route path="blog" element={<Blog />} />
               <Route path="lab" element={<Lab />} />

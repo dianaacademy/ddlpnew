@@ -1,4 +1,5 @@
 import MainDashboardKids from "@/views/Kids";
+import LearnDash from "@/views/Kids/Learn";
 import {
   MdHome,
   MdFingerprint,
@@ -11,6 +12,14 @@ const routes = [
       path: "default",
       icon: <MdHome />,
       component: <MainDashboardKids />,
+
+  },
+  {
+      name: "Home",
+      layout: "/Kids",
+      path: "learn",
+      icon: <MdHome />,
+      component: <LearnDash />,
 
   },
 

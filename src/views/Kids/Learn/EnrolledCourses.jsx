@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardTitle, CardFooter } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/hooks/useauth";
-const MyLearning = () => {
+const EnrolledCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
@@ -53,10 +53,7 @@ const MyLearning = () => {
   }
   return (
     <div>
-      <div className="font-Poppins font-bold text-white text-4xl font-Poppins mt-6 fontpop">
-        Hey ! {currentUser.displayName}
-      </div>
-      <div className="font-Poppins text-white text-xl font-Poppins mt-3 fontpop mb-5">Resume your Pending Courses</div>
+      
       <div className="flex flex-wrap gap-4"> 
         {courses.map((course, index) => (
           <Card className="w-1/5 bg-white rounded-lg shadow-md overflow-hidden" key={index}>
@@ -85,4 +82,4 @@ const MyLearning = () => {
     </div>
   );
 };
-export default MyLearning;
+export default EnrolledCourses;

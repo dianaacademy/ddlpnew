@@ -16,6 +16,7 @@ const CourseViewer = () => {
     useEffect(() => {
         const fetchCourse = async () => {
             try {
+                
                 const courseRef = doc(db, "courses", slug);
                 const courseSnap = await getDoc(courseRef);
                 if (courseSnap.exists()) {
