@@ -15,12 +15,19 @@ import ModuleBuild from "@/views/admin/Modulebuild";
 import NewChapter from "@/views/admin/managechapter";
 import EditChapter from "@/views/admin/Editchapter";
 import Document from "@/views/admin/Document";
+import CreatePostPage from "@/views/admin/CreatePost";
+import AssignCourseUP from "@/views/admin/UpAssign";
+
+
 import {
   Home,
   User,
   Package2,
   SquarePen,
+  Rss,
+  CircleFadingPlus,
 } from "lucide-react"
+
 import DocumentTabs from "@/views/admin/docs";
 const routes = [
   {
@@ -37,6 +44,21 @@ const routes = [
     path: "users",
     icon: <User />,
     component: <UserTable />,
+  },
+  {
+    name: "addpost",
+    layout: "/admin",
+    path: "addpost",
+    icon: <Rss />,
+    component: <CreatePostPage />,
+  },
+  {
+    name: "addstudents",
+    layout: "/admin",
+    path: "addstudents",
+    icon: <CircleFadingPlus />,
+    
+    component: <AssignCourseUP />,
   },
   {
     name: "addcourse",
@@ -67,13 +89,13 @@ const routes = [
     icon: <BookMarked />,
     component: <DocumentTabs />,
   },
-  {
-    name: "Assigncourse",
-    layout: "/admin",
-    path: "Assigncourse",
-    icon: <MdAdd />,
-    component: <AssignCourse />,
-  },
+  // {
+  //   name: "Assigncourse",
+  //   layout: "/admin",
+  //   path: "Assigncourse",
+  //   icon: <MdAdd />,
+  //   component: <AssignCourse />,
+  // },
   {
     name: "student",
     layout: "/admin",

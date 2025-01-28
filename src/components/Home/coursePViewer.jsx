@@ -81,7 +81,7 @@ const CourseViewer = () => {
                 <Button onClick={() => setEditMode(!editMode)}>
                     {editMode ? "Cancel" : "Edit"}
                 </Button>
-            </div>
+            </div> 
 
             {editMode ? (
                 <div className="course-edit space-y-4">
