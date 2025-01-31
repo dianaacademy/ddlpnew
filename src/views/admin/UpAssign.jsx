@@ -289,7 +289,7 @@ const AssignCourseUP = () => {
                       "Assign Course"
                     )}
                   </Button>
-                </div>
+                </div>   
               )}
             </CardContent>
           </Card>

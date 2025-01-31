@@ -41,7 +41,7 @@ function Navbar() {
     height={24}
     className="flex" src={logo} alt="diana logo" />
    </div>
-        <p className="flex pl-1 pt-1 navbardd">iana learning portal</p>
+        <p className="flex pl-1 pt-1 navbardd m-0">iana learning portal</p>
         </div>
       </div>
   

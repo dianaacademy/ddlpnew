@@ -1,5 +1,6 @@
 import MainDashboard from "./src/views/student";
 import Mylearning from "./src/views/student/Mylearning";
+import DisCViewer from "@/views/student/my-courses/CourseViewer";
 // import CourseViewPage from "@/views/student/course-viewer/Courseviewer";
 
 
@@ -28,6 +29,14 @@ const routes = [
     // component: <Course />,
     component: <MainDashboard />,
   },
+
+  {
+    name: "",
+    layout: "/student",
+    path: "discover/:slug",
+    component: <DisCViewer />,
+  }
+  
   // {
   //   name: "My learning",
   //   layout: "/student",
