@@ -183,7 +183,7 @@ const DisCViewer = () => {
                                         <Label htmlFor="email" className="text-gray-200">Email</Label>
                                         <Input
                                             id="email"
-                                            name="email"
+                                            name="emai-l"
                                             type="email"
                                             value={enrollmentData.email}
                                             onChange={handleEnrollmentDataChange}

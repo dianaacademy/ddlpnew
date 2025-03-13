@@ -101,7 +101,7 @@
     .topBar {
       flex-wrap: wrap;
     }
-    .searchBar {
+    .searchBar { 
       width: 100%;
     }
   }

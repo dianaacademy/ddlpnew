@@ -32,7 +32,7 @@ const Category = () => {
                         <Link
                             to={category.url}  // Custom URL for each category
                             key={index}
-                            className="block bg-white border border-gray-200 rounded-lg  hover:shadow-lg hover:bg-gray-100 transition-all p-4 flex items-center space-x-4"
+                            className=" bg-white border border-gray-200 rounded-lg  hover:shadow-lg hover:bg-gray-100 transition-all p-4 flex items-center space-x-4"
                         >
                             <div className="flex-shrink-0">
                                 <img

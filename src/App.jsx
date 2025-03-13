@@ -23,6 +23,12 @@ import CourseStudent from './components/Home/allcourses';
 import DianaJuniorCoursesPage from './components/Home/KidsPViewer';
 import SupportCenterPage from './components/Home/helpandSupport';
 import ContactUsPage from './components/Home/ContactPage';
+import TermsAndConditions from './components/terms';
+import PrivacyPolicy from './components/privacy';
+import SQLLearningPage from './components/Home/SqlLanding';
+import CompleteProfilePage from './views/auth/CompleteProf';
+import ProfilePage from './views/auth/ProfilePage';
+
 
 
 function App() {
@@ -59,10 +65,15 @@ function App() {
               <Route path="help" element={<SupportCenterPage />} />
               <Route path="Junior" element={<DianaJuniorCoursesPage/>}/>
               <Route path="blog" element={<Blog />} />
+              <Route path="learn-sql" element={<SQLLearningPage />} />
+              <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
               <Route path="lab" element={<Lab />} />
               <Route path="viewer" element={<CourseViewPage />} />
               <Route path="course/:slug" element={<Course/>} />
+              <Route path="complete-profile/:slug" element={<CompleteProfilePage/>} />
               <Route path="course" element={<Course />} />
+              <Route path="profile" element={<ProfilePage />} />
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
               <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
               <Route path="Kids/*" element={<PrivateRoute allowedRoles={['Kids']}> <Kids /></PrivateRoute>} />

@@ -42,10 +42,11 @@ const UserTable = () => {
 
   useEffect(() => {
     const result = users.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(result);
   }, [searchTerm, users]);
+  
 
   const handleDelete = async (uid) => {
     const database = getDatabase();

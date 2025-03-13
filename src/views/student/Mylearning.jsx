@@ -5,11 +5,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardTitle, CardFooter } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/hooks/useauth";
+import { getLastVisitedChapter } from "./component/Progressservice"; // Import the 
 
 const MyLearning = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [courseProgress, setCourseProgress] = useState({});
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -30,11 +32,16 @@ const MyLearning = () => {
               const courseData = courseDoc.data();
               const enrolledCourseData = enrolledCoursesData[courseId];
 
+              // Check if the user has started this course
+              const lastVisitedChapter = await getLastVisitedChapter(courseId);
+              
               return {
                 ...courseData,
                 id: courseId,
                 enrolledDate: enrolledCourseData?.enrolled_date || null,
                 enrolledBy: enrolledCourseData?.enrolled_by?.user_id || null,
+                hasStarted: !!lastVisitedChapter,
+                lastVisitedChapter: lastVisitedChapter
               };
             }
             return null;
@@ -106,7 +113,7 @@ const MyLearning = () => {
                 <CardTitle className="text-xl font-semibold mt-2">{course.courseName}</CardTitle>
                 <Link to={`/student/mylearning/learn/${course.id}`}>
                   <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
-                    Resume
+                    {course.hasStarted ? "Continue Learning" : "Start Learning"}
                   </CardFooter>
                 </Link>
               </div>

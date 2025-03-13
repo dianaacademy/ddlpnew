@@ -218,7 +218,7 @@ export default function AllCoursesComponent() {
                         height={192}
                         width={340}
                         src={course.thumbnailUrl}
-                        alt={course.courseName}
+                        alt={course.courseName} 
                         onLoad={() => handleImageLoad(index)}
                       />
                       <div className="px-4 py-2 flex-grow">

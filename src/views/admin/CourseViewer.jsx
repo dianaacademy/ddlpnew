@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { db } from "@/firebase.config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button"; // Adjust the import path as necessary
+import { Button } from "@/components/ui/button"; 
 
 const CourseViewer = () => {
     const { slug } = useParams(); // Get the slug parameter from the URL

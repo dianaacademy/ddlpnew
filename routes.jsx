@@ -17,6 +17,8 @@ import EditChapter from "@/views/admin/Editchapter";
 import Document from "@/views/admin/Document";
 import CreatePostPage from "@/views/admin/CreatePost";
 import AssignCourseUP from "@/views/admin/UpAssign";
+import BooksPage from "@/views/admin/LibraryAll";
+
 
 
 import {
@@ -59,6 +61,13 @@ const routes = [
     icon: <CircleFadingPlus />,
     
     component: <AssignCourseUP />,
+  },
+  {
+    name: "library",
+    layout: "/admin",
+    path: "library",
+    icon: <CircleFadingPlus />,
+    component: <BooksPage />,
   },
   {
     name: "addcourse",

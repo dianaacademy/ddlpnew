@@ -9,7 +9,7 @@ import IN from "../assets/images/category/icon/in.svg";
 const phoneNumber = " +44 7441441208";
 const phoneNumber2 = "+44 7441440203";
 const phoneNumber3 = "+1 9174445704 ";
-const phoneNumber4 = "1800 571 6555 ";
+const phoneNumber4 = "+91 73488 41208 ";
 const address = "40 Bank street, London, E14 5NR, United Kingdom ";
 
 let socialList = [
@@ -147,9 +147,15 @@ const Header = () => {
                             <div className="menu">
                                 <ul className={`lab-ul ${menuToggle ? "active" : ""}`}>
                                     <li><NavLink to="/">Home</NavLink></li>
-                                    {/* <li><NavLink to="/course">Courses</NavLink></li> */}
                                     <li><NavLink to="/contact">Contact</NavLink></li>
                                     <li><NavLink to="/help">Help and Support</NavLink></li>
+                                    {/* Only show Login and Signup on mobile menu */}
+                                    {menuToggle && (
+                                        <>
+                                            <li className="d-lg-none"><NavLink to="/login">Login</NavLink></li>
+                                            <li className="d-lg-none"><NavLink to="/signup">Sign Up</NavLink></li>
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                             {currentUser ? (
@@ -159,11 +165,11 @@ const Header = () => {
                                 </Link>
                             ) : (
                                 <>
-                                    <Link to="/login" className="login">
+                                    <Link to="/login" className="login d-none d-lg-inline-block">
                                         <i className="icofont-user"></i>
                                         <span>LOG IN</span>
                                     </Link>
-                                    <Link to="/signup" className="signup">
+                                    <Link to="/signup" className="signup d-none d-lg-inline-block">
                                         <i className="icofont-users"></i>
                                         <span>SIGN UP</span>
                                     </Link>
@@ -174,7 +180,7 @@ const Header = () => {
                                 <span></span>
                                 <span></span>
                             </div>
-                            <div className="ellepsis-bar d-lg-none" onClick={() => setSocialToggle(!socialToggle)}>
+                            <div className="ellepsis-bar d-lg-none d-block" onClick={() => setSocialToggle(!socialToggle)}>
                                 <i className="icofont-info-square"></i>
                             </div>
                         </div>

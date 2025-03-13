@@ -123,7 +123,7 @@ export default function CourseStudent() {
   };
 
   const updateTotalCourses = async () => {
-    try {
+    try { 
       let q = collection(db, "courses");
       if (selectedCategory !== "all") {
         q = query(q, where("category", "==", selectedCategory));

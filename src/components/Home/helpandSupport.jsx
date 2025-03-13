@@ -18,7 +18,7 @@ const SupportCenterPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone  : "",
     category: "",
     query: "",
   });
