@@ -1,0 +1,280 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Grid styles (kept from original) */
+.e-grid .e-gridheader {
+  border: 2px solid green;
+}
+
+.e-grid .e-headercell {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Certificate container */
+#cert_x7d9f1 {
+  margin: 20px 40px 90px;
+  color: black;
+  font-family: Georgia, serif;
+  font-size: 24px;
+  text-align: center;
+}
+
+.cert_wrapper_a4b2e {
+  position: relative;
+  width: 1100px;
+  height: 850px;
+  display: table-cell;
+  vertical-align: middle;
+  background-image: url("../data/dianat.png");
+  background-size: 500px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Corner decorations */
+.cert_wrapper_a4b2e::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 67px;
+  background-color: #0C202A;
+}
+
+.cert_wrapper_a4b2e::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 67px;
+  height: 50%;
+  background-color: #0C202A;
+}
+
+.cert_bottom_k3f0p {
+  position: relative;
+}
+
+.cert_bottom_k3f0p::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 67px;
+  background-color: #0C202A;
+}
+
+.cert_bottom_k3f0p::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  width: 67px;
+  height: 45%;
+  background-color: #0C202A;
+}
+
+/* Header elements */
+.cert_header_t7b1h {
+  z-index: 10;
+  position: absolute;
+  margin: 5px;
+}
+
+.cert_number_q9x4z h1 {
+  position: absolute;
+  font-size: 15px;
+  margin-left: 580px;
+  color: white;
+  z-index: 10;
+  margin-top: 22px;
+}
+
+/* Logo styling */
+.cert_logo_m5v8g {
+  color: rgb(137, 87, 21);
+  margin-top: 70px;
+}
+
+.cert_logo_left_p2k7j {
+  position: absolute;
+  margin-top: 170px;
+  width: 200px;  
+  margin-left: 50px;
+}
+
+.cert_logo_right_c6n3r {
+  position: absolute;
+  margin-left: 820px;
+  margin-top: 130px;
+}
+
+.cert_logo_right_c6n3r img {
+  display: inline;
+  margin-left: 5px;
+}
+
+/* Certificate title */
+.cert_title_f8e0t {
+  color: tan;
+  font-size: 48px;
+  margin: 150px 20px 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert_title_main_h1y9d {
+  color: rgb(0, 0, 0);
+  font-size: 100px;
+  margin: 20px;
+  display: inline-block;
+}
+
+.cert_title_sub_j4r2h {
+  color: rgb(0, 0, 0);
+  font-size: 45px;
+  margin-top: -40px;
+}
+
+/* Certificate content */
+.cert_text_intro_w3s6f {
+  margin-top: 30px;
+}
+
+.cert_text_prefix_g7b4v {
+  margin: 0;
+  font-size: 35px;
+  display: inline-block;
+}
+
+.cert_text_suffix_z9t2d {
+  margin: 0 100px;
+  font-size: 35px;
+}
+
+.cert_recipient_u5x7m {
+  border-bottom: 2px solid black;
+  font-size: 32px;
+  font-style: italic;
+  padding: 0 15px;
+  margin: 0 10px;
+  display: inline-block;
+}
+
+.cert_date_box_n2k8p h1 {
+  position: absolute;
+  font-size: 35px;
+  margin-left: 700px;
+  margin-top: 120px;
+}
+
+/* Border elements */
+.cert_border_top_f5j2k {
+  position: absolute;
+  margin-left: 690px;
+  margin-top: -280px;
+}
+
+.cert_border_bottom_q1w3e {
+  margin-top: -310px;
+  margin-left: -45px;
+  position: absolute;
+  transform: rotate(180deg);
+}
+
+/* QR code */
+.cert_qr_e4r7s {
+  position: absolute;
+  margin: 330px 30px 10px 978px;
+}
+
+/* Bottom section with signatures */
+.cert_signatures_y9i6o {
+  margin: 0 20px 70px 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 40px;
+}
+
+.cert_director_b8v2d .cert_title_role_d3f7h {
+  margin-top: -50px;
+  font-size: 40px;
+}
+
+.cert_ceo_l1m5p .cert_title_role_d3f7h {
+  margin-top: -40px;
+  font-size: 40px;
+}
+
+/* Download button */
+.cert_download_btn_k7j9h {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.cert_download_btn_k7j9h:hover {
+  background-color: #45a049;
+}
+
+/* Remove text decoration from links */
+a {
+  text-decoration: none;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+  .cert_wrapper_a4b2e {
+    width: 95%;
+    height: auto;
+    min-height: 800px;
+  }
+  
+  .cert_date_box_n2k8p h1 {
+    margin-left: 60%;
+  }
+  
+  .cert_qr_e4r7s {
+    margin: 330px 30px 10px 85%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cert_wrapper_a4b2e {
+    background-size: 350px;
+  }
+  
+  .cert_title_main_h1y9d {
+    font-size: 70px;
+  }
+  
+  .cert_title_sub_j4r2h {
+    font-size: 35px;
+  }
+  
+  .cert_text_prefix_g7b4v, .cert_text_suffix_z9t2d {
+    font-size: 28px;
+  }
+  
+  .cert_signatures_y9i6o {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}

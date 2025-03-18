@@ -31,6 +31,7 @@ import {
 } from "lucide-react"
 
 import DocumentTabs from "@/views/admin/docs";
+import CertificateManagement from "@/views/admin/certBasic";
 const routes = [
   {
     name: "Dashboard",
@@ -61,6 +62,13 @@ const routes = [
     icon: <CircleFadingPlus />,
     
     component: <AssignCourseUP />,
+  },
+  {
+    name: "certmanager",
+    layout: "/admin",
+    path: "certmanager",
+    icon: <CircleFadingPlus />,
+    component: <CertificateManagement/>,
   },
   {
     name: "library",

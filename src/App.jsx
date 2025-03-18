@@ -28,6 +28,8 @@ import PrivacyPolicy from './components/privacy';
 import SQLLearningPage from './components/Home/SqlLanding';
 import CompleteProfilePage from './views/auth/CompleteProf';
 import ProfilePage from './views/auth/ProfilePage';
+import CourseTracker from './views/student/Coursetrack/CourseTracker';
+import Certificate from './views/student/Coursetrack/CertDesign';
 
 
 
@@ -72,9 +74,11 @@ function App() {
               <Route path="viewer" element={<CourseViewPage />} />
               <Route path="course/:slug" element={<Course/>} />
               <Route path="complete-profile/:slug" element={<CompleteProfilePage/>} />
+              <Route path="samplecert" element={<Certificate/>} />
               <Route path="course" element={<Course />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
+              <Route path="/student/course-tracker/:courseId" element={<CourseTracker />} />
               <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
               <Route path="Kids/*" element={<PrivateRoute allowedRoles={['Kids']}> <Kids /></PrivateRoute>} />
               <Route path="instructor/*" element={

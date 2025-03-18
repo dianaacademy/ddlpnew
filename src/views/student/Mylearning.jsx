@@ -3,9 +3,9 @@ import { db, auth } from "@/firebase.config";
 import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardTitle, CardFooter } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth/hooks/useauth";
-import { getLastVisitedChapter } from "./component/Progressservice"; // Import the 
+import { getLastVisitedChapter } from "./component/Progressservice"; 
 
 const MyLearning = () => {
   const [courses, setCourses] = useState([]);
@@ -13,6 +13,7 @@ const MyLearning = () => {
   const [error, setError] = useState(null);
   const [courseProgress, setCourseProgress] = useState({});
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async (user) => {
@@ -68,6 +69,11 @@ const MyLearning = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleContinueLearning = (courseId) => {
+    // Redirect to the course tracker page instead of directly to the learning page
+    navigate(`/student/course-tracker/${courseId}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen">
@@ -111,11 +117,12 @@ const MyLearning = () => {
                   NEW
                 </span>
                 <CardTitle className="text-xl font-semibold mt-2">{course.courseName}</CardTitle>
-                <Link to={`/student/mylearning/learn/${course.id}`}>
-                  <CardFooter className="bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300">
-                    {course.hasStarted ? "Continue Learning" : "Start Learning"}
-                  </CardFooter>
-                </Link>
+                <button
+                  onClick={() => handleContinueLearning(course.id)}
+                  className="w-full bg-black text-white text-center py-2 px-2 mt-2 rounded-lg shadow-md hover:bg-gray-800 transition duration-300"
+                >
+                  {course.hasStarted ? "Continue Learning" : "Start Learning"}
+                </button>
               </div>
             </Card>
           ))}

@@ -230,7 +230,7 @@ const ProfilePage = () => {
             }
         } else if (currentSection === 5) {
             if (!learningOutcome) {
-                toast.error("Please fill in all required fields in Learning Outcome");
+                toast.error("Please fill in all4 required fields in Learning Outcome");
                 return;
             }
         }
