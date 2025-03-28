@@ -30,6 +30,8 @@ import CompleteProfilePage from './views/auth/CompleteProf';
 import ProfilePage from './views/auth/ProfilePage';
 import CourseTracker from './views/student/Coursetrack/CourseTracker';
 import Certificate from './views/student/Coursetrack/CertDesign';
+import { PhoneLoginPage } from './views/auth/PhoneLogin';
+import { ForgetPasswordPage } from './views/auth/forgotpass';
 
 
 
@@ -61,6 +63,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="*" element={<ErrorPage />} />
               <Route path="signup" element={<SignupPage />} />
+              <Route path="forgot-password" element={<ForgetPasswordPage />} />
               <Route path="contact" element={<ContactUsPage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="course" element={<CourseStudent />} />
@@ -77,6 +80,7 @@ function App() {
               <Route path="samplecert" element={<Certificate/>} />
               <Route path="course" element={<Course />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="phonelogin" element={<PhoneLoginPage />} />
               <Route path="student/mylearning/learn/:slug" element={<Learning />} />
               <Route path="/student/course-tracker/:courseId" element={<CourseTracker />} />
               <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />

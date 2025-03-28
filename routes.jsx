@@ -18,6 +18,7 @@ import Document from "@/views/admin/Document";
 import CreatePostPage from "@/views/admin/CreatePost";
 import AssignCourseUP from "@/views/admin/UpAssign";
 import BooksPage from "@/views/admin/LibraryAll";
+import { TbCertificate } from "react-icons/tb";
 
 
 
@@ -28,6 +29,9 @@ import {
   SquarePen,
   Rss,
   CircleFadingPlus,
+  Library ,
+  BookPlus ,
+  Blocks,
 } from "lucide-react"
 
 import DocumentTabs from "@/views/admin/docs";
@@ -54,6 +58,7 @@ const routes = [
     path: "addpost",
     icon: <Rss />,
     component: <CreatePostPage />,
+    
   },
   {
     name: "addstudents",
@@ -62,19 +67,21 @@ const routes = [
     icon: <CircleFadingPlus />,
     
     component: <AssignCourseUP />,
+    
   },
   {
     name: "certmanager",
     layout: "/admin",
     path: "certmanager",
-    icon: <CircleFadingPlus />,
+    icon: <TbCertificate />,
     component: <CertificateManagement/>,
+    
   },
   {
     name: "library",
     layout: "/admin",
     path: "library",
-    icon: <CircleFadingPlus />,
+    icon: <BookPlus />,
     component: <BooksPage />,
   },
   {
@@ -86,10 +93,10 @@ const routes = [
   },
 
   {
-    name: "courses",
+    name: "Build Course",
     layout: "/admin",
     path: "courses",
-    icon: <SquarePen />,
+    icon: <Blocks />,
     component: <CourseTable />,
   },
   {
@@ -113,13 +120,13 @@ const routes = [
   //   icon: <MdAdd />,
   //   component: <AssignCourse />,
   // },
-  {
-    name: "student",
-    layout: "/admin",
-    path: "studentslearning",
-    icon: <MdAdd />,
-    component: <Allstudentlearningcourse />,
-  },
+  // {
+  //   name: "student",
+  //   layout: "/admin",
+  //   path: "studentslearning",
+  //   icon: <MdAdd />,
+  //   component: <Allstudentlearningcourse />,
+  // },
   {
     name: "add document",
     layout: "/admin",
@@ -133,6 +140,7 @@ const routes = [
     path: "courses/:slug",
     // icon: <BookType />,
     component: <CourseViewer />,
+    hidden: true, 
   },
   {
     // name: "courses",
@@ -140,6 +148,7 @@ const routes = [
     path: "courses/build/:slug",
     // icon: <BookType />,
     component: <Coursebuild />,
+    hidden: true, 
   },
   {
     // name: "courses",
@@ -147,6 +156,7 @@ const routes = [
     path: "courses/build/:slug/module/:moduleId",
     // icon: <BookType />,
     component: <ModuleBuild />,
+    hidden: true, 
   },
   {
     // name: "courses",
@@ -154,6 +164,7 @@ const routes = [
     path: "courses/build/:slug/module/:moduleId/chapter/new",
     // icon: <BookType />,
     component: <NewChapter />,
+    hidden: true, 
   },
   {
     // name: "courses",
@@ -161,6 +172,7 @@ const routes = [
     path: "courses/build/:slug/module/:moduleId/chapter/:chapterId/edit",
     // icon: <BookType />,
     component: <EditChapter />,
+    hidden: true, 
   },
 
 ];

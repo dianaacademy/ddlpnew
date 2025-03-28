@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getDatabase, ref, get } from 'firebase/database';
 import { db, auth, storage } from "@/firebase.config";
 import { collection, getDocs, setDoc, doc, updateDoc, query, where } from "firebase/firestore";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import { Command, CommandInput, CommandList, CommandItem } from "@/components/ui/command";
@@ -11,14 +11,30 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Loader2, Edit, Eye, Image as ImageIcon } from "lucide-react";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetDescription, 
+  SheetFooter, 
+  SheetClose 
+} from "@/components/ui/sheet";
+import { 
+  Drawer, 
+  DrawerContent, 
+  DrawerHeader, 
+  DrawerTitle, 
+  DrawerDescription 
+} from "@/components/ui/drawer";
+import { Progress } from "@/components/ui/progress";
+import { Loader2, Edit, Eye, Image as ImageIcon, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { SkeletonCard } from "./components/skeltoncard";
 import { useForm, FormProvider } from "react-hook-form";
+import CertificateDetailsPage from "./CertDetails/CertDetailsApx";
 
 const CertificateManagement = () => {
-  // States for the form
   const [courseCategories, setCourseCategories] = useState([]);
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -27,28 +43,24 @@ const CertificateManagement = () => {
   const [recognizeAs, setRecognizeAs] = useState("");
   const [certificateImage, setCertificateImage] = useState(null);
   const [certificateImagePreview, setCertificateImagePreview] = useState("");
-  
-  // States for dropdowns
   const [openCategory, setOpenCategory] = useState(false);
   const [openCourse, setOpenCourse] = useState(false);
   const [searchCategoryTerm, setSearchCategoryTerm] = useState("");
   const [searchCourseTerm, setSearchCourseTerm] = useState("");
-  
-  // States for loading and submission
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // States for certificates data
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [certificates, setCertificates] = useState([]);
   const [issuedCertificates, setIssuedCertificates] = useState([]);
   const [searchCertTerm, setSearchCertTerm] = useState("");
-  
-  // States for edit mode
   const [editMode, setEditMode] = useState(false);
   const [currentCertificate, setCurrentCertificate] = useState(null);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  
-  // Form initialization
+  const [openEditSheet, setOpenEditSheet] = useState(false);
+  const [openImageDrawer, setOpenImageDrawer] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [isFormModified, setIsFormModified] = useState(false);
+  const [initialValues, setInitialValues] = useState(null);
+
   const form = useForm({
     defaultValues: {
       categoryId: "",
@@ -58,100 +70,83 @@ const CertificateManagement = () => {
     }
   });
 
-  // Fetch initial data on component mount
   useEffect(() => {
-   // Replace the fetchData function in your useEffect with this:
-const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      // Get course categories from courses (since there's no separate collection)
-      const coursesCollection = collection(db, "courses");
-      const coursesSnapshot = await getDocs(coursesCollection);
-      const coursesData = coursesSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      // Extract unique categories from courses
-      const uniqueCategories = [];
-      const categoryMap = {};
-      
-      coursesData.forEach(course => {
-        if (course.category && !categoryMap[course.category]) {
-          categoryMap[course.category] = true;
-          uniqueCategories.push({
-            id: course.category,
-            name: course.category
-          });
-        }
-      });
-      
-      console.log("Extracted categories:", uniqueCategories);
-      setCourseCategories(uniqueCategories);
-      setCourses(coursesData);
-      
-      // Fetch certificates
-      const certificatesCollection = collection(db, "cert_generate");
-      const certificatesSnapshot = await getDocs(certificatesCollection);
-      const certificatesData = certificatesSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setCertificates(certificatesData);
-      
-      // Fetch issued certificates
-      const issuedCertificatesQuery = query(
-        collection(db, "cert_generate"), 
-        where("cert_generated", "==", true)
-      );
-      const issuedCertificatesSnapshot = await getDocs(issuedCertificatesQuery);
-      const issuedCertificatesData = issuedCertificatesSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setIssuedCertificates(issuedCertificatesData);
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-      toast.error("Failed to fetch data. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const coursesCollection = collection(db, "courses");
+        const coursesSnapshot = await getDocs(coursesCollection);
+        const coursesData = coursesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        const uniqueCategories = [];
+        const categoryMap = {};
+        
+        coursesData.forEach(course => {
+          if (course.category && !categoryMap[course.category]) {
+            categoryMap[course.category] = true;
+            uniqueCategories.push({
+              id: course.category,
+              name: course.category
+            });
+          }
+        });
+        
+        setCourseCategories(uniqueCategories);
+        setCourses(coursesData);
+        
+        const certificatesCollection = collection(db, "cert_basicdb");
+        const certificatesSnapshot = await getDocs(certificatesCollection);
+        const certificatesData = certificatesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setCertificates(certificatesData);
+        
+        const issuedCertificatesQuery = query(
+          collection(db, "cert_generate"), 
+          where("cert_generated", "==", true)
+        );
+        const issuedCertificatesSnapshot = await getDocs(issuedCertificatesQuery);
+        const issuedCertificatesData = issuedCertificatesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setIssuedCertificates(issuedCertificatesData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+        toast.error("Failed to fetch data. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     fetchData();
   }, []);
 
-  // Filter courses when category is selected
   useEffect(() => {
     if (selectedCategory) {
-      // Filter courses based on the selected category
       const filtered = courses.filter(course => course.category === selectedCategory);
-      console.log("Filtered courses for category", selectedCategory, ":", filtered);    
       setFilteredCourses(filtered);
     } else {
       setFilteredCourses([]);
     }
   }, [selectedCategory, courses]);
 
-  // Update recognizeAs when course is selected
-  useEffect(() => {
-    if (selectedCourse) {
-      const course = courses.find(c => c.id === selectedCourse);
-      if (course) {
-        setRecognizeAs(course.courseName || "");
-      }
-    } else {
-      setRecognizeAs("");
-    }
-  }, [selectedCourse, courses]);
-
-  // Handle image file selection
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setCertificateImage(file);
       
-      // Create a preview
+      if (file.size > 1 * 1024 * 1024) {
+        toast.error("Image size should not exceed 1MB");
+        return;
+      }
+      
+      setCertificateImage(file);
+      setIsFormModified(true);
+      
       const reader = new FileReader();
       reader.onload = (event) => {
         setCertificateImagePreview(event.target.result);
@@ -160,7 +155,37 @@ const fetchData = async () => {
     }
   };
 
-  // Handle form submission for adding new certificate
+  const uploadImageWithProgress = async (file, path) => {
+    try {
+      const reference = storageRef(storage, path);
+      const uploadTask = uploadBytesResumable(reference, file);
+
+      return new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadProgress(progress);
+          },
+          (error) => {
+            reject(error);
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              setUploadProgress(0);
+              resolve(downloadURL);
+            } catch (error) {
+              reject(error);
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+    }
+  };
+
   const handleAddCertificate = async () => {
     if (!selectedCategory || !selectedCourse || !recognizeAs || !certificateImage) {
       toast.error("Please fill all fields and upload a certificate image.");
@@ -170,12 +195,11 @@ const fetchData = async () => {
     setIsSubmitting(true);
 
     try {
-      // Upload image to Firebase Storage
-      const storageReference = storageRef(storage, `certificates/${selectedCourse}_${Date.now()}`);
-      const uploadResult = await uploadBytes(storageReference, certificateImage);
-      const downloadURL = await getDownloadURL(uploadResult.ref);
+      const downloadURL = await uploadImageWithProgress(
+        certificateImage, 
+        `certificates/${selectedCourse}_${Date.now()}`
+      );
 
-      // Save certificate data to Firestore
       const certificateData = {
         categoryId: selectedCategory,
         courseId: selectedCourse,
@@ -192,14 +216,12 @@ const fetchData = async () => {
 
       toast.success("Certificate template added successfully!");
       
-      // Reset form
       setSelectedCategory("");
       setSelectedCourse("");
       setRecognizeAs("");
       setCertificateImage(null);
       setCertificateImagePreview("");
 
-      // Refresh certificates data
       const certificatesCollection = collection(db, "cert_basicdb");
       const certificatesSnapshot = await getDocs(certificatesCollection);
       const certificatesData = certificatesSnapshot.docs.map(doc => ({
@@ -215,20 +237,25 @@ const fetchData = async () => {
     }
   };
 
-  // Handle edit certificate
   const handleEditCertificate = (certificate) => {
     setCurrentCertificate(certificate);
     setSelectedCategory(certificate.categoryId);
     setSelectedCourse(certificate.courseId);
     setRecognizeAs(certificate.recognizeAs);
     setCertificateImagePreview(certificate.CertThumb);
-    setOpenEditDialog(true);
+    setInitialValues({
+      categoryId: certificate.categoryId,
+      courseId: certificate.courseId,
+      recognizeAs: certificate.recognizeAs,
+      CertThumb: certificate.CertThumb
+    });
+    setOpenEditSheet(true);
+    setIsFormModified(false);
   };
 
-  // Handle update certificate
   const handleUpdateCertificate = async () => {
-    if (!currentCertificate || !selectedCategory || !selectedCourse || !recognizeAs) {
-      toast.error("Please fill all required fields.");
+    if (!currentCertificate) {
+      toast.error("No certificate selected for update.");
       return;
     }
 
@@ -237,14 +264,16 @@ const fetchData = async () => {
     try {
       let CertThumb = currentCertificate.CertThumb;
       
-      // If a new image was uploaded, update it
       if (certificateImage) {
-        const storageReference = storageRef(storage, `certificates/${selectedCourse}_${Date.now()}`);
-        const uploadResult = await uploadBytes(storageReference, certificateImage);
-        CertThumb = await getDownloadURL(uploadResult.ref);
+        CertThumb = await uploadImageWithProgress(
+          certificateImage, 
+          `certificates/${selectedCourse}_${Date.now()}`
+        ).catch(error => {
+          toast.error(`Image upload failed: ${error.message}`);
+          throw error;
+        });
       }
 
-      // Update certificate data
       const certificateData = {
         categoryId: selectedCategory,
         courseId: selectedCourse,
@@ -258,16 +287,15 @@ const fetchData = async () => {
 
       toast.success("Certificate updated successfully!");
       
-      // Close dialog and reset form
-      setOpenEditDialog(false);
+      setOpenEditSheet(false);
       setCurrentCertificate(null);
       setSelectedCategory("");
       setSelectedCourse("");
       setRecognizeAs("");
       setCertificateImage(null);
       setCertificateImagePreview("");
+      setIsFormModified(false);
 
-      // Refresh certificates data
       const certificatesCollection = collection(db, "cert_basicdb");
       const certificatesSnapshot = await getDocs(certificatesCollection);
       const certificatesData = certificatesSnapshot.docs.map(doc => ({
@@ -276,14 +304,18 @@ const fetchData = async () => {
       }));
       setCertificates(certificatesData);
     } catch (error) {
-      console.error("Error updating certificate: ", error);
-      toast.error("Failed to update certificate. Please try again.");
+      console.error("Error updating certificate:", error);
+      toast.error(`Update failed: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Filter certificates based on search term
+  const handleViewImage = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setOpenImageDrawer(true);
+  };
+
   const filteredCertificates = certificates.filter(cert => {
     const courseName = courses.find(c => c.id === cert.courseId)?.courseName || "";
     const categoryName = courseCategories.find(c => c.id === cert.categoryId)?.name || "";
@@ -294,13 +326,12 @@ const fetchData = async () => {
     );
   });
 
-  // Filter course categories based on search term
   const filteredCategories = courseCategories.filter(category =>
     category.name?.toLowerCase().includes(searchCategoryTerm.toLowerCase())
   );
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4">
       <Toaster />
       <Tabs defaultValue="add">
         <TabsList className="grid w-full grid-cols-3">
@@ -309,7 +340,6 @@ const fetchData = async () => {
           <TabsTrigger value="issued">View Issued Certificates</TabsTrigger>
         </TabsList>
         
-        {/* Add Certificate Details Tab */}
         <TabsContent value="add">
           <Card>
             <CardContent>
@@ -320,7 +350,6 @@ const fetchData = async () => {
                 <SkeletonCard />
               ) : (
                 <div className="space-y-4 mt-4">
-                  {/* Course Category Dropdown */}
                   <div>
                     <div className="text-sm font-medium mb-2">Choose Course Category</div>
                     <Popover open={openCategory} onOpenChange={setOpenCategory}>
@@ -344,7 +373,7 @@ const fetchData = async () => {
                                 key={category.id}
                                 onSelect={() => {
                                   setSelectedCategory(category.id);
-                                  setSelectedCourse(""); // Reset course when category changes
+                                  setSelectedCourse("");
                                   setOpenCategory(false);
                                 }}
                               >
@@ -357,7 +386,6 @@ const fetchData = async () => {
                     </Popover>
                   </div>
 
-                  {/* Course Dropdown */}
                   <div>
                     <div className="text-sm font-medium mb-2">Choose Course</div>
                     <Popover open={openCourse} onOpenChange={setOpenCourse}>
@@ -389,6 +417,7 @@ const fetchData = async () => {
                                   key={course.id}
                                   onSelect={() => {
                                     setSelectedCourse(course.id);
+                                    setRecognizeAs(course.courseName);
                                     setOpenCourse(false);
                                   }}
                                 >
@@ -402,10 +431,8 @@ const fetchData = async () => {
                     </Popover>
                   </div>
 
-                  {/* Recognize As Field */}
                   <div>
-                    <div className="text-sm font-medium mb-2">
-                    Recognize As</div>
+                    <div className="text-sm font-medium mb-2">Recognize As</div>
                     <Input 
                       className="mt-2"
                       placeholder="Certificate recognition name"
@@ -414,14 +441,13 @@ const fetchData = async () => {
                     />
                   </div>
 
-                  {/* Certificate Image Upload */}
                   <div>
-                    <div className="text-sm font-medium mb-2">Upload Certificate Image</div>
+                    <div className="text-sm font-medium mb-2">Upload Certificate Badge image</div>
                     <div className="mt-2 flex flex-col space-y-4">
                       <div className="flex items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-md">
                         <label className="cursor-pointer flex flex-col items-center space-y-2">
                           <ImageIcon className="h-10 w-10 text-gray-400" />
-                          <span className="text-sm text-gray-500">Click to upload certificate image</span>
+                          <span className="text-sm text-gray-500">Click to Upload Certificate Badge image</span>
                           <input
                             type="file"
                             accept="image/*"
@@ -451,6 +477,10 @@ const fetchData = async () => {
                           </Button>
                         </div>
                       )}
+
+                      {uploadProgress > 0 && (
+                        <Progress value={uploadProgress} className="w-full" />
+                      )}
                     </div>
                   </div>
 
@@ -474,7 +504,6 @@ const fetchData = async () => {
           </Card>
         </TabsContent>
         
-        {/* View/Edit Certificate Details Tab */}
         <TabsContent value="view">
           <Card>
             <CardContent>
@@ -499,7 +528,6 @@ const fetchData = async () => {
                     <Table className="border rounded-lg">
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Course Category</TableHead>
                           <TableHead>Course Name</TableHead>
                           <TableHead>Recognition</TableHead>
                           <TableHead>Preview</TableHead>
@@ -510,9 +538,6 @@ const fetchData = async () => {
                         {filteredCertificates.map((cert) => (
                           <TableRow key={cert.id}>
                             <TableCell>
-                              {courseCategories.find(c => c.id === cert.categoryId)?.name || "Unknown"}
-                            </TableCell>
-                            <TableCell>
                               {courses.find(c => c.id === cert.courseId)?.courseName || "Unknown"}
                             </TableCell>
                             <TableCell>{cert.recognizeAs}</TableCell>
@@ -520,7 +545,7 @@ const fetchData = async () => {
                               <Button 
                                 variant="outline" 
                                 size="sm"
-                                onClick={() => window.open(cert.CertThumb, '_blank')}
+                                onClick={() => handleViewImage(cert.CertThumb)}
                               >
                                 <Eye className="h-4 w-4 mr-2" />
                                 View
@@ -547,92 +572,21 @@ const fetchData = async () => {
           </Card>
         </TabsContent>
         
-        {/* View Issued Certificates Tab */}
         <TabsContent value="issued">
-          <Card>
-            <CardContent>
-              <div className="flex mt-4 justify-between">
-                <CardTitle className="px-2 py-2">Issued Certificates</CardTitle>
-                <Input
-                  placeholder="Search issued certificates..."
-                  value={searchCertTerm}
-                  onChange={(e) => setSearchCertTerm(e.target.value)}
-                  className="max-w-sm"
-                />
-              </div>
-              {isLoading ? (
-                <SkeletonCard />
-              ) : (
-                <div className="mt-4">
-                  {issuedCertificates.length === 0 ? (
-                    <div className="text-center py-6">
-                      <p className="text-gray-500">No issued certificates found.</p>
-                    </div>
-                  ) : (
-                    <Table className="border rounded-lg">
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Course Category</TableHead>
-                          <TableHead>Course Name</TableHead>
-                          <TableHead>Recognition</TableHead>
-                          <TableHead>Issue Date</TableHead>
-                          <TableHead>Certificate</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {issuedCertificates
-                          .filter(cert => {
-                            const courseName = courses.find(c => c.id === cert.courseId)?.courseName || "";
-                            const categoryName = courseCategories.find(c => c.id === cert.categoryId)?.name || "";
-                            return (
-                              courseName.toLowerCase().includes(searchCertTerm.toLowerCase()) ||
-                              categoryName.toLowerCase().includes(searchCertTerm.toLowerCase()) ||
-                              cert.recognizeAs.toLowerCase().includes(searchCertTerm.toLowerCase())
-                            );
-                          })
-                          .map((cert) => (
-                            <TableRow key={cert.id}>
-                              <TableCell>
-                                {courseCategories.find(c => c.id === cert.categoryId)?.name || "Unknown"}
-                              </TableCell>
-                              <TableCell>
-                                {courses.find(c => c.id === cert.courseId)?.courseName || "Unknown"}
-                              </TableCell>
-                              <TableCell>{cert.recognizeAs}</TableCell>
-                              <TableCell>
-                                {new Date(cert.issueDate || cert.updatedAt).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => window.open(cert.CertThumb, '_blank')}
-                                >
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <CertificateDetailsPage/>
         </TabsContent>
       </Tabs>
 
-      {/* Edit Certificate Dialog */}
-      <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Edit Certificate Template</DialogTitle>
-          </DialogHeader>
+      <Sheet open={openEditSheet} onOpenChange={setOpenEditSheet}>
+        <SheetContent className="w-[500px] overflow-y-auto">
+          <SheetHeader className="sticky top-0 bg-white z-10">
+            <SheetTitle>Edit Certificate Template</SheetTitle>
+            <SheetDescription>
+              Update details for your certificate template
+            </SheetDescription>
+          </SheetHeader>
           
-          <div className="space-y-4 mt-4">
-            {/* Course Category Dropdown */}
+          <div className="space-y-4 mt-4 pb-24">
             <div>
               <div className="text-sm font-medium mb-2">Choose Course Category</div>
               <Popover open={openCategory} onOpenChange={setOpenCategory}>
@@ -656,8 +610,9 @@ const fetchData = async () => {
                           key={category.id}
                           onSelect={() => {
                             setSelectedCategory(category.id);
-                            setSelectedCourse(""); // Reset course when category changes
+                            setSelectedCourse("");
                             setOpenCategory(false);
+                            setIsFormModified(true);
                           }}
                         >
                           {category.name}
@@ -669,7 +624,6 @@ const fetchData = async () => {
               </Popover>
             </div>
 
-            {/* Course Dropdown */}
             <div>
               <div className="text-sm font-medium mb-2">Choose Course</div>
               <Popover open={openCourse} onOpenChange={setOpenCourse}>
@@ -702,6 +656,7 @@ const fetchData = async () => {
                             onSelect={() => {
                               setSelectedCourse(course.id);
                               setOpenCourse(false);
+                              setIsFormModified(true);
                             }}
                           >
                             {course.courseName}
@@ -714,18 +669,19 @@ const fetchData = async () => {
               </Popover>
             </div>
 
-            {/* Recognize As Field */}
             <div>
               <div className="text-sm font-medium mb-2">Recognize As</div>
               <Input 
                 className="mt-2"
                 placeholder="Certificate recognition name"
                 value={recognizeAs}
-                onChange={(e) => setRecognizeAs(e.target.value)}
+                onChange={(e) => {
+                  setRecognizeAs(e.target.value);
+                  setIsFormModified(true);
+                }}
               />
             </div>
 
-            {/* Certificate Image Upload/Preview */}
             <div>
               <div className="text-sm font-medium mb-2">Certificate Image</div>
               <div className="mt-2 flex flex-col space-y-4">
@@ -736,6 +692,18 @@ const fetchData = async () => {
                       alt="Certificate Preview" 
                       className="w-full max-h-64 object-contain rounded-md"
                     />
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2"
+                      onClick={() => {
+                        setCertificateImage(null);
+                        setCertificateImagePreview("");
+                        setIsFormModified(true);
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
                   </div>
                 )}
                 
@@ -751,30 +719,52 @@ const fetchData = async () => {
                     />
                   </label>
                 </div>
+                
+                {uploadProgress > 0 && (
+                  <Progress value={uploadProgress} className="w-full" />
+                )}
               </div>
             </div>
           </div>
           
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenEditDialog(false)}>
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleUpdateCertificate} 
-              disabled={isSubmitting || !selectedCategory || !selectedCourse || !recognizeAs}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Updating...
-                </>
-              ) : (
-                "Update Certificate"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t">
+            <div className="flex justify-end gap-2">
+              <SheetClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </SheetClose>
+              <Button 
+                onClick={handleUpdateCertificate} 
+                disabled={isSubmitting || !isFormModified}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update Certificate"
+                )}
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <Drawer open={openImageDrawer} onOpenChange={setOpenImageDrawer}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Certificate Image</DrawerTitle>
+            <DrawerDescription>Full view of the certificate image</DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 flex justify-center items-center">
+            <img 
+              src={selectedImageUrl} 
+              alt="Certificate Full View" 
+              className="max-w-full max-h-[70vh] object-contain"
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

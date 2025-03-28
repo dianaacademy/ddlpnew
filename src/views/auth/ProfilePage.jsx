@@ -286,7 +286,7 @@ const ProfilePage = () => {
         } catch (error) {
             console.error("Error updating profile:", error);
             toast.error("Failed to update profile: " + error.message);
-        } finally {
+        } finally { 
             setSaveLoading(false);
         }
     };

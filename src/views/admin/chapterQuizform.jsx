@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
+
+
 const ChapterQuizform = ({ questions, setQuestions }) => {
   const [quizName, setQuizName] = useState('');
 
@@ -14,8 +16,8 @@ const ChapterQuizform = ({ questions, setQuestions }) => {
   const handleQuestionChange = (index, e) => {
     const newQuestions = [...questions];
     newQuestions[index].question = e.target.value;
-    setQuestions(newQuestions);
-  };
+    setQuestions(newQuestions); 
+  }; 
 
   const handleHintChange = (index, e) => {
     const newQuestions = [...questions];
@@ -59,7 +61,7 @@ const ChapterQuizform = ({ questions, setQuestions }) => {
   const handleDeleteQuestion = (questionIndex) => {
     const newQuestions = [...questions];
     newQuestions.splice(questionIndex, 1);
-    setQuestions(newQuestions);
+    setQuestions( );
   };
 
   return (
