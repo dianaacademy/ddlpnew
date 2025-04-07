@@ -99,7 +99,7 @@ const CourseViewer = () => {
             <div className="lg:sticky lg:top-6 h-fit">
                 <div className="bg-gray-100 p-6 rounded-md shadow-md">
                     <div className="mb-4">
-                        <span className="text-xl font-bold text-black-500">${course.coursePrice || "0.00"}</span>
+                        {/* <span className="text-xl font-bold text-black-500">${course.coursePrice || "0.00"}</span> */}
                     </div>
     
                     {/* Dialog Trigger */}

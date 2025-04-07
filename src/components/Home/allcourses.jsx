@@ -36,23 +36,30 @@ export default function CourseStudent() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
+  const [debouncedSearchUpdate, setDebouncedSearchUpdate] = useState(false);
   const coursesPerPage = 15;
 
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Initialize from URL params only on first load
   useEffect(() => {
     fetchCategories();
     const searchParams = new URLSearchParams(location.search);
     const categoryParam = searchParams.get("cat");
-    setSelectedCategory(categoryParam || "all");
-  }, [location.search]);
+    const queryParam = searchParams.get("query");
+    
+    if (categoryParam) setSelectedCategory(categoryParam);
+    if (queryParam) setSearchQuery(queryParam);
+  }, []); // Empty dependency array - only run once on mount
 
+  // Fetch courses when category changes
   useEffect(() => {
     fetchCourses();
     updateTotalCourses();
   }, [selectedCategory]);
 
+  // Filter courses based on search query
   useEffect(() => {
     if (searchQuery) {
       const filtered = courses.filter((course) =>
@@ -63,6 +70,49 @@ export default function CourseStudent() {
       setFilteredCourses(courses);
     }
   }, [searchQuery, courses]);
+
+  // Debounce search updates to avoid too many URL changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchUpdate(true);
+    }, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      setDebouncedSearchUpdate(false);
+    };
+  }, [searchQuery]);
+
+  // Update URL when search query changes (debounced)
+  useEffect(() => {
+    if (!debouncedSearchUpdate) return;
+    
+    const currentParams = new URLSearchParams(location.search);
+    
+    if (searchQuery) {
+      currentParams.set("query", searchQuery);
+    } else {
+      currentParams.delete("query");
+    }
+    
+    // Keep category if it exists
+    if (selectedCategory !== "all") {
+      currentParams.set("cat", selectedCategory);
+    } else {
+      currentParams.delete("cat");
+    }
+    
+    const newQueryString = currentParams.toString();
+    const newPath = location.pathname + (newQueryString ? `?${newQueryString}` : "");
+    
+    // Only update if the URL would actually change
+    if (newPath !== location.pathname + location.search) {
+      navigate(newPath, { replace: true });
+    }
+    
+    setDebouncedSearchUpdate(false);
+  }, [debouncedSearchUpdate, searchQuery, selectedCategory, navigate, location]);
+
   const handleImageLoad = (index) => {
     setImageLoading((prev) => {
       const newImageLoading = [...prev];
@@ -70,8 +120,6 @@ export default function CourseStudent() {
       return newImageLoading;
     });
   };
-
-
 
   const fetchCategories = async () => {
     try {
@@ -140,11 +188,28 @@ export default function CourseStudent() {
     setSelectedCategory(value);
     setLastVisible(null);
     setCourses([]);
+    
+    const currentParams = new URLSearchParams(location.search);
     if (value === "all") {
-      navigate("/admin/courses", { replace: true });
+      currentParams.delete("cat");
     } else {
-      navigate(`?cat=${value}`, { replace: true });
+      currentParams.set("cat", value);
     }
+    
+    // Preserve search query if it exists
+    if (searchQuery) {
+      currentParams.set("query", searchQuery);
+    } else {
+      currentParams.delete("query");
+    }
+    
+    const newQueryString = currentParams.toString();
+    const newPath = location.pathname + (newQueryString ? `?${newQueryString}` : "");
+    navigate(newPath, { replace: true });
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   const loadMoreCourses = async () => {
@@ -193,7 +258,7 @@ export default function CourseStudent() {
               className="w-full bg-white rounded-md px-4 py-2 mb-4"
               placeholder="Search courses..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

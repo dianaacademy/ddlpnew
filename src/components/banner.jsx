@@ -11,6 +11,7 @@ const Banner = () => {
   const [displayText, setDisplayText] = useState('');
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let typingTimer;
@@ -45,14 +46,27 @@ const Banner = () => {
     };
   }, [displayText, currentSentenceIndex, isTyping]);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.open(`/course?query=${encodeURIComponent(searchQuery)}`, '_blank');
+      setSearchQuery('');
+    }
+  };
+
+  const handleButtonClick = () => {
+    // Simple button click effect
+    const button = document.getElementById('search-button');
+    if (button) {
+      button.classList.add('button-clicked');
+      setTimeout(() => {
+        button.classList.remove('button-clicked');
+      }, 200);
+    }
+  };
+
   const subTitle = "Welcome to Diana Advanced Tech Academy";
-  const title = (
-    <h2 className="title">
-      <span className="d-lg-block">Learn The</span> Skills You Need{" "}
-      <span className="d-lg-block">To Succeed</span>
-    </h2>
-  );
-  const desc = "Best online courses from the world’s Leading experts. Join 1.5+ million learners today.";
+  const desc = "Best online courses from the world's Leading experts. Join 1.5+ million learners today.";
 
   const categoryList = [
     { name: 'Cyber Security', link: '/course?cat=CyberSecurity' },
@@ -63,6 +77,7 @@ const Banner = () => {
     { name: 'Bigdata', link: '/course?cat=Bigdata' },
     { name: 'fiveG', link: '/course?cat=5G' },
   ];
+  
   const UserList = [
     { name: 'Kids', link: '/junior' },
     { name: 'Parents', link: '/parents' },
@@ -86,7 +101,6 @@ const Banner = () => {
             <div className="col-xxl-5 col-xl-6 col-lg-10">
               <div className="banner-content">
                 <h6 className="subtitle text-uppercase fw-medium">{subTitle}</h6>
-                {/* {title} */}
                 <div className="h-28 mb-6">
                   <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800">
                     <span className="inline-block text-transparent bg-clip-text text-black	text-5xl relative">
@@ -97,47 +111,63 @@ const Banner = () => {
                     </span>
                   </h1>
                 </div>
-                <p className="desc">{desc}</p>
-                {/* <form action="/">
-                  <div className="banner-icon">
-                    <i className="icofont-search"></i>
+                
+                {/* Search Form */}
+                <form onSubmit={handleSearch} className="search-form w-full mb-6 astin">
+                  <div className="relative flex items-center w-full astin">
+                    <input 
+                      type="text" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search for courses..." 
+                      className="w-full py-3 pl-12 pr-20 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent "
+                    />
+                    <div className="absolute left-4 text-gray-500">
+                      <i className="icofont-search"></i>
+                    </div>
+                    <button 
+                      id="search-button"
+                      type="submit" 
+                      onClick={handleButtonClick}
+                      className="absolute right-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                    >
+                      Search Courses
+                    </button>
                   </div>
-                  <input type="text" placeholder="Keywords of your course" />
-                  <button type="submit">Search Course</button>
-                </form> */}
+                </form>
+                
+                <p className="desc">{desc}</p>
+                
                 <div className="banner-category d-flex flex-wrap mt-10 text-bold">
-                  {/* <p>I'm: </p> */}
                   <ul className="lab-ul flex flex-wrap gap-2">
-  {UserList.map((item, index) => (
-    <li key={index}>
-      <a 
-        href={item.link} 
-        className="block p-1 rounded hover:bg-gray-50 transition duration-300"
-      >
-        {item.name}
-      </a>
-    </li>
-  ))}
-</ul>
-
+                    {UserList.map((item, index) => (
+                      <li key={index}>
+                        <a 
+                          href={item.link} 
+                          className="block p-1 rounded hover:bg-gray-50 transition duration-300"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+                
                 <div className="banner-category d-flex flex-wrap mt-10">
                   <p>Most Popular: </p>
                   <ul className="lab-ul flex flex-wrap gap-2">
-  {categoryList.map((item, index) => (
-    <li key={index}>
-      <a 
-        href={item.link} 
-        className="block p-1 rounded hover:bg-gray-50 transition duration-300"
-      >
-        {item.name}
-      </a>
-    </li>
-  ))}
-</ul>
-
+                    {categoryList.map((item, index) => (
+                      <li key={index}>
+                        <a 
+                          href={item.link} 
+                          className="block p-1 rounded hover:bg-gray-50 transition duration-300"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                
               </div>
             </div>
             <div className="col-xxl-7 col-xl-6">
@@ -158,6 +188,33 @@ const Banner = () => {
           ))}
         </ul>
       </div>
+      
+      {/* Additional CSS for button click effect */}
+      <style jsx>{`
+        @keyframes buttonPulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.95); }
+          100% { transform: scale(1); }
+        }
+        
+        .button-clicked {
+          animation: buttonPulse 0.2s ease-in-out;
+        }
+        
+        .animate-blink {
+          animation: blink 1s step-start infinite;
+        }
+        
+        @keyframes blink {
+          50% { opacity: 0; }
+        }
+
+        .banner-section .section-wrapper .banner-content form input{
+        width: 100%;}
+
+        .astin{
+        border-radius: 10px;}
+      `}</style>
     </section>
   );
 };

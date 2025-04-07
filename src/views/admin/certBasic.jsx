@@ -82,7 +82,7 @@ const CertificateManagement = () => {
         }));
         
         const uniqueCategories = [];
-        const categoryMap = {};
+        const categoryMap = {}; 
         
         coursesData.forEach(course => {
           if (course.category && !categoryMap[course.category]) {

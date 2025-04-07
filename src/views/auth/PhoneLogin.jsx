@@ -445,7 +445,7 @@ const PhoneLoginPage = () => {
             <CardHeader className="space-y-1">
               <div className="flex justify-center mb-2">
                 <img src={logo} alt="Logo" className="h-12" />
-              </div>
+              </div> 
               <CardTitle className="text-2xl text-center font-bold">Phone Login</CardTitle>
               <CardDescription className="text-center">
                 Login with your registered phone number

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import Home from './components/Home/home';
@@ -17,6 +17,7 @@ import CourseViewPage from './views/student/course-viewer/Courseviewer';
 import Learning from "@/views/student/component/learning";
 import { AuthProvider } from './auth/hooks/useauth';
 import PrivateRoute from './utils/PrivateRoutes';
+import AuthenticatedRoute from './views/student/AuthRoutes';
 import SplashScreen from './views/admin/SplashScreen';
 import Course from './components/course';
 import CourseStudent from './components/Home/allcourses';
@@ -32,8 +33,6 @@ import CourseTracker from './views/student/Coursetrack/CourseTracker';
 import Certificate from './views/student/Coursetrack/CertDesign';
 import { PhoneLoginPage } from './views/auth/PhoneLogin';
 import { ForgetPasswordPage } from './views/auth/forgotpass';
-
-
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -81,16 +80,30 @@ function App() {
               <Route path="course" element={<Course />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="phonelogin" element={<PhoneLoginPage />} />
-              <Route path="student/mylearning/learn/:slug" element={<Learning />} />
-              <Route path="/student/course-tracker/:courseId" element={<CourseTracker />} />
+              
+              
+              <Route path="student/mylearning/learn/:slug" element={
+               
+                  <Learning />
+                
+              } />
+              
+              <Route path="/student/course-tracker/:courseId" element={
+                
+                  <CourseTracker />
+                
+              } />
+              
+              <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
               <Route path="admin/*" element={<PrivateRoute allowedRoles={['Admin']}><Admin /></PrivateRoute>} />
               <Route path="Kids/*" element={<PrivateRoute allowedRoles={['Kids']}> <Kids /></PrivateRoute>} />
               <Route path="instructor/*" element={
-              <PrivateRoute allowedRoles={['instructor']}><Instructor />
+                <PrivateRoute allowedRoles={['instructor']}><Instructor />
               </PrivateRoute>
               } />
-              <Route path="student/*" element={ <PrivateRoute allowedRoles={['Student']}><Student /></PrivateRoute>
-            }/>
+              <Route path="student/*" element={ 
+                <PrivateRoute allowedRoles={['Student']}><Student /></PrivateRoute>
+              }/>
               <Route path="creator/*" element={
                 <PrivateRoute allowedRoles={['Creator']}>
                   <Creator />

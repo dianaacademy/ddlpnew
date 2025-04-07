@@ -8,6 +8,17 @@ import Linux from "../assets/images/category/icon/Linux.svg";
 import fiveG from "../assets/images/category/icon/5G.svg";
 import Bigdata from "../assets/images/category/icon/Bigdata.svg";
 
+
+import Aws from "../assets/images/category/icon/aws.svg";
+import Vmware from "../assets/images/category/icon/vmware-logo-grey.svg";
+import WebDevelopment from "../assets/images/category/icon/websiter.svg";
+import DigitalMarketing from "../assets/images/category/icon/ddmm.svg";
+import Coding from "../assets/images/category/icon/coding.svg";
+import Oracle from "../assets/images/category/icon/oracle.svg";
+import DianaJunior from "../assets/images/category/icon/junior.svg";
+
+import MiniCourseList from "./Home/ShowFreeCourse";
+
 const title = "Top Categories";
 const categoryList = [
     { imgUrl: CyberIcon, title: "Cyber Security", url: "/course?cat=CyberSecurity" },
@@ -18,6 +29,13 @@ const categoryList = [
     { imgUrl: Linux, title: "Azure", url: "/course?cat=Azure" },
     { imgUrl: Bigdata, title: "Bigdata", url: "/course?cat=BigData" },
     { imgUrl: fiveG, title: "5G", url: "/course?cat=5G" },
+    { imgUrl: Aws, title: "Aws", url: "/course?cat=AWS" },
+    { imgUrl: Vmware, title: "Vmware", url: "/course?cat=VMWARE" },
+    { imgUrl: WebDevelopment, title: "Web Development", url: "/course?cat=Web+Development" },
+    { imgUrl: DigitalMarketing, title: "Digital Marketing", url: "/course?cat=Digital+Marketing" },
+    { imgUrl: Coding, title: "Coding", url: "/course?cat=Coding" },
+    { imgUrl: Oracle, title: "Oracle", url: "/course?cat=Oracle" },
+    { imgUrl: DianaJunior, title: "Diana Junior", url: "/course?cat=Diana+Junior" },
 ];
 
 const Category = () => {
@@ -25,7 +43,10 @@ const Category = () => {
         <div className="category-section py-10">
             <div className="container mx-auto">
                 <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold">{title}</h2>
+
+                    <h2 className="text-2xl font-bold">Free Courses</h2>
+                    <MiniCourseList/>
+                    <h2 className="text-2xl font-bold mt-5">{title}</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {categoryList.map((category, index) => (

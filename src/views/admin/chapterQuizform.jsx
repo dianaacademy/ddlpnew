@@ -46,7 +46,7 @@ const ChapterQuizform = ({ questions, setQuestions }) => {
   };
 
   const handleAddQuestion = () => {
-    setQuestions([
+    setQuestions([ 
       ...questions,
       { question: '', hint: '', options: [{ option: '', isCorrect: false }] },
     ]);
