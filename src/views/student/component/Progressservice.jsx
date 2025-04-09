@@ -20,6 +20,9 @@ export const markChapterAsComplete = async (courseId, chapterId) => {
       lastVisitedChapter: chapterId
     });
   }
+  
+  // Return the updated chapter ID for local state updates
+  return chapterId;
 };
 
 // Function to get completed chapters for a course
@@ -36,7 +39,6 @@ export const getCompletedChapters = async (courseId) => {
     return [];
   }
 };
-console.log(getCompletedChapters);
 
 // Function to set the last visited chapter
 export const setLastVisitedChapter = async (courseId, chapterId) => {
@@ -44,9 +46,21 @@ export const setLastVisitedChapter = async (courseId, chapterId) => {
   if (!userId) throw new Error('User not authenticated');
 
   const progressRef = doc(db, `users/${userId}/progress/${courseId}`);
-  await updateDoc(progressRef, {
-    lastVisitedChapter: chapterId
-  });
+  const progressSnap = await getDoc(progressRef);
+  
+  if (progressSnap.exists()) {
+    await updateDoc(progressRef, {
+      lastVisitedChapter: chapterId
+    });
+  } else {
+    await setDoc(progressRef, {
+      completedChapters: [],
+      lastVisitedChapter: chapterId
+    });
+  }
+  
+  // Return the updated chapter ID for local state updates
+  return chapterId;
 };
 
 // Function to get the last visited chapter

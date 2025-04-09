@@ -62,6 +62,7 @@ const Learning = () => {
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [currentModuleName, setCurrentModuleName] = useState("");
   const [animationData, setAnimationData] = useState(null);
+  const [totalChapters, setTotalChapters] = useState(0);
 
   useEffect(() => {
     fetch("https://lottie.host/d684aa48-68fe-4b9a-9c97-c8c8b17f7136/2efFrG33MG.json")
@@ -107,6 +108,10 @@ const Learning = () => {
           formattedData.sort((a, b) => a.modnum - b.modnum);
           
           setCourseData(formattedData);
+          
+          // Calculate total chapters
+          const chaptersCount = formattedData.reduce((total, module) => total + module.list.length, 0);
+          setTotalChapters(chaptersCount);
           
         } else {
           console.log('No such course document!');
@@ -205,7 +210,7 @@ const Learning = () => {
           break;
         case 'text':
           setChapterContent(<Content content={chapterData.details.content} />);
-          break;
+          break; 
         case 'quiz':
           setChapterContent(<QuizContent quizContent={chapterData.details.questions} />);
           break;
@@ -223,8 +228,22 @@ const Learning = () => {
           setChapterContent(<div>Unsupported content type</div>);
       }
 
+      // Mark chapter as complete and update local state immediately
       await markChapterAsComplete(slug, chapterId);
+      
+      // Update local state to reflect completion immediately
+      if (!completedChapters.includes(chapterId)) {
+        setCompletedChapters(prevCompletedChapters => {
+          const updatedCompletedChapters = [...prevCompletedChapters];
+          if (!updatedCompletedChapters.includes(chapterId)) {
+            updatedCompletedChapters.push(chapterId);
+          }
+          return updatedCompletedChapters;
+        });
+      }
+      
       await setLastVisitedChapter(slug, chapterId);
+      setLastVisitedChapterState(chapterId);
     } else {
       console.log("Chapter data not found");
       setChapterContent(null);
@@ -243,12 +262,14 @@ const Learning = () => {
     }
   };
 
-  const renderChapterOpener = () => {
+  const renderChapterOpener = () => { 
     if (!activeChapter) return null;
-    const totalChapters = allChapters.length;
-    const completedCount = completedChapters.length;
-    
     // Add your chapter opener rendering logic here if needed
+  };
+
+  const calculateProgress = () => {
+    if (totalChapters === 0) return 0;
+    return Math.round((completedChapters.length / totalChapters) * 100);
   };
 
   if (loading) {
@@ -268,23 +289,24 @@ const Learning = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="sticky top-0 z-10 shadow-sm	">
+      <div className="sticky top-0 z-10 shadow-sm">
         <CourseVideoNavbar 
           title={data.title}
           moduleName={currentModuleName}
           chapterName={activeChapter ? activeChapter.ttl : ""}
           completedChapters={completedChapters.length}
           totalChapters={allChapters.length}
+          progressPercentage={calculateProgress()}
         />
       </div>
       
       <div className="flex flex-1 overflow-hidden">
-        <div className={`overflow-y-auto custom-scrollbar ${isSidebarCollapsed ? 'w-0' : 'w-1/4'} transition-all duration-300 border-r-2	`}>
+        <div className={`overflow-y-auto custom-scrollbar ${isSidebarCollapsed ? 'w-0' : 'w-1/4'} transition-all duration-300 border-r-2`}>
           {!isSidebarCollapsed && (
             <Card className="h-full">
               <div className="">
                 <span
-                  className="flex float-right cursor-pointer pt-4 pr-5 z-30	sticky"
+                  className="flex float-right    cursor-pointer pt-4 pr-5 z-30 sticky"
                   onClick={() => setIsSidebarCollapsed(true)}
                 >
                 <SidebarCloseIcon />
@@ -306,14 +328,14 @@ const Learning = () => {
         <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'w-full' : 'w-3/4'} transition-all duration-300`}>
           <Card className="flex-1 overflow-y-auto">
             {isSidebarCollapsed && (
-              <span
-                className="flex float-left cursor-pointer mt-4 ml-4"
+              <span className="flex float-left cursor-pointer mt-4 ml-4"
                 onClick={() => setIsSidebarCollapsed(false)}
               >
                 <SidebarCloseIcon />
               </span>
             )}
-            <div className="p-4">
+            <div className="">
+              
               {renderChapterOpener()}
               {chapterContent}
             </div>

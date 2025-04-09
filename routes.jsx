@@ -46,14 +46,14 @@ const routes = [
   },
 
   {
-    name: "users",
+    name: "Users",
     layout: "/admin",
     path: "users",
     icon: <User />,
     component: <UserTable />,
   },
   {
-    name: "addpost",
+    name: "Add Post",
     layout: "/admin",
     path: "addpost",
     icon: <Rss />,
@@ -61,7 +61,7 @@ const routes = [
     
   },
   {
-    name: "addstudents",
+    name: "Add Students",
     layout: "/admin",
     path: "addstudents",
     icon: <CircleFadingPlus />,
@@ -70,7 +70,7 @@ const routes = [
     
   },
   {
-    name: "certmanager",
+    name: "Cert Manager",
     layout: "/admin",
     path: "certmanager",
     icon: <TbCertificate />,
@@ -78,14 +78,14 @@ const routes = [
     
   },
   {
-    name: "library",
+    name: "Library",
     layout: "/admin",
     path: "library",
     icon: <BookPlus />,
     component: <BooksPage />,
   },
   {
-    name: "addcourse",
+    name: "Add Course",
     layout: "/admin",
     path: "addcourse",
     icon: <Package2 />,
@@ -100,7 +100,7 @@ const routes = [
     component: <CourseTable />,
   },
   {
-    name: "instructors",
+    name: "Instructors",
     layout: "/admin",
     path: "instructor",
     icon: <Biohazard />,
@@ -128,7 +128,7 @@ const routes = [
   //   component: <Allstudentlearningcourse />,
   // },
   {
-    name: "add document",
+    name: "Add Document",
     layout: "/admin",
     path: "Documents",
     icon: <SquarePen />,

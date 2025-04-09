@@ -170,7 +170,7 @@ export default function MiniCourseList() {
       }
       
       // Enroll the student
-      const enrolledStudentDoc = await getDoc(doc(db, "enrolledstudents", userId));
+      const enrolledStudentDoc = await getDoc(doc(db , "enrolledstudents", userId));
       const enrolledData = enrolledStudentDoc.exists() ? enrolledStudentDoc.data() : { courses: {} };
       
       const currentDate = new Date().toISOString();

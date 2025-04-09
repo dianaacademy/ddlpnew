@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/sidebar/adminsidebar";
@@ -8,17 +8,23 @@ import './index.css';
 export default function Admin(props) {
   const { ...rest } = props;
   const location = useLocation();
-  const [open, setOpen] = React.useState(true);
-  const [currentRoute, setCurrentRoute] = React.useState("Main Dashboard");
+  const [open, setOpen] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState("Main Dashboard");
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", () =>
       window.innerWidth < 1200 ? setOpen(false) : setOpen(true)
     );
   }, []);
-  React.useEffect(() => {
+  
+  useEffect(() => {
     getActiveRoute(routes);
   }, [location.pathname]);
+
+  const handleSidebarExpand = (isExpanded) => {
+    setExpanded(isExpanded);
+  };
 
   const getActiveRoute = (routes) => {
     let activeRoute = "Main Dashboard";
@@ -33,6 +39,7 @@ export default function Admin(props) {
     }
     return activeRoute;
   };
+  
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {
@@ -44,6 +51,7 @@ export default function Admin(props) {
     }
     return activeNavbar;
   };
+  
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -59,13 +67,17 @@ export default function Admin(props) {
   document.documentElement.dir = "ltr";
   return (
     <div className="flex h-full">
-      <Sidebar open={open} onClose={() => setOpen(false)} />
+      <Sidebar 
+        open={open} 
+        onClose={() => setOpen(false)} 
+        expanded={expanded}
+        onExpandChange={handleSidebarExpand}
+      />
+      
       {/* Navbar & Main Content */}
-      <div className="h-full w-full bg-lightPrimary dark:!bg-darkBlue">
+      <div className={`h-full w-full bg-lightPrimary dark:!bg-darkBlue transition-all duration-300 ${expanded ? "pl-64" : "pl-14"}`}>
         {/* Main Content */}
-        <main
-          className={`h-full flex-none transition-all  xl:ml-[25px] `}
-        >
+        <main className="h-full flex-none transition-all xl:ml-[25px]">
           {/* Routes */}
           <div className="h-full">
             <Navbar
@@ -75,10 +87,9 @@ export default function Admin(props) {
               secondary={getActiveNavbar(routes)}
               {...rest}
             />
-            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]  ">
+            <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh]">
               <Routes>
                 {getRoutes(routes)}
-
                 <Route
                   path="/"
                   element={<Navigate to="/admin/default" replace />}
