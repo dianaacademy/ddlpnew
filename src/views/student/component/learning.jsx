@@ -328,7 +328,8 @@ const Learning = () => {
         <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'w-full' : 'w-3/4'} transition-all duration-300`}>
           <Card className="flex-1 overflow-y-auto">
             {isSidebarCollapsed && (
-              <span className="flex float-left cursor-pointer mt-4 ml-4"
+              <span 
+                className="flex float-left cursor-pointer mt-4 ml-4"
                 onClick={() => setIsSidebarCollapsed(false)}
               >
                 <SidebarCloseIcon />
