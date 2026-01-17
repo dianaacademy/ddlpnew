@@ -37,7 +37,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "emailjs": "^4.0.3",
-    "firebase": "^10.11.1",
+    "firebase": "^11.0.0",
     "highlight.js": "^11.9.0",
     "html-react-parser": "^5.1.10",
     "html2canvas": "^1.4.1",
